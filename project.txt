@@ -1,0 +1,82 @@
+Implemented Files:
+Assignment1.cpp
+Assignment1.h
+Ball.cpp
+Ball.h
+CubeBox.cpp
+CubeBox.h
+
+
+Modified Files:
+resources.cfg
+Makefile.am
+media/materials/scripts/Examples.material
+
+
+Description:
+The skeleton (setup) is BasicApplication from Tutorial. My implementation is Assignment1.xx which inherits BasicApplication class.
+I overrode most important methods including:
+	virtual void createCamera(void);
+    	virtual void createScene(void);
+	virtual void createFrameListener(void);
+    	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+    	virtual bool keyPressed( const OIS::KeyEvent& evt );
+	virtual bool keyReleased( const OIS::KeyEvent& evt );
+	virtual bool mouseMoved( const OIS::MouseEvent& evt );
+	virtual bool mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID id );
+	virtual bool mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID id );
+I also implemented two classes:
+	Ball: Each instance represents a ball. For simplicity, all balls share the same speed and size. However, they can be easily changed to non-static data so that every ball has its own speed and size.
+	CubeBox: Each instance represents a surronding box. 
+
+
+Features:
+	Balls and Boxes are classes so you can create more instances, each with a single call to the constructors.
+	The balls are local to a box so you can create many boxes with their own balls.
+	For faster calculation, the collision physics is approximation. The balls will refelct along the tangent plane of the collision. The simulation looks good enough for this assignment.
+	The balls are rolling, the direction of rolling is approximation.
+	During collision calculation, to reduce duplicate change of direction (direction is changed but the balls are still intersected), the current direction of the ball is checked. If the current direction and the vector from the other ball to this ball forms a sharp angle, then the ball is leaving the other ball, so there's no need for another change of direction.
+	When calculating collisions, to reduce redundant calculaion, the update of ball direction is for both balls in the collision. Ball 1 calculates collisions with Ball 2 - Ball 10, Ball 2 calculates collisions with Ball 3 - Ball 10, and so on. Therefore, each collision is only calculated only once.
+	The user has controlls to change the state of the balls.
+	Movable Camera.
+	Basic UI.
+
+
+Unsolved problem:
+	The resources are not cleaned up. I used a small portion of the original resources package, but I did not take time to clean them up so the turnin folder is a bit large. 
+
+Software requirements:
+	Standard Ogre installation, resources zip file, and maketools.
+
+
+Reusability: 
+	The Ball and CubeBox are new classes which can be used anywhere in the new programs. The collision algorithm can be taken out of Ball class since it's in a single method so it's easy to build a separate physics engine.
+
+
+Extra credits:
+1. Fancier: used multiple light sources with different types, texture mapped balls and walls
+2. Moving camera: Implemented myself without using the cameraMan SDK. The implementation is based on Tutorial from Ogre.
+	A - Move left
+	D - Move right
+	W - Move forward
+	S - Move back
+	Q - Move up
+	E - Move down
+	Mouse left - turn left
+	Mouse right - turn right
+	Mouse up - turn up
+	Mouse down - turn down
+3. More balls: Max of 10 balls supported with collision detection. The physics is approximation so it looks right.
+4. More physics: not implemented
+5. Sound: not implemented
+6. UI: Keybord controls
+	Esc - exit
+	Space - toggle pause/resume all balls
+	1 - toggle pause/resume ball #1
+	2 - toggle pause/resume ball #2
+	...
+	9 - toggle pause/resume ball #9
+	0 - toggle pause/resume ball #10
+	+ from main/numeric keyboard - increase ball speed
+	- from main/numeric keyboard - decrease ball speed
+7. Keep score: I implemented a score panel which keeps tracks of state of all balls as well as the number of time the balls hit the walls and the number of collisions between balls.
