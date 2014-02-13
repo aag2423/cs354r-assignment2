@@ -41,8 +41,10 @@ void Assignment2::updatePanel(void) {
 
 void Assignment2::moveBall(const Ogre::FrameEvent& evt) {
 	btTransform trans;
+	Ogre::Vector3 dir = mCamNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
+	dir *= 100;
 	if(mouseClicked) {
-		ball.applyCentralForce(btVector3(5, 15, 5)) ;
+		ball.applyCentralForce(btVector3(dir.x, dir.y, dir.z));
 	}
 	physicsEngine.stepSimulation(evt.timeSinceLastFrame*4);
 	
