@@ -5,7 +5,7 @@
 #include <btBulletDynamicsCommon.h>
 #include "BaseApplication.h"
 #include "Ball.h"
-#include "CubeBox.h"
+#include "PlayGround.h"
 #include "PhysicsEngine.h"
 
 class Assignment2 : public BaseApplication
@@ -20,7 +20,7 @@ protected:
 	btDiscreteDynamicsWorld* dynamicsWorld;
 	btRigidBody* fallRigidBody;
 
-	CubeBox *box;
+	PlayGround *box;
 	Ball* balls [MAX_NUM_BALLS];
 	bool pauses [MAX_NUM_BALLS];
 	bool mPaused;

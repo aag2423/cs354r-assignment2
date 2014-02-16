@@ -11,7 +11,7 @@ Jiawei Guo, jg44347
 
 
 #include <Ogre.h>
-#include "CubeBox.h"
+#include "PlayGround.h"
 
 class Ball {
 protected:
@@ -22,7 +22,7 @@ protected:
 	Ogre::Vector3 ballDirection;
 	bool checkCollision(Ogre::Vector3& direction, Ogre::Vector3& from);
 public:
-	Ball(Ogre::SceneManager* mSceneMgr, CubeBox& box, Ogre::Real x, Ogre::Real y, Ogre::Real z);
+	Ball(Ogre::SceneManager* mSceneMgr, PlayGround& box, Ogre::Real x, Ogre::Real y, Ogre::Real z);
 	~Ball(void);
 	void move(const Ogre::FrameEvent& evt);
 	bool bounceWall(void);

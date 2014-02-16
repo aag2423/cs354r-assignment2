@@ -57,6 +57,10 @@ void PhysicsObject::setToSphere(btScalar radius, btScalar mass, const btQuaterni
         rigidBody = new btRigidBody(rigidBodyCI);
 }
 
+btVector3 PhysicsObject::getCenterOfMassPosition() {
+	rigidBody->getCenterOfMassPosition();
+}
+
 void PhysicsObject::getWorldTransform(btTransform& trans) {
 	rigidBody->getMotionState()->getWorldTransform(trans);
 }

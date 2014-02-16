@@ -42,8 +42,11 @@ void Assignment2::updatePanel(void) {
 void Assignment2::moveBall(const Ogre::FrameEvent& evt) {
 	btTransform trans;
 	Ogre::Vector3 dir = mCamNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
-	dir *= 100;
-	if(mouseClicked) {
+	dir *= 10000;
+	Ogre::Vector3 cameraPos = mCamNode->getPosition();
+	Ogre::Vector3 ballPos = balls[0]->getNode()->getPosition();
+	Ogre::Vector3 distance = Ogre::Vector3(cameraPos.x - ballPos.x, cameraPos.y - ballPos.y, cameraPos.z - ballPos.z);
+	if(mouseClicked && (distance.x < 80.0 && distance.x > -80.0) && (distance.y < 80.0 && distance.y > -80.0) && (distance.z < 80.0 && distance.z > -80.0)) {
 		ball.applyCentralForce(btVector3(dir.x, dir.y, dir.z));
 	}
 	physicsEngine.stepSimulation(evt.timeSinceLastFrame*4);
@@ -80,9 +83,9 @@ void Assignment2::createCamera(void)
 	mCamera = mSceneMgr->createCamera("MainCam");
 	mCamera->lookAt(Ogre::Vector3(0,0,0));
 	mCamera->setNearClipDistance(5);
-	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MainCamNode", Ogre::Vector3(0,BOX_SIDE_LENGTH/2,BOX_SIDE_LENGTH/2));
+	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MainCamNode", Ogre::Vector3(0,-100,200));
         mCamNode->attachObject(mCamera);
-        mCamNode->pitch(Ogre::Degree(-45));
+        //mCamNode->pitch(Ogre::Degree(360));
 }
 //-------------------------------------------------------------------------------------
 
@@ -91,7 +94,7 @@ void Assignment2::createScene(void)
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-	box = new CubeBox(mSceneMgr, BOX_SIDE_LENGTH, 0, 0, 0);
+	box = new PlayGround(mSceneMgr, BOX_SIDE_LENGTH, 0, 0, 0);
 	balls[0] = new Ball(mSceneMgr, *box, 0, 0, 0);
 /*
 	balls[0] = new Ball(mSceneMgr, *box, 20, -20, 0);
@@ -105,14 +108,14 @@ void Assignment2::createScene(void)
 	balls[8] = new Ball(mSceneMgr, *box, 0, 0, 40);
 	balls[9] = new Ball(mSceneMgr, *box, 0, 0, -40);
 */	
-	Ball::setSpeed(200);
+	Ball::setSpeed(1000);
 
 	Ogre::Light* spotLight1 = mSceneMgr->createLight("spotLight1");
     	spotLight1->setType(Ogre::Light::LT_SPOTLIGHT);
 	spotLight1->setDiffuseColour(Ogre::ColourValue::Blue);
 	spotLight1->setSpecularColour(Ogre::ColourValue::Blue);
 	spotLight1->setDirection(1, -1, -1);
-	spotLight1->setPosition(Ogre::Vector3(-80, 80, 80));
+	spotLight1->setPosition(Ogre::Vector3(-80, 80, -80));
 	spotLight1->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(20));
 	
 	Ogre::Light* spotLight2 = mSceneMgr->createLight("spotLight2");
@@ -120,14 +123,14 @@ void Assignment2::createScene(void)
 	spotLight2->setDiffuseColour(Ogre::ColourValue::White);
 	spotLight2->setSpecularColour(Ogre::ColourValue::White);
 	spotLight2->setDirection(-1, -1, -1);
-	spotLight2->setPosition(Ogre::Vector3(80, 80, 80));
+	spotLight2->setPosition(Ogre::Vector3(80, 80, -80));
 	spotLight2->setSpotlightRange(Ogre::Degree(10), Ogre::Degree(20));
 
 	Ogre::Light* pointLight = mSceneMgr->createLight("pointLight");
 	pointLight->setType(Ogre::Light::LT_POINT);
 	pointLight->setPosition(Ogre::Vector3(0, 80, -80));
-	pointLight->setDiffuseColour(0.8, 0.0, 0.0);
-	pointLight->setSpecularColour(0.8, 0.0, 0.0);
+	pointLight->setDiffuseColour(0.8, 0.8, 0.8);
+	pointLight->setSpecularColour(0.8, 0.8, 0.8);
 
 
 
@@ -136,21 +139,21 @@ void Assignment2::createScene(void)
 	// set up physical world
 	ball.setToSphere(
 		10, 
-		1, 
+		2, 
 		btQuaternion(0.2f, 0.6f, 0.1f, 1.0f).normalized(),
 		btVector3(0,0,0) 
 	);
 	ball.setRestitution(0.99);
-	ball.setLinearVelocity(btVector3(0,-10,0));
+	ball.setLinearVelocity(btVector3(0,-98.1,0));
 	ball.setFriction(0.5);  
 	ball.setAngularVelocity(btVector3(0.2f, 0.5f, 0.2f));
 
-	bottomPlane.setToStaticPlane(btVector3(0,1,0), -100);
-	topPlane.setToStaticPlane(btVector3(0,-1,0), -100);
-	leftPlane.setToStaticPlane(btVector3(1,0,0), -100);
-	rightPlane.setToStaticPlane(btVector3(-1,0,0), -100);
-	frontPlane.setToStaticPlane(btVector3(0,0,-1), -100);
-	backPlane.setToStaticPlane(btVector3(0,0,1), -100);
+	bottomPlane.setToStaticPlane(btVector3(0,1,0), -125);
+	topPlane.setToStaticPlane(btVector3(0,-1,0), -125);
+	leftPlane.setToStaticPlane(btVector3(1,0,0), -250);
+	rightPlane.setToStaticPlane(btVector3(-1,0,0), -250);
+	frontPlane.setToStaticPlane(btVector3(0,0,-1), -375);
+	backPlane.setToStaticPlane(btVector3(0,0,1), -375);
 	//bottomPlane.setFriction(0.5);  
 	//topPlane.setFriction(0.5);  
 	bottomPlane.setRestitution(0.8); 
@@ -167,7 +170,7 @@ void Assignment2::createScene(void)
 	physicsEngine.addObject(&rightPlane);
 	physicsEngine.addObject(&frontPlane);
 	physicsEngine.addObject(&backPlane);
-	physicsEngine.setGravity(0, -10, 0);
+	physicsEngine.setGravity(0, -98.1, 0);
 
 
 /*

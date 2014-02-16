@@ -32,6 +32,7 @@ public:
 	void setToSphere(btScalar radius, btScalar mass, const btQuaternion &orientation, const btVector3 &pos);
 
 	// Utility functions
+	btVector3 getCenterOfMassPosition();
 	btRigidBody* getRigidBody(void) { return rigidBody; }
 	void getWorldTransform(btTransform& trans);
 	void setWorldTransform(const btTransform& newTrans);

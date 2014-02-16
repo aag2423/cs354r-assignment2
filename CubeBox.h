@@ -1,25 +1,18 @@
-/*
------------------------------------------------------------------------------
-Filename:    CubeBox.h
------------------------------------------------------------------------------
-Jiawei Guo, jg44347
------------------------------------------------------------------------------
-*/
 
-#ifndef __CubeBox_h_
-#define __CubeBox_h_
+#ifndef __PlayGround_h_
+#define __PlayGround_h_
 
 #include <Ogre.h>
 
-class CubeBox {
+class PlayGround {
 protected:
 	Ogre::SceneNode* parentNode;
-	Ogre::Real halfSideLength;
-	void makePlane(Ogre::SceneManager* mSceneMgr, const Ogre::Vector3& planeNormal, const Ogre::Vector3& textureUp, const Ogre::String& texture);
+	Ogre::Real size;
+	void makePlane(Ogre::SceneManager* mSceneMgr, String name, const Ogre::Vector3& planeNormal, const Ogre::Vector3& textureUp, const Ogre::String& texture, const int distance, const int lenght, const int height);
 public:
-	CubeBox(Ogre::SceneManager* mSceneMgr, Ogre::Real sideLength, Ogre::Real x, Ogre::Real y, Ogre::Real z);
-	~CubeBox(void);
+	PlayGround(Ogre::SceneManager* mSceneMgr, Ogre::Real size, Ogre::Real x, Ogre::Real y, Ogre::Real z);
+	~PlayGround(void);
 	Ogre::Real getHalfSideLength(void) { return halfSideLength; }
 	Ogre::SceneNode* getNode(void) { return parentNode; }
 };
-#endif // #ifndef __CubeBox_h_
+#endif // #ifndef __PlayGround_h_

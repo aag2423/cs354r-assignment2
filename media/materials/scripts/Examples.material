@@ -824,6 +824,35 @@ material Examples/GrassFloor
 	}
 }
 
+
+material Examples/TennisCourt
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture tenniscourt.jpeg
+			}
+		}
+	}
+}
+
+material Examples/TennisBall
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture tennisball.jpeg
+			}
+		}
+	}
+}
+
 vertex_program Examples/GrassWaverVp cg
 {
 	source Grass.cg

@@ -10,14 +10,14 @@ Jiawei Guo, jg44347
 
 Ogre::Real Ball::ballSpeed = 120;
 
-Ball::Ball(Ogre::SceneManager* mSceneMgr, CubeBox& box, Ogre::Real x, Ogre::Real y, Ogre::Real z) :  
+Ball::Ball(Ogre::SceneManager* mSceneMgr, PlayGround& box, Ogre::Real x, Ogre::Real y, Ogre::Real z) :  
 	parentNode(0),
 	ballMoveRange(0),
 	ballDirection(Ogre::Math::UnitRandom(), Ogre::Math::UnitRandom(), Ogre::Math::UnitRandom())
 {
 	Ogre::Entity* entBall = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
 	entBall->setCastShadows(true);
-	entBall->setMaterialName("Examples/BumpyMetal");
+	entBall->setMaterialName("Examples/TennisBall");
 
 	parentNode = box.getNode()->createChildSceneNode(Ogre::Vector3(x, y, z));
 	parentNode->attachObject(entBall);
