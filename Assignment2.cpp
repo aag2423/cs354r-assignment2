@@ -378,6 +378,9 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 	case OIS::MB_Left:
 		mouseClicked = false;
 		break;
+	case OIS::MB_Right:
+		ball.toggleRigidBodyAndKinematic(2);
+		break;
 	default:
 	    break;
 	}

@@ -22,6 +22,7 @@ private:
 protected:
 	btCollisionShape* collisionShape;
 	btRigidBody* rigidBody;
+	bool isRigid;
 public:
 	// Initializations
 	PhysicsObject(void);
@@ -30,6 +31,9 @@ public:
 	void setToBox(const btVector3 &boxHalfExtents, btScalar mass, const btQuaternion &orientation, const btVector3 &pos);
 	void setToStaticPlane(const btVector3 &normal, btScalar distAlongNormal);
 	void setToSphere(btScalar radius, btScalar mass, const btQuaternion &orientation, const btVector3 &pos);
+	void toggleRigidBodyAndKinematic(btScalar mass=0); // make sure to remove object from physical world before calling this method
+	bool isRigidBody(void) { return isRigid; }
+
 
 	// Utility functions
 	btVector3 getCenterOfMassPosition();
