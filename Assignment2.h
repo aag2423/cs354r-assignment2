@@ -15,31 +15,24 @@ public:
     virtual ~Assignment2(void);
 protected:
 	const static Ogre::Real BOX_SIDE_LENGTH = 200.0f;
-	const static int MAX_NUM_BALLS = 10;
-
-	btDiscreteDynamicsWorld* dynamicsWorld;
-	btRigidBody* fallRigidBody;
 
 	PlayGround *box;
-	Ball* balls [MAX_NUM_BALLS];
-	bool pauses [MAX_NUM_BALLS];
-	bool mPaused;
+	Ball* ball;
+
 	bool mouseClicked;
-	int bounces;
-	int collisions;
 	Ogre::Real mRotate;       
     	Ogre::Real mMove;
     	Ogre::Vector3 mDirection;
     	Ogre::SceneNode *mCamNode;
-	OgreBites::ParamsPanel* scorePanel; 
 	PhysicsEngine physicsEngine;
-	PhysicsObject ball;
-	PhysicsObject bottomPlane;
-	PhysicsObject topPlane;
-	PhysicsObject leftPlane;
-	PhysicsObject rightPlane;
-	PhysicsObject frontPlane;
-	PhysicsObject backPlane;
+
+	// not used for now
+	OgreBites::ParamsPanel* scorePanel; 
+	const static int MAX_NUM_BALLS = 10;
+	bool pauses [MAX_NUM_BALLS];
+	bool mPaused;
+	int bounces;
+	int collisions;
 	
 	
 
@@ -49,7 +42,6 @@ protected:
     	virtual void createScene(void);
 	
 	virtual void createFrameListener(void);
-	virtual bool frameStarted(const Ogre::FrameEvent& evt);
     	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
     	virtual bool keyPressed( const OIS::KeyEvent& evt );
 	virtual bool keyReleased( const OIS::KeyEvent& evt );

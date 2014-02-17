@@ -6,8 +6,7 @@
 //-------------------------------------------------------------------------------------
 Assignment2::Assignment2(void) : 
 	box(NULL),
-	balls(),
-	pauses(),
+	ball(NULL),
 	mPaused(false),
 	mouseClicked(false),
 	bounces(0),
@@ -26,6 +25,7 @@ Assignment2::~Assignment2(void)
 void Assignment2::updatePanel(void) {
 	scorePanel->setParamValue(MAX_NUM_BALLS, Ogre::StringConverter::toString(bounces));
 	scorePanel->setParamValue(MAX_NUM_BALLS+1, Ogre::StringConverter::toString(collisions));
+	/*
 	scorePanel->setParamValue(MAX_NUM_BALLS+2, Ogre::StringConverter::toString(Ball::getSpeed()));
 	for(int i = 0; i < MAX_NUM_BALLS; i++) {
 		if(balls[i] == NULL)
@@ -35,45 +35,14 @@ void Assignment2::updatePanel(void) {
 		else
 			scorePanel->setParamValue(i, "Moving");
 	}
-
+	*/
 }
 //-------------------------------------------------------------------------------------
 
 void Assignment2::moveBall(const Ogre::FrameEvent& evt) {
-	btTransform trans;
-	Ogre::Vector3 dir = mCamNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
-	dir *= 10000;
-	Ogre::Vector3 cameraPos = mCamNode->getPosition();
-	Ogre::Vector3 ballPos = balls[0]->getNode()->getPosition();
-	Ogre::Vector3 distance = Ogre::Vector3(cameraPos.x - ballPos.x, cameraPos.y - ballPos.y, cameraPos.z - ballPos.z);
-	if(mouseClicked && (distance.x < 80.0 && distance.x > -80.0) && (distance.y < 80.0 && distance.y > -80.0) && (distance.z < 80.0 && distance.z > -80.0)) {
-		ball.applyCentralForce(btVector3(dir.x, dir.y, dir.z));
-	}
-	physicsEngine.stepSimulation(evt.timeSinceLastFrame*4);
-	
-	ball.getWorldTransform(trans);
-	btQuaternion orientation = trans.getRotation();
-	balls[0]->getNode()->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
-	balls[0]->getNode()->setPosition(Ogre::Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-
-	return;
-
-	//dynamicsWorld->stepSimulation(1/60.f);
-	dynamicsWorld->stepSimulation(evt.timeSinceLastFrame*5);
-	fallRigidBody->getMotionState()->getWorldTransform(trans);
-	
-	return;
-	for(int i = 0; i < MAX_NUM_BALLS; i++) {
-		if(balls[i] == NULL)
-			continue;
-		for(int j = i+1; j < MAX_NUM_BALLS; j++) {
-			if(balls[j] != NULL && balls[i]->collideWith(balls[j]))
-				collisions++;
-		}
-		if(balls[i]->bounceWall()) bounces++;
-		if(!pauses[i])
-			balls[i]->move(evt);
-	}
+	if(mouseClicked) ball->hitBy(mCamNode);
+	physicsEngine.stepSimulation(evt.timeSinceLastFrame*10);
+	ball->updateGraphicsScene();
 }
 
 //-------------------------------------------------------------------------------------
@@ -94,21 +63,8 @@ void Assignment2::createScene(void)
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-	box = new PlayGround(mSceneMgr, BOX_SIDE_LENGTH, 0, 0, 0);
-	balls[0] = new Ball(mSceneMgr, *box, 0, 0, 0);
-/*
-	balls[0] = new Ball(mSceneMgr, *box, 20, -20, 0);
-	balls[1] = new Ball(mSceneMgr, *box, 20, 20, 0);
-	balls[2] = new Ball(mSceneMgr, *box, -20, -20, 0);
-	balls[3] = new Ball(mSceneMgr, *box, -20, 20, 0);
-	balls[4] = new Ball(mSceneMgr, *box, 40, 0, 0);
-	balls[5] = new Ball(mSceneMgr, *box, -40, 0, 0);
-	balls[6] = new Ball(mSceneMgr, *box, 0, 40, 0);
-	balls[7] = new Ball(mSceneMgr, *box, 0, -40, 0);
-	balls[8] = new Ball(mSceneMgr, *box, 0, 0, 40);
-	balls[9] = new Ball(mSceneMgr, *box, 0, 0, -40);
-*/	
-	Ball::setSpeed(1000);
+	box = new PlayGround(mSceneMgr, physicsEngine, 750, 500, 250);
+	ball = new Ball(mSceneMgr, physicsEngine, *box, 0, 0, 0);
 
 	Ogre::Light* spotLight1 = mSceneMgr->createLight("spotLight1");
     	spotLight1->setType(Ogre::Light::LT_SPOTLIGHT);
@@ -132,94 +88,8 @@ void Assignment2::createScene(void)
 	pointLight->setDiffuseColour(0.8, 0.8, 0.8);
 	pointLight->setSpecularColour(0.8, 0.8, 0.8);
 
-
-
-
-
 	// set up physical world
-	ball.setToSphere(
-		10, 
-		2, 
-		btQuaternion(0.2f, 0.6f, 0.1f, 1.0f).normalized(),
-		btVector3(0,0,0) 
-	);
-	ball.setRestitution(0.99);
-	ball.setLinearVelocity(btVector3(0,-98.1,0));
-	ball.setFriction(0.5);  
-	ball.setAngularVelocity(btVector3(0.2f, 0.5f, 0.2f));
-
-	bottomPlane.setToStaticPlane(btVector3(0,1,0), -125);
-	topPlane.setToStaticPlane(btVector3(0,-1,0), -125);
-	leftPlane.setToStaticPlane(btVector3(1,0,0), -250);
-	rightPlane.setToStaticPlane(btVector3(-1,0,0), -250);
-	frontPlane.setToStaticPlane(btVector3(0,0,-1), -375);
-	backPlane.setToStaticPlane(btVector3(0,0,1), -375);
-	//bottomPlane.setFriction(0.5);  
-	//topPlane.setFriction(0.5);  
-	bottomPlane.setRestitution(0.8); 
-	topPlane.setRestitution(0.8); 
-	leftPlane.setRestitution(0.8); 
-	rightPlane.setRestitution(0.8); 
-	frontPlane.setRestitution(0.8); 
-	backPlane.setRestitution(0.8); 
-
-	physicsEngine.addObject(&ball);
-	physicsEngine.addObject(&bottomPlane);
-	physicsEngine.addObject(&topPlane);
-	physicsEngine.addObject(&leftPlane);
-	physicsEngine.addObject(&rightPlane);
-	physicsEngine.addObject(&frontPlane);
-	physicsEngine.addObject(&backPlane);
-	physicsEngine.setGravity(0, -98.1, 0);
-
-
-/*
-	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-        btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0,-10,0));
-
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),0);
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,-BOX_SIDE_LENGTH/2,0)));
-	btRigidBody::btRigidBodyConstructionInfo
-                groundRigidBodyCI(0,groundMotionState,groundShape,btVector3(0,0,0));
-        btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	groundRigidBody->setRestitution(0.9);
-	dynamicsWorld->addRigidBody(groundRigidBody);
-
-
-	groundShape = new btStaticPlaneShape(btVector3(0,-1,0),0);
-	groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,BOX_SIDE_LENGTH/2,0)));
-	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI2(0,groundMotionState,groundShape,btVector3(0,0,0));
-	groundRigidBody = new btRigidBody(groundRigidBodyCI2);
-	groundRigidBody->setRestitution(0.9);
-	groundRigidBody->setFriction(0.5);
-	dynamicsWorld->addRigidBody(groundRigidBody);
-
-
-
-
-
-
-
-
-	btCollisionShape* fallShape = new btSphereShape(10);
-	btDefaultMotionState* fallMotionState = new btDefaultMotionState(btTransform(btQuaternion(0.2f, 0.6f, 0.1f, 1.0f).normalized(),btVector3(0,0,0)));
-	btScalar mass = 1;
-        btVector3 fallInertia(0,0,0);
-        fallShape->calculateLocalInertia(mass,fallInertia);
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass,fallMotionState,fallShape,fallInertia);
-	fallRigidBody = new btRigidBody(fallRigidBodyCI);
-	fallRigidBody->setLinearVelocity(btVector3(0,-10,0));
-	fallRigidBody->setRestitution(0.99); 
-	fallRigidBody->setFriction(0.5);  
-	fallRigidBody->setAngularVelocity(btVector3(0.2f, 0.5f, 0.2f));
-        dynamicsWorld->addRigidBody(fallRigidBody);
-
-*/
-	
+	physicsEngine.setGravity(0, -10, 0);
 }
 //-------------------------------------------------------------------------------------
 void Assignment2::createFrameListener(void) {
@@ -240,11 +110,6 @@ void Assignment2::createFrameListener(void) {
      	items.push_back("Ball Speed");
 	scorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "ScorePanel", 150, items);
 	updatePanel();
-}
-//-------------------------------------------------------------------------------------
-bool Assignment2::frameStarted(const Ogre::FrameEvent& evt)
-{
-        return true;
 }
 //-------------------------------------------------------------------------------------
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
@@ -318,14 +183,6 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 		case OIS::KC_0:
     			pauses[9] = !pauses[9];
     			break;
-		case OIS::KC_ADD:
-		case OIS::KC_EQUALS:
-			Ball::setSpeed(Ball::getSpeed() + 10);
-    			break;
-		case OIS::KC_MINUS:
-		case OIS::KC_SUBTRACT:
-			Ball::setSpeed(Ball::getSpeed() - 10);
-    			break;
 		default:
 			break;
 	}
@@ -379,7 +236,7 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 		mouseClicked = false;
 		break;
 	case OIS::MB_Right:
-		ball.toggleRigidBodyAndKinematic(2);
+		ball->getPhysicsObject().toggleRigidBodyAndKinematic(2);
 		break;
 	default:
 	    break;
