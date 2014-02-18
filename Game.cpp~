@@ -81,7 +81,9 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if (be ==HIT_PLAYER)
 		std::cout << "play sound woo"<<std::endl;
 	if (be == HIT_FLOOR)
-		std::cout << "play sound boo"<<std::endl;
+		soundHandler->play_sound(point_down);
+	if (be == HIT_WALL)
+		soundHander->play_sound(point_up);
 	ball->updateGraphicsScene();
 }
 

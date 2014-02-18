@@ -16,6 +16,7 @@ created: 4/17/2014
 static const char *ambient_sound = "./media/sounds/spring-weather-1.wav";
 static const char *ball_hit = "./media/sounds/ball_hit.wav";
 static const char *point_up = "./media/sounds/point_up.wav";
+static const char *point_down = "./media/sounds/point_down.wav";
 
 class Sound{
 public:

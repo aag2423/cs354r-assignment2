@@ -60,7 +60,7 @@ void Sound::play_sound(const char* current)
 	if(sound_c == NULL)
 		fprintf(stdout, "Unable to load wav file: %s \n", Mix_GetError());
 		
-	channel = Mix_PlayChannel(-1, sound_c, -1);
+	channel = Mix_PlayChannel(-1, sound_c, 0);
 	if(channel == -1)
 		fprintf(stdout, "Unable to play wav file: %s \n", Mix_GetError());
 }
