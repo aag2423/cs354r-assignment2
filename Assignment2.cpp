@@ -3,6 +3,7 @@
 #include <OgreMath.h>
 #include <OgreSphere.h>
 #include <iostream>
+#include <stdio.h>
 //-------------------------------------------------------------------------------------
 Assignment2::Assignment2(void) : 
 	game(NULL),
@@ -21,24 +22,66 @@ Assignment2::~Assignment2(void)
 	delete game;
 	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
+//------------------------------------------------------------------------------------
+CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
+{
+    switch (buttonID)
+    {
+    case OIS::MB_Left:
+        return CEGUI::LeftButton;
+
+    case OIS::MB_Right:
+        return CEGUI::RightButton;
+
+    case OIS::MB_Middle:
+        return CEGUI::MiddleButton;
+
+    default:
+        return CEGUI::LeftButton;
+    }
+}
 //-------------------------------------------------------------------------------------
 
 void Assignment2::updatePanel(void) {
-	scorePanel->setParamValue(MAX_NUM_BALLS, Ogre::StringConverter::toString(bounces));
-	scorePanel->setParamValue(MAX_NUM_BALLS+1, Ogre::StringConverter::toString(collisions));
-	/*
-	scorePanel->setParamValue(MAX_NUM_BALLS+2, Ogre::StringConverter::toString(Ball::getSpeed()));
-	for(int i = 0; i < MAX_NUM_BALLS; i++) {
-		if(balls[i] == NULL)
-			scorePanel->setParamValue(i, "Not set up");
-		else if(pauses[i])
-			scorePanel->setParamValue(i, "Paused");
-		else
-			scorePanel->setParamValue(i, "Moving");
-	}
-	*/
+	//scorePanel->setParamValue(MAX_NUM_BALLS, Ogre::StringConverter::toString(bounces));
+	//scorePanel->setParamValue(MAX_NUM_BALLS+1, Ogre::StringConverter::toString(collisions));
 }
 
+//-------------------------------------------------------------------------------------
+void Assignment2::setupCEGUI(void) {
+	mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+	CEGUI::Imageset::setDefaultResourceGroup("Imagesets");
+	CEGUI::Font::setDefaultResourceGroup("Fonts");
+	CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+	CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+	CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+
+	CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
+	CEGUI::System::getSingleton().setDefaultMouseCursor("TaharezLook", "MouseArrow");
+	CEGUI::MouseCursor::getSingleton().hide();
+
+	// GUI imageset(s)
+	CEGUI::Imageset *PauseImageset = &CEGUI::ImagesetManager::getSingleton().createFromImageFile("Background", "black_bg.jpg");
+
+	// GUI layout
+	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "Game/Sheet");
+	CEGUI::System::getSingleton().setGUISheet(sheet);
+
+	CEGUI::Window *scoreRoot = wmgr.loadWindowLayout("GameScore.layout");
+	sheet->addChildWindow(scoreRoot);
+
+	CEGUI::Window *pauseRoot = wmgr.loadWindowLayout("GamePause.layout");
+	sheet->addChildWindow(pauseRoot);
+
+	CEGUI::Window *configRoot = wmgr.loadWindowLayout("GameConfig.layout");
+	sheet->addChildWindow(configRoot);
+
+	wmgr.getWindow("PauseRoot/Menu/Resume")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::resume_game, this));
+	wmgr.getWindow("PauseRoot/Menu/Quit")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::quit, this));
+	wmgr.getWindow("PauseRoot/Menu/Config")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::configure_game, this));
+	wmgr.getWindow("ConfigRoot/Menu/Cancel")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::cancel_config, this));
+}
 //-------------------------------------------------------------------------------------
 
 void Assignment2::createCamera(void)
@@ -54,6 +97,8 @@ void Assignment2::createCamera(void)
 
 void Assignment2::createScene(void)
 {
+	setupCEGUI();
+
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
@@ -83,7 +128,32 @@ void Assignment2::createScene(void)
 }
 //-------------------------------------------------------------------------------------
 void Assignment2::createFrameListener(void) {
-	BaseApplication::createFrameListener();    
+	//BaseApplication::createFrameListener();    
+	Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
+	OIS::ParamList pl;
+	size_t windowHnd = 0;
+	std::ostringstream windowHndStr;
+
+	mWindow->getCustomAttribute("WINDOW", &windowHnd);
+	windowHndStr << windowHnd;
+	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+
+	mInputManager = OIS::InputManager::createInputSystem( pl );
+
+	mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true ));
+	mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject( OIS::OISMouse, true ));
+
+	mMouse->setEventCallback(this);
+	mKeyboard->setEventCallback(this);
+
+	//Set initial mouse clipping size
+	windowResized(mWindow);
+
+	//Register as a Window listener
+	Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
+
+	mRoot->addFrameListener(this);
+
 	Ogre::StringVector items;
      	items.push_back("Ball 1");
      	items.push_back("Ball 2");
@@ -98,7 +168,6 @@ void Assignment2::createFrameListener(void) {
      	items.push_back("Bounces");	
      	items.push_back("Collisions");
      	items.push_back("Ball Speed");
-	scorePanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "ScorePanel", 150, items);
 	updatePanel();
 }
 //-------------------------------------------------------------------------------------
@@ -108,7 +177,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mShutDown) return false;
 	mKeyboard->capture();
 	mMouse->capture();
-	mTrayMgr->frameRenderingQueued(evt);
+	//mTrayMgr->frameRenderingQueued(evt);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	game->runNextFrame(evt);
 	updatePanel();
@@ -117,6 +186,11 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 //-------------------------------------------------------------------------------------
 // OIS::KeyListener
 bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
+	// pass event to CEGUI
+	CEGUI::System &sys = CEGUI::System::getSingleton();
+	sys.injectKeyDown(evt.key);
+	sys.injectChar(evt.text);
+
 	switch (evt.key) {
 		case OIS::KC_ESCAPE: 
 			mShutDown = true;
@@ -124,7 +198,13 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 			break;
 		case OIS::KC_SPACE: 
 			mPaused = !mPaused;
-			for(int i = 0; i < MAX_NUM_BALLS; i++) pauses[i] = mPaused;
+			game->handleKeyboardEvent(PAUSE);
+			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
+			pause_screen->setVisible(mPaused);
+			if(mPaused)
+				CEGUI::MouseCursor::getSingleton().show();
+			else
+				CEGUI::MouseCursor::getSingleton().hide();
 			break;
 		case OIS::KC_R:
 			game->handleKeyboardEvent(RESTART);
@@ -181,6 +261,8 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 }
 //-------------------------------------------------------------------------------------
 bool Assignment2::keyReleased( const OIS::KeyEvent& evt ){
+	CEGUI::System::getSingleton().injectKeyUp(evt.key);
+
 	switch (evt.key) {
 		case OIS::KC_LCONTROL:
 			game->handleKeyboardEvent(STOP_RUN);
@@ -218,13 +300,19 @@ bool Assignment2::keyReleased( const OIS::KeyEvent& evt ){
 
 // OIS::MouseListener
 bool Assignment2::mouseMoved( const OIS::MouseEvent& evt ){
-	game->handleMouseMove(evt.state.X.rel, evt.state.Y.rel);
+	CEGUI::System &sys = CEGUI::System::getSingleton();
+	sys.injectMouseMove(evt.state.X.rel, evt.state.Y.rel);
+	if(evt.state.Z.rel)
+		sys.injectMouseWheelChange(evt.state.Z.rel / 120.0f);
+	if(!mPaused)
+		game->handleMouseMove(evt.state.X.rel, evt.state.Y.rel);
 //	mCamNode->yaw(Ogre::Degree(-mRotate * evt.state.X.rel), Ogre::Node::TS_WORLD);
 //    	mCamNode->pitch(Ogre::Degree(-mRotate * evt.state.Y.rel), Ogre::Node::TS_LOCAL);
 	return true;
 }
 //-------------------------------------------------------------------------------------
 bool Assignment2::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID id ){
+	CEGUI::System::getSingleton().injectMouseButtonDown(convertButton(id));
 	switch (id)
 	{
 	case OIS::MB_Left:
@@ -238,6 +326,7 @@ bool Assignment2::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID i
 }
 //-------------------------------------------------------------------------------------
 bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID id ){
+	CEGUI::System::getSingleton().injectMouseButtonUp(convertButton(id));
 	switch (id)
 	{
 	case OIS::MB_Left:
@@ -252,7 +341,35 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 	return true;
 }
 //-------------------------------------------------------------------------------------
+// CEGUI events
+bool Assignment2::quit(const CEGUI::EventArgs &e) {
+        mShutDown = true;
+        return true;
+}
+//-------------------------------------------------------------------------------------
 
+bool Assignment2::resume_game(const CEGUI::EventArgs &e) {
+        mPaused = false;
+	game->handleKeyboardEvent(PAUSE);
+        CEGUI::WindowManager::getSingleton().getWindow("PauseRoot")->setVisible(false);
+        CEGUI::MouseCursor::getSingleton().hide();
+        return true;
+}
+//-------------------------------------------------------------------------------------
+
+bool Assignment2::configure_game(const CEGUI::EventArgs &e) {
+        CEGUI::WindowManager::getSingleton().getWindow("PauseRoot")->setVisible(false);
+        CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot")->setVisible(true);
+        return true;
+}
+//-------------------------------------------------------------------------------------
+
+bool Assignment2::cancel_config(const CEGUI::EventArgs &e) {
+	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot")->setVisible(true);
+        CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot")->setVisible(false);
+        return true;
+}
+//--------------
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"

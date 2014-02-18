@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" ?>
+<GUILayout>
+	<Window Type="DefaultWindow" Name="PauseRoot">
+		<Property Name="AlwaysOnTop" Value="True" />
+		<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
+		<Property Name="Visible" Value="False" />
+		<Window Type="TaharezLook/StaticImage" Name="PauseRoot/Bg">
+			<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
+			<Property Name="InheritsAlpha" Value="False" />
+			<Property Name="Alpha" Value="0.5" />
+			<Property Name="Image" Value="set:Background image:full_image" />
+		</Window>
+		<Window Type="TaharezLook/FrameWindow" Name="PauseRoot/Menu">
+			<Property Name="UnifiedSize" Value="{{0.2,0},{0.25,0}}" />
+			<Property Name="UnifiedPosition" Value="{{0.4,0},{0.4,0}}" />
+			<Property Name="Text" Value="Paused" />
+			<Property Name="DragMovingEnabled" Value="False" />
+			<Property Name="CloseButtonEnabled" Value="False" />
+			<Property Name="SizingEnabled" Value="False" />
+			<Property Name="AlwaysOnTop" Value="True" />
+			<Window Type="TaharezLook/Button" Name="PauseRoot/Menu/Resume">
+				<Property Name="Text" Value="Resume" />
+				<Property Name="UnifiedSize" Value="{{0.95,0},{0.2,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.1,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="PauseRoot/Menu/Config">
+				<Property Name="Text" Value="Config" />
+				<Property Name="UnifiedSize" Value="{{0.95,0},{0.2,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.4,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="PauseRoot/Menu/Quit">
+				<Property Name="Text" Value="Quit" />
+				<Property Name="UnifiedSize" Value="{{0.95,0},{0.2,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.7,0}}" />
+			</Window>
+		</Window>
+	</Window>
+</GUILayout>

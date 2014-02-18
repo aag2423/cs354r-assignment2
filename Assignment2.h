@@ -5,6 +5,9 @@
 #include "BaseApplication.h"
 #include "Game.h"
 
+#include <CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
+
 class Assignment2 : public BaseApplication
 {
 public:
@@ -22,14 +25,20 @@ protected:
     	Ogre::SceneNode *mCamNode;
 
 	// not used for now
-	OgreBites::ParamsPanel* scorePanel; 
+	//OgreBites::ParamsPanel* scorePanel; 
 	const static int MAX_NUM_BALLS = 10;
 	bool pauses [MAX_NUM_BALLS];
 	bool mPaused;
 	int bounces;
 	int collisions;
 	
-	
+	CEGUI::OgreRenderer* mRenderer;	
+
+	void setupCEGUI(void);
+	bool quit(const CEGUI::EventArgs &e);
+	bool resume_game(const CEGUI::EventArgs &e);
+	bool configure_game(const CEGUI::EventArgs &e);
+	bool cancel_config(const CEGUI::EventArgs &e);
 
 	void updatePanel(void);
 	void moveBall(const Ogre::FrameEvent &evt);
