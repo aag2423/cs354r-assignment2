@@ -28,6 +28,7 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 	court = new PlayGround(mSceneMgr, physicsEngine, 750, 500, 250);
 	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -80, 180));
 	player = new Player(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -125, 200));
+	//soundHandler = new Sound();
 	toggleCamera();
 }
 

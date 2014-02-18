@@ -4,6 +4,7 @@
 
 #include "BaseApplication.h"
 #include "Game.h"
+#include "Sound.h"
 
 #include <CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>

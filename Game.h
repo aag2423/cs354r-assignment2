@@ -22,6 +22,7 @@ game.reset();
 #include "PlayGround.h"
 #include "Player.h"
 #include <OgreVector3.h>
+#include "Sound.h"
 
 enum {
 	COURT_LENGTH = 400,
@@ -91,5 +92,8 @@ public:
 	void runNextFrame(const Ogre::FrameEvent& evt);
 	void serveBall(void);
 };
+
+//GLOBAL SOUND OBJECT INSTANCE
+static Sound* soundHandler;
 
 #endif // #ifndef __Game_h_

@@ -57,12 +57,12 @@ am_OgreApp_OBJECTS = OgreApp-PhysicsObject.$(OBJEXT) \
 	OgreApp-PhysicsEngine.$(OBJEXT) OgreApp-Ball.$(OBJEXT) \
 	OgreApp-PlayGround.$(OBJEXT) OgreApp-Player.$(OBJEXT) \
 	OgreApp-Game.$(OBJEXT) OgreApp-BaseApplication.$(OBJEXT) \
-	OgreApp-Assignment2.$(OBJEXT)
+	OgreApp-Assignment2.$(OBJEXT) OgreApp-Sound.$(OBJEXT)
 OgreApp_OBJECTS = $(am_OgreApp_OBJECTS)
 am__DEPENDENCIES_1 =
 OgreApp_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 OgreApp_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(OgreApp_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -172,6 +172,11 @@ PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
+SDL_CFLAGS = @SDL_CFLAGS@
+SDL_LIBS = @SDL_LIBS@
+SDL_MIXER_CFLAGS = @SDL_MIXER_CFLAGS@
+SDL_mixer_CFLAGS = @SDL_mixer_CFLAGS@
+SDL_mixer_LIBS = @SDL_mixer_LIBS@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -225,6 +230,8 @@ prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
+sdl_CFLAGS = @sdl_CFLAGS@
+sdl_LIBS = @sdl_LIBS@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
@@ -233,11 +240,11 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-noinst_HEADERS = PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h
+noinst_HEADERS = PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h Sound.h
 OgreApp_CPPFLAGS = -I$(top_srcdir)
-OgreApp_SOURCES = PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp
-OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS)
-OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS)
+OgreApp_SOURCES = PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp Sound.cpp
+OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS)
+OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS)
 EXTRA_DIST = buildit makeit
 AUTOMAKE_OPTIONS = foreign
 all: config.h
@@ -355,6 +362,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-PhysicsObject.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-PlayGround.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Player.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Sound.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -488,6 +496,20 @@ OgreApp-Assignment2.obj: Assignment2.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Assignment2.cpp' object='OgreApp-Assignment2.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Assignment2.obj `if test -f 'Assignment2.cpp'; then $(CYGPATH_W) 'Assignment2.cpp'; else $(CYGPATH_W) '$(srcdir)/Assignment2.cpp'; fi`
+
+OgreApp-Sound.o: Sound.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Sound.o -MD -MP -MF $(DEPDIR)/OgreApp-Sound.Tpo -c -o OgreApp-Sound.o `test -f 'Sound.cpp' || echo '$(srcdir)/'`Sound.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-Sound.Tpo $(DEPDIR)/OgreApp-Sound.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Sound.cpp' object='OgreApp-Sound.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Sound.o `test -f 'Sound.cpp' || echo '$(srcdir)/'`Sound.cpp
+
+OgreApp-Sound.obj: Sound.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Sound.obj -MD -MP -MF $(DEPDIR)/OgreApp-Sound.Tpo -c -o OgreApp-Sound.obj `if test -f 'Sound.cpp'; then $(CYGPATH_W) 'Sound.cpp'; else $(CYGPATH_W) '$(srcdir)/Sound.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-Sound.Tpo $(DEPDIR)/OgreApp-Sound.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Sound.cpp' object='OgreApp-Sound.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Sound.obj `if test -f 'Sound.cpp'; then $(CYGPATH_W) 'Sound.cpp'; else $(CYGPATH_W) '$(srcdir)/Sound.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

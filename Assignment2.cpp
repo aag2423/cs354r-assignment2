@@ -125,6 +125,9 @@ void Assignment2::createScene(void)
 	pointLight->setPosition(Ogre::Vector3(0, 80, -80));
 	pointLight->setDiffuseColour(0.8, 0.8, 0.8);
 	pointLight->setSpecularColour(0.8, 0.8, 0.8);
+	
+	soundHandler = new Sound();
+	soundHandler->play_sound(ambient_sound);
 }
 //-------------------------------------------------------------------------------------
 void Assignment2::createFrameListener(void) {

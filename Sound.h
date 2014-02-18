@@ -22,6 +22,7 @@ public:
 	Sound(void);
 	~Sound(void);
 	void play_sound(const char*);
+	void set_ambient_volume(int vol);
 };
 
 static SDL_AudioSpec s_wanted;
