@@ -34,7 +34,8 @@ enum PlayerStep { NORMAL_STEP = 200, RUN_STEP = 350 };
 enum HitStrength { WEAK_HIT, NORMAL_HIT, STRONG_HIT };
 enum Gravity { EARTH_G = -10, MOON_G = -2 };
 enum CameraMode { ABOVE_CAM, FIRST_PERSON_CAM };
-enum shotHorizontalMode{ FOREHAND = -45, BACKHAND = 45, VOLLEY = -20, SMASH = 45 };
+enum shotHorizontalMode{ FOREHAND = -45, BACKHAND = 45, VOLLEY = -30, SMASH = 30 };
+
 
 enum KeyboardEvent {
 	GO_LEFT, GO_RIGHT, GO_FORWARD, GO_BACKWARD,		// player movement

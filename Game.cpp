@@ -73,8 +73,15 @@ void Game::serveBall(void) {
 void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if(gameState.paused) return;
 	movePlayer(evt);
-	if(playerState.hitting) ball->hitBy(player, playerState.shotDirection);
+	if(ball->hitBy(playerState.hitting, player, playerState.shotDirection)){
+		std::cout << "play sound bang"<<std::endl;
+	}
 	physicsEngine.stepSimulation(evt.timeSinceLastFrame*10);
+	BallCollisionEvent be = ball->collidesWith(court, player);
+	if (be ==HIT_PLAYER)
+		std::cout << "play sound woo"<<std::endl;
+	if (be == HIT_FLOOR)
+		std::cout << "play sound boo"<<std::endl;
 	ball->updateGraphicsScene();
 }
 
@@ -95,9 +102,10 @@ void Game::toggleCamera(void) {
 		gameState.camMode = ABOVE_CAM;
 		newCamParent = graphicsEngine->getRootSceneNode();
 		newCamParent->addChild(cameraNode);
-		cameraNode->setPosition(0, 125, 500);
+		cameraNode->setPosition(0, 50, 700);
 		cameraNode->resetOrientation();
-        	cameraNode->pitch(Ogre::Degree(-20));
+		player->getNode()->resetOrientation();
+        	cameraNode->pitch(Ogre::Degree(-10));
 	}
 }
 
@@ -162,13 +170,13 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 
 void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 	if (playerState.hitting) {
-		if (dx > 0)
+		if (dx > 10 && playerState.shotDirection.x == 0)
 			playerState.shotDirection.x = BACKHAND;
-		else if (dx < 0)
+		else if (dx < -10 && playerState.shotDirection.x == 0)
                         playerState.shotDirection.x = FOREHAND;
-		if (dy > 0) 
+		if (dy > 10 && playerState.shotDirection.y == 0) 
 			playerState.shotDirection.y = VOLLEY;
-		else if (dy < 0) 
+		else if (dy < -10 && playerState.shotDirection.y == 0) 
 			playerState.shotDirection.y = SMASH;
 	}
 	if (gameState.camMode == FIRST_PERSON_CAM){

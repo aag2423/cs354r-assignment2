@@ -19,6 +19,7 @@ public:
 	void removeObject(PhysicsObject* obj);
 	void setGravity(btScalar x, btScalar y, btScalar z);
 	void stepSimulation(btScalar step, int maxSubSteps = 1, btScalar fixStep = 1.0f/60.0f);
+	btDiscreteDynamicsWorld* getPhysicsWorld(void) { return dynamicsWorld; }
 
 };
 #endif // #ifndef __PhysicsEngine_h_

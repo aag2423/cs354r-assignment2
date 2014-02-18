@@ -24,7 +24,7 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 	);
 	physicsObject.toggleRigidBodyAndKinematic(); // change to Kinematic
 
-	physicsObject.setRestitution(0.05); 
+	physicsObject.setRestitution(0.001); 
 	physicsObject.getRigidBody()->setAngularFactor(0);
 	physicsObject.setFriction(1);  
 

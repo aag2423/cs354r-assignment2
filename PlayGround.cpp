@@ -4,6 +4,7 @@
 #include <iostream>
 
 PlayGround::PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Ogre::Real l, Ogre::Real w, Ogre::Real h) :
+	bRoll(false),
 	parentNode(0),
 	halfLength(l/2),
 	halfWidth(w/2),
@@ -26,11 +27,13 @@ PlayGround::PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngi
 	backPlane.setToStaticPlane(btVector3(0,0,1), -l/2);
 	//bottomPlane.setFriction(0.5);  
 	//topPlane.setFriction(0.5);  
+	leftPlane.setFriction(1);  
+	rightPlane.setFriction(1);  
 	bottomPlane.setRestitution(0.9); 
 	topPlane.setRestitution(0.5); 
 	leftPlane.setRestitution(0.8); 
 	rightPlane.setRestitution(0.8); 
-	frontPlane.setRestitution(0.8); 
+	frontPlane.setRestitution(0.01); 
 	backPlane.setRestitution(0.8); 
 	physicsEngine.addObject(&bottomPlane);
 	physicsEngine.addObject(&topPlane);

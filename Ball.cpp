@@ -11,7 +11,9 @@ Jiawei Guo, jg44347
 
 Ball::Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& engine, PlayGround* box, const Ogre::Vector3& pos) :  
 	parentNode(0),
-	physicsEngine(&engine)
+	physicsEngine(&engine),
+	colliding(false),
+	shooting(false)
 {
 	Ogre::Entity* entBall = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
 	entBall->setCastShadows(true);
@@ -57,7 +59,12 @@ void Ball::updateGraphicsScene(void) {
 
 //-------------------------------------------------------------------------------------
 
-void Ball::hitBy(Player* player, Ogre::Vector3 shotDirection) {
+bool Ball::hitBy(bool hitting, Player* player, Ogre::Vector3 shotDirection) {
+	if (!hitting) {
+		shooting =false;
+		return false;
+	}
+	bool playSound = false;
 	Ogre::SceneNode* playerNode = player->getNode();
 	Ogre::Vector3 dir = playerNode->getOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 	Ogre::Vector3 distance = parentNode->getPosition() - (playerNode->getPosition() + Ogre::Vector3(0, 40, 0));
@@ -65,10 +72,61 @@ void Ball::hitBy(Player* player, Ogre::Vector3 shotDirection) {
 		//physicsObject.setLinearVelocity(btVector3(0, 30, -100));
 		dir *= 100;
 		//physicsObject.setLinearVelocity(btVector3(dir.x, dir.y, dir.z));
+		if (shotDirection.y == 0) shotDirection.y = 10;
 		physicsObject.setLinearVelocity(btVector3(shotDirection.x, shotDirection.y, -100));
-	}
+		if (!shooting)
+			playSound = true;
+		shooting = true;
+	} else
+		shooting =false;
+	return playSound;
 }
 
+
+BallCollisionEvent Ball::collidesWith(PlayGround* court, Player* p) {
+	MyPlaneContactResultCallback callback;
+	BallCollisionEvent result = NOTHING_HAPPENED;
+        btDiscreteDynamicsWorld* world = physicsEngine->getPhysicsWorld();
+	btRigidBody* me = physicsObject.getRigidBody();
+
+	world->contactPairTest(me, p->getPhysicsObject().getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_PLAYER;
+	} else {
+	world->contactPairTest(me, court->getPhysicsObject(TOP_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_CEILING;
+	}
+	world->contactPairTest(me, court->getPhysicsObject(LEFT_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_WALL;
+	}
+	world->contactPairTest(me, court->getPhysicsObject(RIGHT_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_WALL;
+	}
+	world->contactPairTest(me, court->getPhysicsObject(FRONT_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_WALL;
+	}
+	world->contactPairTest(me, court->getPhysicsObject(BACK_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_TARGET;
+	}
+	world->contactPairTest(me, court->getPhysicsObject(BOTTOM_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_FLOOR;
+	}
+	}
+	if (colliding) {
+		if (result == NOTHING_HAPPENED)
+			colliding = false;
+		return NOTHING_HAPPENED;
+	} else {
+		if (result != NOTHING_HAPPENED) colliding = true;
+		return result;
+	}
+}
 //-------------------------------------------------------------------------------------
 void Ball::setPositionAndPause(const Ogre::Vector3& pos) {
 	parentNode->setPosition(pos);
