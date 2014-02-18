@@ -74,7 +74,7 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if(gameState.paused) return;
 	movePlayer(evt);
 	if(ball->hitBy(playerState.hitting, player, playerState.shotDirection)){
-		std::cout << "play sound bang"<<std::endl;
+		soundHandler->play_sound(ball_hit);
 	}
 	physicsEngine.stepSimulation(evt.timeSinceLastFrame*10);
 	BallCollisionEvent be = ball->collidesWith(court, player);
