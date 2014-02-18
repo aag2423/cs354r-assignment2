@@ -1,4 +1,5 @@
 #include "PhysicsObject.h"
+#include <iostream>
 
 PhysicsObject::PhysicsObject(void) : 
 	collisionShape(NULL),
@@ -10,6 +11,7 @@ PhysicsObject::PhysicsObject(void) :
 PhysicsObject::~PhysicsObject(void)
 {
 	clearData();
+	std::cout << "========= Debug: Physics Object Deleted =========" << std::endl;
 }
 
 
@@ -56,12 +58,13 @@ void PhysicsObject::setToSphere(btScalar radius, btScalar mass, const btQuaterni
 
         btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass,motionState,collisionShape,inertia);
         rigidBody = new btRigidBody(rigidBodyCI);
+	rigidBody->setActivationState(DISABLE_DEACTIVATION);
 }
 
 void PhysicsObject::toggleRigidBodyAndKinematic(btScalar mass) {
 	if (isRigid) {
 		rigidBody->setMassProps(0, btVector3(0,0,0));
-		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+		rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 		rigidBody->setLinearVelocity(btVector3(0,0,0));
 		rigidBody->setAngularVelocity(btVector3(0,0,0));
 		rigidBody->setActivationState(DISABLE_DEACTIVATION);
@@ -73,7 +76,7 @@ void PhysicsObject::toggleRigidBodyAndKinematic(btScalar mass) {
 		rigidBody->updateInertiaTensor();
 		rigidBody->setLinearVelocity(btVector3(0,0,0));
 		rigidBody->setAngularVelocity(btVector3(0,0,0));
-		rigidBody->setActivationState(WANTS_DEACTIVATION);
+		//rigidBody->setActivationState(WANTS_DEACTIVATION);
 	}
 	isRigid = !isRigid;
 }

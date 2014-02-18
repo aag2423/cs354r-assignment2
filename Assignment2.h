@@ -2,11 +2,8 @@
 #ifndef __Assignment2_h_
 #define __Assignment2_h_
 
-#include <btBulletDynamicsCommon.h>
 #include "BaseApplication.h"
-#include "Ball.h"
-#include "PlayGround.h"
-#include "PhysicsEngine.h"
+#include "Game.h"
 
 class Assignment2 : public BaseApplication
 {
@@ -16,15 +13,13 @@ public:
 protected:
 	const static Ogre::Real BOX_SIDE_LENGTH = 200.0f;
 
-	PlayGround *box;
-	Ball* ball;
+	Game* game;
 
 	bool mouseClicked;
 	Ogre::Real mRotate;       
     	Ogre::Real mMove;
     	Ogre::Vector3 mDirection;
     	Ogre::SceneNode *mCamNode;
-	PhysicsEngine physicsEngine;
 
 	// not used for now
 	OgreBites::ParamsPanel* scorePanel; 

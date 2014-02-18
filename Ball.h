@@ -13,18 +13,22 @@ Jiawei Guo, jg44347
 #include <Ogre.h>
 #include "PlayGround.h"
 #include "PhysicsEngine.h"
+#include "Player.h"
 
 class Ball {
 protected:
 	const static Ogre::Real BALL_RADIUS = 5.0f;
 	Ogre::SceneNode* parentNode;
+	PhysicsEngine* physicsEngine;
 	PhysicsObject physicsObject;
 public:
-	Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround& box, Ogre::Real x, Ogre::Real y, Ogre::Real z);
+	Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos=Ogre::Vector3::ZERO);
 	~Ball(void);
 	Ogre::SceneNode* getNode() { return parentNode; }
-	void hitBy(Ogre::SceneNode* player);
+	void hitBy(Player* player, Ogre::Vector3 shotDirection=Ogre::Vector3::ZERO);
 	void updateGraphicsScene(void);
+	void setPositionAndPause(const Ogre::Vector3& pos=Ogre::Vector3::ZERO);
+	void resume(void);
 	PhysicsObject& getPhysicsObject(void) { return physicsObject; }
 };
 #endif // #ifndef __Ball_h_

@@ -55,7 +55,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_OgreApp_OBJECTS = OgreApp-PhysicsObject.$(OBJEXT) \
 	OgreApp-PhysicsEngine.$(OBJEXT) OgreApp-Ball.$(OBJEXT) \
-	OgreApp-PlayGround.$(OBJEXT) OgreApp-BaseApplication.$(OBJEXT) \
+	OgreApp-PlayGround.$(OBJEXT) OgreApp-Player.$(OBJEXT) \
+	OgreApp-Game.$(OBJEXT) OgreApp-BaseApplication.$(OBJEXT) \
 	OgreApp-Assignment2.$(OBJEXT)
 OgreApp_OBJECTS = $(am_OgreApp_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -227,9 +228,9 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 ACLOCAL_AMFLAGS = -I m4
-noinst_HEADERS = PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h BaseApplication.h Assignment2.h
+noinst_HEADERS = PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h
 OgreApp_CPPFLAGS = -I$(top_srcdir)
-OgreApp_SOURCES = PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp BaseApplication.cpp Assignment2.cpp
+OgreApp_SOURCES = PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp
 OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
 OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
 EXTRA_DIST = buildit makeit
@@ -344,9 +345,11 @@ distclean-compile:
 include ./$(DEPDIR)/OgreApp-Assignment2.Po
 include ./$(DEPDIR)/OgreApp-Ball.Po
 include ./$(DEPDIR)/OgreApp-BaseApplication.Po
+include ./$(DEPDIR)/OgreApp-Game.Po
 include ./$(DEPDIR)/OgreApp-PhysicsEngine.Po
 include ./$(DEPDIR)/OgreApp-PhysicsObject.Po
 include ./$(DEPDIR)/OgreApp-PlayGround.Po
+include ./$(DEPDIR)/OgreApp-Player.Po
 
 .cpp.o:
 	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -424,6 +427,34 @@ OgreApp-PlayGround.obj: PlayGround.cpp
 #	source='PlayGround.cpp' object='OgreApp-PlayGround.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-PlayGround.obj `if test -f 'PlayGround.cpp'; then $(CYGPATH_W) 'PlayGround.cpp'; else $(CYGPATH_W) '$(srcdir)/PlayGround.cpp'; fi`
+
+OgreApp-Player.o: Player.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Player.o -MD -MP -MF $(DEPDIR)/OgreApp-Player.Tpo -c -o OgreApp-Player.o `test -f 'Player.cpp' || echo '$(srcdir)/'`Player.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Player.Tpo $(DEPDIR)/OgreApp-Player.Po
+#	source='Player.cpp' object='OgreApp-Player.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Player.o `test -f 'Player.cpp' || echo '$(srcdir)/'`Player.cpp
+
+OgreApp-Player.obj: Player.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Player.obj -MD -MP -MF $(DEPDIR)/OgreApp-Player.Tpo -c -o OgreApp-Player.obj `if test -f 'Player.cpp'; then $(CYGPATH_W) 'Player.cpp'; else $(CYGPATH_W) '$(srcdir)/Player.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Player.Tpo $(DEPDIR)/OgreApp-Player.Po
+#	source='Player.cpp' object='OgreApp-Player.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Player.obj `if test -f 'Player.cpp'; then $(CYGPATH_W) 'Player.cpp'; else $(CYGPATH_W) '$(srcdir)/Player.cpp'; fi`
+
+OgreApp-Game.o: Game.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Game.o -MD -MP -MF $(DEPDIR)/OgreApp-Game.Tpo -c -o OgreApp-Game.o `test -f 'Game.cpp' || echo '$(srcdir)/'`Game.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Game.Tpo $(DEPDIR)/OgreApp-Game.Po
+#	source='Game.cpp' object='OgreApp-Game.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Game.o `test -f 'Game.cpp' || echo '$(srcdir)/'`Game.cpp
+
+OgreApp-Game.obj: Game.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Game.obj -MD -MP -MF $(DEPDIR)/OgreApp-Game.Tpo -c -o OgreApp-Game.obj `if test -f 'Game.cpp'; then $(CYGPATH_W) 'Game.cpp'; else $(CYGPATH_W) '$(srcdir)/Game.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Game.Tpo $(DEPDIR)/OgreApp-Game.Po
+#	source='Game.cpp' object='OgreApp-Game.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Game.obj `if test -f 'Game.cpp'; then $(CYGPATH_W) 'Game.cpp'; else $(CYGPATH_W) '$(srcdir)/Game.cpp'; fi`
 
 OgreApp-BaseApplication.o: BaseApplication.cpp
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-BaseApplication.o -MD -MP -MF $(DEPDIR)/OgreApp-BaseApplication.Tpo -c -o OgreApp-BaseApplication.o `test -f 'BaseApplication.cpp' || echo '$(srcdir)/'`BaseApplication.cpp

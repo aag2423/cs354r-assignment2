@@ -1,4 +1,5 @@
 #include "PhysicsEngine.h"
+#include <iostream>
 
 PhysicsEngine::PhysicsEngine(void) {
 	broadphase = new btDbvtBroadphase();
@@ -16,6 +17,7 @@ PhysicsEngine::~PhysicsEngine(void)
         delete collisionConfig;
         delete dispatcher;
         delete broadphase;
+	std::cout << "========= Debug: Physics Engine Deleted =========" << std::endl;
 }
 
 void PhysicsEngine::addObject(PhysicsObject* obj) {

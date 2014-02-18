@@ -5,8 +5,7 @@
 #include <iostream>
 //-------------------------------------------------------------------------------------
 Assignment2::Assignment2(void) : 
-	box(NULL),
-	ball(NULL),
+	game(NULL),
 	mPaused(false),
 	mouseClicked(false),
 	bounces(0),
@@ -19,6 +18,8 @@ Assignment2::Assignment2(void) :
 //-------------------------------------------------------------------------------------
 Assignment2::~Assignment2(void)
 {
+	delete game;
+	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
 //-------------------------------------------------------------------------------------
 
@@ -37,13 +38,6 @@ void Assignment2::updatePanel(void) {
 	}
 	*/
 }
-//-------------------------------------------------------------------------------------
-
-void Assignment2::moveBall(const Ogre::FrameEvent& evt) {
-	if(mouseClicked) ball->hitBy(mCamNode);
-	physicsEngine.stepSimulation(evt.timeSinceLastFrame*10);
-	ball->updateGraphicsScene();
-}
 
 //-------------------------------------------------------------------------------------
 
@@ -52,7 +46,7 @@ void Assignment2::createCamera(void)
 	mCamera = mSceneMgr->createCamera("MainCam");
 	mCamera->lookAt(Ogre::Vector3(0,0,0));
 	mCamera->setNearClipDistance(5);
-	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MainCamNode", Ogre::Vector3(0,-100,200));
+	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MainCamNode", Ogre::Vector3(0,100,300));
         mCamNode->attachObject(mCamera);
         //mCamNode->pitch(Ogre::Degree(360));
 }
@@ -63,8 +57,7 @@ void Assignment2::createScene(void)
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-	box = new PlayGround(mSceneMgr, physicsEngine, 750, 500, 250);
-	ball = new Ball(mSceneMgr, physicsEngine, *box, 0, 0, 0);
+	game = new Game(mSceneMgr, mCamNode);
 
 	Ogre::Light* spotLight1 = mSceneMgr->createLight("spotLight1");
     	spotLight1->setType(Ogre::Light::LT_SPOTLIGHT);
@@ -87,9 +80,6 @@ void Assignment2::createScene(void)
 	pointLight->setPosition(Ogre::Vector3(0, 80, -80));
 	pointLight->setDiffuseColour(0.8, 0.8, 0.8);
 	pointLight->setSpecularColour(0.8, 0.8, 0.8);
-
-	// set up physical world
-	physicsEngine.setGravity(0, -10, 0);
 }
 //-------------------------------------------------------------------------------------
 void Assignment2::createFrameListener(void) {
@@ -120,7 +110,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mMouse->capture();
 	mTrayMgr->frameRenderingQueued(evt);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-	moveBall(evt);
+	game->runNextFrame(evt);
 	updatePanel();
         return true;
 }
@@ -130,58 +120,59 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 	switch (evt.key) {
 		case OIS::KC_ESCAPE: 
 			mShutDown = true;
+			game->handleKeyboardEvent(PAUSE);
 			break;
 		case OIS::KC_SPACE: 
 			mPaused = !mPaused;
 			for(int i = 0; i < MAX_NUM_BALLS; i++) pauses[i] = mPaused;
 			break;
-		case OIS::KC_A:
+		case OIS::KC_R:
+			game->handleKeyboardEvent(RESTART);
+    			break;
+		case OIS::KC_J:
     			mDirection.x = -mMove;
     			break;
-		case OIS::KC_D:
+		case OIS::KC_L:
     			mDirection.x = mMove;
     			break;
-		case OIS::KC_Q:
+		case OIS::KC_U:
     			mDirection.y = mMove;
     			break;
-		case OIS::KC_E:
+		case OIS::KC_O:
     			mDirection.y = -mMove;
     			break;
-		case OIS::KC_W:
+		case OIS::KC_I:
     			mDirection.z = -mMove;
     			break;
-		case OIS::KC_S:
+		case OIS::KC_K:
     			mDirection.z = mMove;
     			break;
+		case OIS::KC_W:
+			game->handleKeyboardEvent(GO_FORWARD);
+    			break;
+		case OIS::KC_S:
+			game->handleKeyboardEvent(GO_BACKWARD);
+    			break;
+		case OIS::KC_A:
+			game->handleKeyboardEvent(GO_LEFT);
+    			break;
+		case OIS::KC_D:
+			game->handleKeyboardEvent(GO_RIGHT);
+    			break;
+		case OIS::KC_LCONTROL:
+			game->handleKeyboardEvent(RUN);
+    			break;
+		case OIS::KC_C:
+			game->handleKeyboardEvent(TOGGLE_CAMERA);
+    			break;
 		case OIS::KC_1:
-    			pauses[0] = !pauses[0];
+			game->handleKeyboardEvent(USE_WEAK_HIT);
     			break;
 		case OIS::KC_2:
-    			pauses[1] = !pauses[1];
+			game->handleKeyboardEvent(USE_NORMAL_HIT);
     			break;
 		case OIS::KC_3:
-    			pauses[2] = !pauses[2];
-    			break;
-		case OIS::KC_4:
-    			pauses[3] = !pauses[3];
-    			break;
-		case OIS::KC_5:
-    			pauses[4] = !pauses[4];
-    			break;
-		case OIS::KC_6:
-    			pauses[5] = !pauses[5];
-    			break;
-		case OIS::KC_7:
-    			pauses[6] = !pauses[6];
-    			break;
-		case OIS::KC_8:
-    			pauses[7] = !pauses[7];
-    			break;
-		case OIS::KC_9:
-    			pauses[8] = !pauses[8];
-    			break;
-		case OIS::KC_0:
-    			pauses[9] = !pauses[9];
+			game->handleKeyboardEvent(USE_STRONG_HIT);
     			break;
 		default:
 			break;
@@ -191,17 +182,32 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 //-------------------------------------------------------------------------------------
 bool Assignment2::keyReleased( const OIS::KeyEvent& evt ){
 	switch (evt.key) {
-		case OIS::KC_A:
-		case OIS::KC_D:
+		case OIS::KC_LCONTROL:
+			game->handleKeyboardEvent(STOP_RUN);
+    			break;
+		case OIS::KC_J:
+		case OIS::KC_L:
     			mDirection.x = 0;
     			break;
-		case OIS::KC_Q:
-		case OIS::KC_E:
+		case OIS::KC_U:
+		case OIS::KC_O:
     			mDirection.y = 0;
     			break;
-		case OIS::KC_W:
-		case OIS::KC_S:
+		case OIS::KC_I:
+		case OIS::KC_K:
     			mDirection.z = 0;
+    			break;
+		case OIS::KC_W:
+			game->handleKeyboardEvent(STOP_FORWARD);
+    			break;
+		case OIS::KC_S:
+			game->handleKeyboardEvent(STOP_BACKWARD);
+    			break;
+		case OIS::KC_A:
+			game->handleKeyboardEvent(STOP_LEFT);
+    			break;
+		case OIS::KC_D:
+			game->handleKeyboardEvent(STOP_RIGHT);
     			break;
 		default:
 			break;
@@ -212,8 +218,9 @@ bool Assignment2::keyReleased( const OIS::KeyEvent& evt ){
 
 // OIS::MouseListener
 bool Assignment2::mouseMoved( const OIS::MouseEvent& evt ){
-	mCamNode->yaw(Ogre::Degree(-mRotate * evt.state.X.rel), Ogre::Node::TS_WORLD);
-    	mCamNode->pitch(Ogre::Degree(-mRotate * evt.state.Y.rel), Ogre::Node::TS_LOCAL);
+	game->handleMouseMove(evt.state.X.rel, evt.state.Y.rel);
+//	mCamNode->yaw(Ogre::Degree(-mRotate * evt.state.X.rel), Ogre::Node::TS_WORLD);
+//    	mCamNode->pitch(Ogre::Degree(-mRotate * evt.state.Y.rel), Ogre::Node::TS_LOCAL);
 	return true;
 }
 //-------------------------------------------------------------------------------------
@@ -221,7 +228,8 @@ bool Assignment2::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID i
 	switch (id)
 	{
 	case OIS::MB_Left:
-		mouseClicked = true;
+		game->serveBall();
+		game->handleMouseClick(HIT_START);
 		break;
 	default:
 	    break;
@@ -233,10 +241,10 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 	switch (id)
 	{
 	case OIS::MB_Left:
-		mouseClicked = false;
+		game->handleMouseClick(HIT_STOP);
 		break;
 	case OIS::MB_Right:
-		ball->getPhysicsObject().toggleRigidBodyAndKinematic(2);
+		//ball->getPhysicsObject().toggleRigidBodyAndKinematic(2);
 		break;
 	default:
 	    break;

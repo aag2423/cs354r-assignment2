@@ -95,9 +95,9 @@ void Game::toggleCamera(void) {
 		gameState.camMode = ABOVE_CAM;
 		newCamParent = graphicsEngine->getRootSceneNode();
 		newCamParent->addChild(cameraNode);
-		cameraNode->setPosition(0, 200, 500);
+		cameraNode->setPosition(0, 125, 500);
 		cameraNode->resetOrientation();
-        	cameraNode->pitch(Ogre::Degree(-25));
+        	cameraNode->pitch(Ogre::Degree(-20));
 	}
 }
 

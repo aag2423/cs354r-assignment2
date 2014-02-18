@@ -1,9 +1,13 @@
 
 
 #include "PlayGround.h"
+#include <iostream>
 
 PlayGround::PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Ogre::Real l, Ogre::Real w, Ogre::Real h) :
-	parentNode(0)
+	parentNode(0),
+	halfLength(l/2),
+	halfWidth(w/2),
+	halfHeight(h/2)
 {
 	parentNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 	makePlane(mSceneMgr, "wallf", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h);
@@ -39,6 +43,7 @@ PlayGround::PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngi
 //-------------------------------------------------------------------------------------
 
 PlayGround::~PlayGround(void) {
+	std::cout << "========= Debug: Play Ground Deleted =========" << std::endl;
 }
 //-------------------------------------------------------------------------------------
 
