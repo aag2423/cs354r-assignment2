@@ -41,6 +41,17 @@ void fill_audio(void *udata, Uint8 *stream, int len)
 	}
 }
 
+void Sound::start_ambient(){
+	std::cout << "starting ambient sound track \n";
+	ambient_chunk = NULL;
+	ambient_chunk = Mix_LoadWAV(ambient_sound);
+	if(ambient_chunk == NULL)
+		fprintf(stdout, "Unable to load ambient wav file: %s \n", Mix_GetError());
+	a_channel = Mix_PlayChannel(-1, ambient_chunk, -1);
+	if(a_channel == -1)
+		fprintf(stdout, "Unable to play wav file: %s \n", Mix_GetError());
+}
+
 void Sound::play_sound(const char* current)
 {
 	std::cout << "in play_sound \n";
@@ -49,7 +60,7 @@ void Sound::play_sound(const char* current)
 	if(sound_c == NULL)
 		fprintf(stdout, "Unable to load wav file: %s \n", Mix_GetError());
 		
-	channel = Mix_PlayChannel(-1, sound_c, -1);
+	channel = Mix_PlayChannel(-1, sound_c, 0);
 	if(channel == -1)
 		fprintf(stdout, "Unable to play wav file: %s \n", Mix_GetError());
 }

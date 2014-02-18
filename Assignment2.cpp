@@ -127,7 +127,7 @@ void Assignment2::createScene(void)
 	pointLight->setSpecularColour(0.8, 0.8, 0.8);
 	
 	soundHandler = new Sound();
-	soundHandler->play_sound(ambient_sound);
+	soundHandler->start_ambient();
 }
 //-------------------------------------------------------------------------------------
 void Assignment2::createFrameListener(void) {
