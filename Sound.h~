@@ -24,15 +24,18 @@ public:
 	~Sound(void);
 	void play_sound(const char*);
 	void start_ambient();
-	void set_ambient_volume(int vol);
+	void set_ambient_volume(int chan, int vol);
+	void loadAllWAV();
+	void play_sound_chunk(Mix_Chunk* current);
 };
 
 static SDL_AudioSpec s_wanted;
 static Mix_Chunk *sound_c; 
 static Mix_Chunk *ambient_chunk;
+static Mix_Chunk *point_up_c;
 static Uint8 *audio_chunk;
 static Uint32 audio_len;
 static Uint8 *audio_pos;
-static int channel, a_channel;
+static int channel, a_channel, p_u_chan;
 void fill_audio(void *udata, Uint8 *stream, int len);
 #endif

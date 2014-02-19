@@ -86,12 +86,12 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	}
 	physicsEngine.stepSimulation(evt.timeSinceLastFrame*10);
 	BallCollisionEvent be = ball->collidesWith(court, player);
-	if (be ==HIT_PLAYER)
-		std::cout << "play sound woo"<<std::endl;
+	if (be == HIT_PLAYER)
+		std::cout << "play sound ball hit player"<<std::endl;
 	if (be == HIT_FLOOR)
-		soundHandler->play_sound(point_down);
+		std::cout << "play sound ball hit floor"<<std::endl;		//soundHandler->play_sound(point_down);
 	if (be == HIT_WALL)
-		soundHandler->play_sound(point_up);
+		soundHandler->play_sound_chunk(point_up_c);//soundHandler->play_sound(point_up);
 	ball->updateGraphicsScene();
 }
 

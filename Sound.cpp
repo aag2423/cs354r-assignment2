@@ -17,6 +17,8 @@ Sound::Sound(void){
 	if (Mix_OpenAudio(s_wanted.freq, s_wanted.format, s_wanted.channels, s_wanted.samples) != 0){
 		fprintf(stdout, "Couldn't open audio: %s\n", SDL_GetError());
 	}
+	
+	loadAllWAV();
 }
 
 Sound::~Sound(void){
@@ -41,6 +43,14 @@ void fill_audio(void *udata, Uint8 *stream, int len)
 	}
 }
 
+void Sound::loadAllWAV(){
+	std::cout << "Loading all WAV files\n";
+	point_up_c = Mix_LoadWAV(point_up);
+	if(point_up_c == NULL)
+		fprintf(stdout, "Unable to load point up wav file: %s \n", Mix_GetError());
+	
+}
+
 void Sound::start_ambient(){
 	std::cout << "starting ambient sound track \n";
 	ambient_chunk = NULL;
@@ -52,6 +62,11 @@ void Sound::start_ambient(){
 		fprintf(stdout, "Unable to play wav file: %s \n", Mix_GetError());
 }
 
+void Sound::play_sound_chunk(Mix_Chunk* current){
+	if(Mix_PlayChannel(-1, current, 0) == -1)
+		fprintf(stdout, "Unable to play wav file: %s \n", Mix_GetError());
+}
+
 void Sound::play_sound(const char* current)
 {
 	std::cout << "in play_sound \n";
@@ -59,13 +74,13 @@ void Sound::play_sound(const char* current)
 	sound_c = Mix_LoadWAV(current);
 	if(sound_c == NULL)
 		fprintf(stdout, "Unable to load wav file: %s \n", Mix_GetError());
-		
+	
 	channel = Mix_PlayChannel(-1, sound_c, 0);
 	if(channel == -1)
 		fprintf(stdout, "Unable to play wav file: %s \n", Mix_GetError());
 }
 
-void Sound::set_ambient_volume(int vol)
+void Sound::set_ambient_volume(int chan, int vol)
 {
-		Mix_Volume(channel, vol);
+		Mix_Volume(chan, vol);
 }
