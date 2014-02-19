@@ -9,6 +9,13 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 	playerEnt->setCastShadows(true);
 	parentNode = box->getNode()->createChildSceneNode(pos);
 	parentNode->attachObject(playerEnt);
+	/*
+	Ogre::Entity* paddleEnt = mSceneMgr->createEntity( "paddleEnt", "cube.mesh" );
+	paddleEnt->setCastShadows(true);
+	paddleNode = parentNode->createChildSceneNode(Ogre::Vector3(pos.x, pos.y + 300.0, pos.z - 250));
+	paddleNode->scale(0.5, 0.5, 0.1);
+	paddleNode->attachObject(paddleEnt);
+	*/
 
 	Ogre::Real height = playerEnt->getBoundingBox().getSize().y;
 	Ogre::Real ratio = HEIGHT/height;

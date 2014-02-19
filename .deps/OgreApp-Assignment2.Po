@@ -858,7 +858,7 @@ OgreApp-Assignment2.o: Assignment2.cpp Assignment2.h BaseApplication.h \
  /usr/local/include/bullet/BulletDynamics/Vehicle/btWheelInfo.h \
  /usr/local/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
  /usr/local/include/bullet/BulletDynamics/Dynamics/btRigidBody.h Ball.h \
- /usr/include/OGRE/Ogre.h PlayGround.h Player.h \
+ /usr/include/OGRE/Ogre.h PlayGround.h Player.h Target.h \
  /usr/include/OGRE/OgreVector3.h Sound.h /usr/include/SDL/SDL.h \
  /usr/include/SDL/SDL_main.h /usr/include/SDL/SDL_stdinc.h \
  /usr/include/SDL/SDL_config.h /usr/include/SDL/SDL_platform.h \
@@ -3127,6 +3127,8 @@ Ball.h:
 PlayGround.h:
 
 Player.h:
+
+Target.h:
 
 /usr/include/OGRE/OgreVector3.h:
 

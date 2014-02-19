@@ -848,7 +848,7 @@ OgreApp-Game.o: Game.cpp Game.h PhysicsEngine.h PhysicsObject.h \
  /usr/include/OGRE/OgreShadowCameraSetupLiSPSM.h \
  /usr/include/OGRE/OgreShadowCameraSetupPlaneOptimal.h \
  /usr/include/OGRE/OgreShadowCameraSetupPSSM.h PlayGround.h Player.h \
- /usr/include/OGRE/OgreVector3.h Sound.h /usr/include/SDL/SDL.h \
+ Target.h /usr/include/OGRE/OgreVector3.h Sound.h /usr/include/SDL/SDL.h \
  /usr/include/SDL/SDL_main.h /usr/include/SDL/SDL_stdinc.h \
  /usr/include/SDL/SDL_config.h /usr/include/SDL/SDL_platform.h \
  /usr/include/strings.h /usr/include/inttypes.h /usr/include/iconv.h \
@@ -2829,6 +2829,8 @@ Ball.h:
 PlayGround.h:
 
 Player.h:
+
+Target.h:
 
 /usr/include/OGRE/OgreVector3.h:
 

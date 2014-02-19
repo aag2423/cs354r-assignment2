@@ -381,6 +381,20 @@ material Examples/RustySteel
 	}
 }
 
+material Examples/Target
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture target.jpeg
+			}
+		}
+	}
+}
+
 material Examples/Chrome
 {
 	technique

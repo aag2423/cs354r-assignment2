@@ -28,6 +28,11 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 	court = new PlayGround(mSceneMgr, physicsEngine, 750, 500, 250);
 	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -80, 180));
 	player = new Player(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -125, 200));
+	target1 = new Target("t1", mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -300), "Examples/Target");
+	target2 = new Target("t2", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -300), "Examples/Target");
+	target3 = new Target("t3", mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -300), "Examples/Target");
+	//wall = new Target("wall", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -200, -200), "Examples/Rockwall", 6.0, 2.0, 0.05);
+	
 	toggleCamera();
 }
 
@@ -37,6 +42,9 @@ Game::~Game(void) {
 	delete ball;
 	delete court;
 	delete player;
+	delete target1;
+	delete target2;
+	delete target3;
 	std::cout << "========= Debug: Game Deleted =========" << std::endl;
 }
 

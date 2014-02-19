@@ -9,6 +9,7 @@
 class Player {
 protected:
 	Ogre::SceneNode* parentNode;
+	Ogre::SceneNode* paddleNode;
 	PhysicsObject physicsObject;
 	PlayGround* court;
 public:

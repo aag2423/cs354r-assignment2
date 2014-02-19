@@ -53,7 +53,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_OgreApp_OBJECTS = OgreApp-PhysicsObject.$(OBJEXT) \
+am_OgreApp_OBJECTS = OgreApp-Target.$(OBJEXT) \
+	OgreApp-PhysicsObject.$(OBJEXT) \
 	OgreApp-PhysicsEngine.$(OBJEXT) OgreApp-Ball.$(OBJEXT) \
 	OgreApp-PlayGround.$(OBJEXT) OgreApp-Player.$(OBJEXT) \
 	OgreApp-Game.$(OBJEXT) OgreApp-BaseApplication.$(OBJEXT) \
@@ -99,12 +100,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run aclocal-1.11
+ACLOCAL = ${SHELL} /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AR = ar
-AUTOCONF = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run autoconf
-AUTOHEADER = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run autoheader
-AUTOMAKE = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run automake-1.11
+AUTOCONF = ${SHELL} /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2/missing --run autoconf
+AUTOHEADER = ${SHELL} /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2/missing --run autoheader
+AUTOMAKE = ${SHELL} /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2/missing --run automake-1.11
 AWK = gawk
 BULLET_CFLAGS = 
 BULLET_LIBS = 
@@ -147,7 +148,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run makeinfo
+MAKEINFO = ${SHELL} /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2/missing --run makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -182,10 +183,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/agarza/game_tech/cs354r-assignment2
-abs_srcdir = /u/agarza/game_tech/cs354r-assignment2
-abs_top_builddir = /u/agarza/game_tech/cs354r-assignment2
-abs_top_srcdir = /u/agarza/game_tech/cs354r-assignment2
+abs_builddir = /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2
+abs_srcdir = /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2
+abs_top_builddir = /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2
+abs_top_srcdir = /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -217,7 +218,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/install-sh
+install_sh = ${SHELL} /v/filer4b/v38q001/kvander/Desktop/354R/cs354r-assignment2/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -240,9 +241,9 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 ACLOCAL_AMFLAGS = -I m4
-noinst_HEADERS = PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h Sound.h
+noinst_HEADERS = Target.h PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h Sound.h
 OgreApp_CPPFLAGS = -I$(top_srcdir)
-OgreApp_SOURCES = PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp Sound.cpp
+OgreApp_SOURCES = Target.cpp PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp Sound.cpp
 OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS)
 OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS)
 EXTRA_DIST = buildit makeit
@@ -363,6 +364,7 @@ include ./$(DEPDIR)/OgreApp-PhysicsObject.Po
 include ./$(DEPDIR)/OgreApp-PlayGround.Po
 include ./$(DEPDIR)/OgreApp-Player.Po
 include ./$(DEPDIR)/OgreApp-Sound.Po
+include ./$(DEPDIR)/OgreApp-Target.Po
 
 .cpp.o:
 	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -384,6 +386,20 @@ include ./$(DEPDIR)/OgreApp-Sound.Po
 #	source='$<' object='$@' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(LTCXXCOMPILE) -c -o $@ $<
+
+OgreApp-Target.o: Target.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Target.o -MD -MP -MF $(DEPDIR)/OgreApp-Target.Tpo -c -o OgreApp-Target.o `test -f 'Target.cpp' || echo '$(srcdir)/'`Target.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Target.Tpo $(DEPDIR)/OgreApp-Target.Po
+#	source='Target.cpp' object='OgreApp-Target.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Target.o `test -f 'Target.cpp' || echo '$(srcdir)/'`Target.cpp
+
+OgreApp-Target.obj: Target.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Target.obj -MD -MP -MF $(DEPDIR)/OgreApp-Target.Tpo -c -o OgreApp-Target.obj `if test -f 'Target.cpp'; then $(CYGPATH_W) 'Target.cpp'; else $(CYGPATH_W) '$(srcdir)/Target.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Target.Tpo $(DEPDIR)/OgreApp-Target.Po
+#	source='Target.cpp' object='OgreApp-Target.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Target.obj `if test -f 'Target.cpp'; then $(CYGPATH_W) 'Target.cpp'; else $(CYGPATH_W) '$(srcdir)/Target.cpp'; fi`
 
 OgreApp-PhysicsObject.o: PhysicsObject.cpp
 	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-PhysicsObject.o -MD -MP -MF $(DEPDIR)/OgreApp-PhysicsObject.Tpo -c -o OgreApp-PhysicsObject.o `test -f 'PhysicsObject.cpp' || echo '$(srcdir)/'`PhysicsObject.cpp
