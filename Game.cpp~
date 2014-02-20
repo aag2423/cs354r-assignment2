@@ -93,22 +93,26 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 		std::cout << "play sound ball hit player"<<std::endl;
 	if (be == HIT_FLOOR)
 		std::cout << "play sound ball hit floor"<<std::endl;		//soundHandler->play_sound(point_down);
-	if (be == HIT_WALL)
-		soundHandler->play_sound_chunk(point_up_c);//soundHandler->play_sound(point_up);
 		
 	BallCollisionEvent te = ball->hitTarget(target1, target2, target3);
 	if(te == HIT_TARGET_1) {
 		target1->setHitTexture();
+		soundHandler->play_sound_chunk(point_up_c);
+		//soundHandler->play_sound(point_up);
 	}else {
 		target1->setNormalTexture();
 	}
 	if(te == HIT_TARGET_2) {
 		target2->setHitTexture();
+		soundHandler->play_sound_chunk(point_up_c);
+		//soundHandler->play_sound(point_up);
 	}else {
 		target2->setNormalTexture();
 	}
 	if(te == HIT_TARGET_3) {
 		target3->setHitTexture();
+		soundHandler->play_sound_chunk(point_up_c);
+		//soundHandler->play_sound(point_up);
 	}else {
 		target3->setNormalTexture();
 	}
