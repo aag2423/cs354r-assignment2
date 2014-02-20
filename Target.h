@@ -26,6 +26,8 @@ public:
 	void resetScore(void) { score = 0; };
 	int getScore(void) { return score; }
 	void setHitTexture(void) {
+		if(start == 0)
+			score++;
 		start = std::clock();
 		obj->setMaterialName("Examples/TennisBall"); 
 	}
@@ -35,7 +37,6 @@ public:
 		if (diff > 0.5) {
 			obj->setMaterialName("Examples/Target");
 			start = 0;
-			score++;
 		}
 	}
 };
