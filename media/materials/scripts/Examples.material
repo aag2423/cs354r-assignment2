@@ -395,6 +395,20 @@ material Examples/Target
 	}
 }
 
+material Examples/Target_Hit
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture target_hit.jpg
+			}
+		}
+	}
+}
+
 material Examples/Chrome
 {
 	technique

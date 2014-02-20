@@ -389,7 +389,21 @@ material Examples/Target
 		{
 			texture_unit
 			{
-				texture target.png
+				texture target.jpeg
+			}
+		}
+	}
+}
+
+material Examples/Target_Hit
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture target_hit.jpg
 			}
 		}
 	}

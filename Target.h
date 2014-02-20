@@ -25,11 +25,15 @@ public:
 	PhysicsObject& getPhysicsObject(void) { return physicsObject; }
 	void resetScore(void) { score = 0; };
 	int getScore(void) { return score; }
-	void setHitTexture(void) {
-		if(start == 0)
-			score++;
+	bool handleHit(int bonus) {
+		bool hit = false;
+		if(start == 0) {
+			score += bonus + 1;
+			hit = true;
+		}
 		start = std::clock();
-		obj->setMaterialName("Examples/TennisBall"); 
+		obj->setMaterialName("Examples/Target_Hit"); 
+		return hit;
 	}
 	void setNormalTexture(void) {
 		if (start == 0)  return;

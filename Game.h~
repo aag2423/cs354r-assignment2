@@ -35,7 +35,7 @@ enum {
 enum PlayerStep { NORMAL_STEP = 200, RUN_STEP = 350 };
 enum HitStrength { WEAK_HIT, NORMAL_HIT, STRONG_HIT };
 enum Gravity { EARTH_G = -10, MOON_G = -2 };
-enum CameraMode { ABOVE_CAM, FIRST_PERSON_CAM };
+enum CameraMode { ABOVE_CAM, THIRD_PERSON_CAM, FIRST_PERSON_CAM };
 enum shotHorizontalMode{ FOREHAND = -45, BACKHAND = 45, VOLLEY = -30, SMASH = 30 };
 
 
@@ -52,6 +52,8 @@ typedef struct GameState {
 	enum CameraMode camMode;
 	bool paused;	// whether the game is paused (in menu)
 	bool gameStarted;
+	bool combo;
+	int comboBonus;
 } GameState;
 
 typedef struct PlayerState {
@@ -91,6 +93,7 @@ public:
  	~Game(void);
 
 	int getScore(void) { return target1->getScore() + target2->getScore() + target3->getScore(); }
+	int getComboBonus(void) { return gameState.comboBonus; }
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);	

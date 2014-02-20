@@ -72,7 +72,7 @@ bool Ball::hitBy(bool hitting, Player* player, Ogre::Vector3 shotDirection) {
 		//physicsObject.setLinearVelocity(btVector3(0, 30, -100));
 		dir *= 100;
 		//physicsObject.setLinearVelocity(btVector3(dir.x, dir.y, dir.z));
-		if (shotDirection.y == 0) shotDirection.y = 30;
+		if (shotDirection.y == 0) shotDirection.y = 20;
 		physicsObject.setLinearVelocity(btVector3(shotDirection.x, shotDirection.y, -100));
 		if (!shooting)
 			playSound = true;

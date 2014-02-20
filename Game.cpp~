@@ -10,6 +10,8 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 	gameState.camMode = ABOVE_CAM;
 	gameState.paused = false;
 	gameState.gameStarted = false;
+	gameState.combo = false;
+	gameState.comboBonus = 0;
 
 
 	physicsEngine.setGravity(0, EARTH_G, 0);
@@ -26,12 +28,12 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 	graphicsEngine = mSceneMgr;
 	cameraNode = camNode;
 
-	court = new PlayGround(mSceneMgr, physicsEngine, 750, 500, 250);
+	court = new PlayGround(mSceneMgr, physicsEngine, COURT_LENGTH, COURT_WIDTH, COURT_HEIGHT);
 	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -80, 180));
 	player = new Player(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -125, 200));
-	target1 = new Target("t1", mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -375), "Examples/Target");
-	target2 = new Target("t2", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -375), "Examples/Target");
-	target3 = new Target("t3", mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -375), "Examples/Target");
+	target1 = new Target("t1", mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -COURT_LENGTH/2), "Examples/Target");
+	target2 = new Target("t2", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -COURT_LENGTH/2), "Examples/Target");
+	target3 = new Target("t3", mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -COURT_LENGTH/2), "Examples/Target");
 	//wall = new Target("wall", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -200, -200), "Examples/Rockwall", 6.0, 2.0, 0.05);
 	
 	toggleCamera();
@@ -53,6 +55,8 @@ Game::~Game(void) {
 
 void Game::reset(void) {
 	physicsEngine.setGravity(0, EARTH_G, 0);
+	gameState.combo = false;
+	gameState.comboBonus = 0;
 	target2->resetScore();
 	target3->resetScore();
 	target1->resetScore();
@@ -89,6 +93,10 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	}
 	physicsEngine.stepSimulation(evt.timeSinceLastFrame*10);
 	BallCollisionEvent be = ball->collidesWith(court, player);
+	if (be != NOTHING_HAPPENED) {
+		gameState.combo = false;
+		gameState.comboBonus = 0;
+	}
 	if (be == HIT_PLAYER)
 		std::cout << "play sound ball hit player"<<std::endl;
 	if (be == HIT_FLOOR)
@@ -97,18 +105,21 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 		soundHandler->play_sound_chunk(point_up_c);//soundHandler->play_sound(point_up);
 		
 	BallCollisionEvent te = ball->hitTarget(target1, target2, target3);
-	if(te == HIT_TARGET_1) {
-		target1->setHitTexture();
+	if(te == HIT_TARGET_1 && target1->handleHit(gameState.comboBonus)) {
+		gameState.comboBonus++;
+		gameState.combo = true;
 	}else {
 		target1->setNormalTexture();
 	}
-	if(te == HIT_TARGET_2) {
-		target2->setHitTexture();
+	if(te == HIT_TARGET_2 && target2->handleHit(gameState.comboBonus)) {
+		gameState.comboBonus++;
+		gameState.combo = true;
 	}else {
 		target2->setNormalTexture();
 	}
-	if(te == HIT_TARGET_3) {
-		target3->setHitTexture();
+	if(te == HIT_TARGET_3 && target3->handleHit(gameState.comboBonus)) {
+		gameState.comboBonus++;
+		gameState.combo = true;
 	}else {
 		target3->setNormalTexture();
 	}
@@ -123,6 +134,13 @@ void Game::toggleCamera(void) {
 	oldCamParent->removeChild(cameraNode);
 	Ogre::SceneNode* newCamParent;
 	if(gameState.camMode == ABOVE_CAM) {
+		gameState.camMode = THIRD_PERSON_CAM;
+		newCamParent = player->getNode();
+		newCamParent->addChild(cameraNode);
+		cameraNode->setPosition(0, 300, 200);
+		cameraNode->resetOrientation();
+        	cameraNode->pitch(Ogre::Degree(-10));
+	} else if (gameState.camMode == THIRD_PERSON_CAM){
 		gameState.camMode = FIRST_PERSON_CAM;
 		newCamParent = player->getNode();
 		newCamParent->addChild(cameraNode);
@@ -210,8 +228,10 @@ void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 		else if (dy < -10 && playerState.shotDirection.y == 0) 
 			playerState.shotDirection.y = SMASH;
 	}
-	if (gameState.camMode == FIRST_PERSON_CAM){
+	if (gameState.camMode != ABOVE_CAM){
 		player->getNode()->yaw(Ogre::Degree(-0.15*dx), Ogre::Node::TS_LOCAL);
+	}
+	if (gameState.camMode == FIRST_PERSON_CAM){
 		cameraNode->pitch(Ogre::Degree(-0.15*dy), Ogre::Node::TS_LOCAL);
 	} 
 }
