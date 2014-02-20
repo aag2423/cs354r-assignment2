@@ -91,7 +91,7 @@ void Assignment2::createCamera(void)
 {
 	mCamera = mSceneMgr->createCamera("MainCam");
 	mCamera->lookAt(Ogre::Vector3(0,0,0));
-	mCamera->setNearClipDistance(5);
+	mCamera->setNearClipDistance(10);
 	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MainCamNode", Ogre::Vector3(0,100,300));
         mCamNode->attachObject(mCamera);
         //mCamNode->pitch(Ogre::Degree(360));

@@ -87,7 +87,8 @@ void Game::serveBall(void) {
 
 void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if(gameState.paused) return;
-	movePlayer(evt);
+	if (!gameState.gameStarted) return;
+		player->move(playerState, evt);
 	if(ball->hitBy(playerState.hitting, player, playerState.shotDirection)){
 		soundHandler->play_sound(ball_hit);
 	}
@@ -158,24 +159,6 @@ void Game::toggleCamera(void) {
 		player->getNode()->resetOrientation();
         	cameraNode->pitch(Ogre::Degree(-10));
 	}
-}
-
-//-------------------------------------------------------------------------------------
-
-void Game::movePlayer(const Ogre::FrameEvent& evt) {
-	if (!gameState.gameStarted) return;
-	Ogre::Vector3 direction(0, 0, 0);
-	if (playerState.movingLeft)
-		direction.x -= playerState.step;
-	if (playerState.movingRight)
-		direction.x += playerState.step;
-	if (playerState.movingForward)
-		direction.z -= playerState.step;
-	if (playerState.movingBackward)
-		direction.z += playerState.step;
-	
-	// check if player runs off court, move according to direction
-	player->move(direction*evt.timeSinceLastFrame);
 }
 
 //-------------------------------------------------------------------------------------

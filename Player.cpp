@@ -5,10 +5,19 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 	parentNode(0),
 	court(box)
 {
-	Ogre::Entity* playerEnt = mSceneMgr->createEntity( "playerEnt", "ninja.mesh" );
+	playerEnt = mSceneMgr->createEntity( "playerEnt", "ninja.mesh" );
 	playerEnt->setCastShadows(true);
 	parentNode = box->getNode()->createChildSceneNode(pos);
 	parentNode->attachObject(playerEnt);
+
+
+	walkAnimation = playerEnt->getAnimationState("Walk");
+        walkAnimation->setLoop(true);
+        walkAnimation->setEnabled(true);
+
+	shootAnimation = playerEnt->getAnimationState("Attack3");
+        shootAnimation->setLoop(true);
+        shootAnimation->setEnabled(true);
 	/*
 	Ogre::Entity* paddleEnt = mSceneMgr->createEntity( "paddleEnt", "cube.mesh" );
 	paddleEnt->setCastShadows(true);
@@ -44,8 +53,19 @@ Player::~Player(void) {
 	std::cout << "========= Debug: Player Deleted =========" << std::endl;
 }
 
-void Player::move(const Ogre::Vector3& direction) {
+void Player::move(PlayerState& playerState, const Ogre::FrameEvent& evt) {
 	
+	Ogre::Vector3 direction(0, 0, 0);
+	if (playerState.movingLeft)
+		direction.x -= playerState.step;
+	if (playerState.movingRight)
+		direction.x += playerState.step;
+	if (playerState.movingForward)
+		direction.z -= playerState.step;
+	if (playerState.movingBackward)
+		direction.z += playerState.step;
+	direction *= evt.timeSinceLastFrame;
+
 	parentNode->translate(direction, Ogre::Node::TS_LOCAL);
 	Ogre::Vector3 range;
 	court->getHalfMovaRange(range);
@@ -59,7 +79,15 @@ void Player::move(const Ogre::Vector3& direction) {
 	
 	Ogre::Quaternion q = parentNode->getOrientation();
 
-	
+	if(direction.x != 0 || direction.z != 0)
+		if (playerState.step == NORMAL_STEP)
+			walkAnimation->addTime(evt.timeSinceLastFrame*4);
+		else		
+			walkAnimation->addTime(evt.timeSinceLastFrame*8);
+	if (playerState.hitting) 
+		shootAnimation->addTime(evt.timeSinceLastFrame*2);
+	else 
+		shootAnimation->setTimePosition(0);
 	btTransform playerTrans;
 	physicsObject.getWorldTransform(playerTrans);
 	playerTrans.setOrigin(btVector3(playerPos.x, playerPos.y, playerPos.z));

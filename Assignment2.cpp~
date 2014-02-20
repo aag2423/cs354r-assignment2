@@ -20,6 +20,7 @@ Assignment2::Assignment2(void) :
 Assignment2::~Assignment2(void)
 {
 	delete game;
+	delete soundHandler;
 	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
 //------------------------------------------------------------------------------------

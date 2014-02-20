@@ -87,7 +87,8 @@ void Game::serveBall(void) {
 
 void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if(gameState.paused) return;
-	movePlayer(evt);
+	if (!gameState.gameStarted) return;
+		player->move(playerState, evt);
 	if(ball->hitBy(playerState.hitting, player, playerState.shotDirection)){
 		soundHandler->play_sound(ball_hit);
 	}
@@ -103,7 +104,7 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 		std::cout << "play sound ball hit floor"<<std::endl;		//soundHandler->play_sound(point_down);
 		
 	BallCollisionEvent te = ball->hitTarget(target1, target2, target3);
-<<<<<<< HEAD
+
 	if(te == HIT_TARGET_1 && target1->handleHit(gameState.comboBonus)) {
 		gameState.comboBonus++;
 		gameState.combo = true;
@@ -122,20 +123,6 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 		gameState.comboBonus++;
 		gameState.combo = true;
 		soundHandler->play_sound(point_up);
-=======
-	if(te == HIT_TARGET_1) {
-		target1->setHitTexture();
-	}else {
-		target1->setNormalTexture();
-	}
-	if(te == HIT_TARGET_2) {
-		target2->setHitTexture();
-	}else {
-		target2->setNormalTexture();
-	}
-	if(te == HIT_TARGET_3) {
-		target3->setHitTexture();
->>>>>>> bbf52912360c7a95c9b6352b8251aa31cdd0cc83
 	}else {
 		target3->setNormalTexture();
 	}
@@ -177,19 +164,6 @@ void Game::toggleCamera(void) {
 //-------------------------------------------------------------------------------------
 
 void Game::movePlayer(const Ogre::FrameEvent& evt) {
-	if (!gameState.gameStarted) return;
-	Ogre::Vector3 direction(0, 0, 0);
-	if (playerState.movingLeft)
-		direction.x -= playerState.step;
-	if (playerState.movingRight)
-		direction.x += playerState.step;
-	if (playerState.movingForward)
-		direction.z -= playerState.step;
-	if (playerState.movingBackward)
-		direction.z += playerState.step;
-	
-	// check if player runs off court, move according to direction
-	player->move(direction*evt.timeSinceLastFrame);
 }
 
 //-------------------------------------------------------------------------------------
