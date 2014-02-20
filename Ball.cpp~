@@ -13,8 +13,7 @@ Ball::Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& engine, PlayGround* box
 	parentNode(0),
 	physicsEngine(&engine),
 	colliding(false),
-	shooting(false),
-	start(0)
+	shooting(false)
 {
 	Ogre::Entity* entBall = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
 	entBall->setCastShadows(true);

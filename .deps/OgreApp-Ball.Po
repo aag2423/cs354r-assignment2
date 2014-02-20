@@ -846,7 +846,8 @@ OgreApp-Ball.o: Ball.cpp Ball.h /usr/include/OGRE/Ogre.h \
  /usr/local/include/bullet/BulletDynamics/Vehicle/btVehicleRaycaster.h \
  /usr/local/include/bullet/BulletDynamics/Vehicle/btWheelInfo.h \
  /usr/local/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
- /usr/local/include/bullet/BulletDynamics/Dynamics/btRigidBody.h Player.h
+ /usr/local/include/bullet/BulletDynamics/Dynamics/btRigidBody.h Player.h \
+ Target.h
 
 Ball.h:
 
@@ -2809,3 +2810,5 @@ PhysicsObject.h:
 /usr/local/include/bullet/BulletDynamics/Dynamics/btRigidBody.h:
 
 Player.h:
+
+Target.h:

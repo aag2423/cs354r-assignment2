@@ -29,7 +29,7 @@ public:
 	void setNormalTexture(void) {
 		if (start == 0)  return;
 		double diff = ( std::clock() - start ) / (double)CLOCKS_PER_SEC;
-		if (diff > 0.5) {
+		if (diff > 1) {
 			obj->setMaterialName("Examples/Target");
 			start = 0;
 		}
