@@ -80,8 +80,10 @@ void Assignment2::setupCEGUI(void) {
 	wmgr.getWindow("PauseRoot/Menu/Resume")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::resume_game, this));
 	wmgr.getWindow("PauseRoot/Menu/Quit")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::quit, this));
 	wmgr.getWindow("PauseRoot/Menu/Config")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::configure_game, this));
-	wmgr.getWindow("ConfigRoot/Menu/Cancel")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::cancel_config, this));
+	wmgr.getWindow("ConfigRoot/Menu/Return")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::config_return, this));
+	wmgr.getWindow("ConfigRoot/Menu/VolumeScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setVolume, this));
 }
+
 //-------------------------------------------------------------------------------------
 
 void Assignment2::createCamera(void)
@@ -176,6 +178,7 @@ void Assignment2::createFrameListener(void) {
 //-------------------------------------------------------------------------------------
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+	static char score_buf[5];
 	if (mWindow->isClosed()) return false;
 	if (mShutDown) return false;
 	mKeyboard->capture();
@@ -183,6 +186,8 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//mTrayMgr->frameRenderingQueued(evt);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	game->runNextFrame(evt);
+	sprintf(score_buf, "%d", game->getScore());
+	CEGUI::WindowManager::getSingleton().getWindow("ScoreRoot")->setText(score_buf);
 	updatePanel();
         return true;
 }
@@ -204,6 +209,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 			game->handleKeyboardEvent(PAUSE);
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);
+			CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot")->setVisible(false);
 			if(mPaused)
 				CEGUI::MouseCursor::getSingleton().show();
 			else
@@ -348,6 +354,7 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 	return true;
 }
 //-------------------------------------------------------------------------------------
+
 // CEGUI events
 bool Assignment2::quit(const CEGUI::EventArgs &e) {
         mShutDown = true;
@@ -371,11 +378,17 @@ bool Assignment2::configure_game(const CEGUI::EventArgs &e) {
 }
 //-------------------------------------------------------------------------------------
 
-bool Assignment2::cancel_config(const CEGUI::EventArgs &e) {
+bool Assignment2::config_return(const CEGUI::EventArgs &e) {
 	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot")->setVisible(true);
         CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot")->setVisible(false);
         return true;
 }
+
+bool Assignment2::config_setVolume(const CEGUI::EventArgs &e) {
+	CEGUI::Scrollbar *vol = (CEGUI::Scrollbar*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/VolumeScrollbar");
+	soundHandler->set_ambient_volume(a_channel, (vol->getScrollPosition() * 128));
+}
+
 //--------------
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN

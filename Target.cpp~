@@ -7,7 +7,8 @@ Target::Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsE
 	length(x),
 	height(y),
 	width(z),
-	start(0)
+	start(0),
+	score(0)
 {
 	obj = mSceneMgr->createEntity(name, "cube.mesh");
 	obj->setCastShadows(true);
@@ -16,7 +17,7 @@ Target::Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsE
 	parentNode->scale(length, height, width);
 	parentNode->attachObject(obj);
 	physicsObject.setToBox(
-		btVector3(40, 40, 20),
+		btVector3(100*x, 100*y, 100*z),
 		100,
 		btQuaternion(0, 0, 0, 1),
 		btVector3(pos.x, pos.y, pos.z)

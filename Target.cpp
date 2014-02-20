@@ -17,7 +17,7 @@ Target::Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsE
 	parentNode->scale(length, height, width);
 	parentNode->attachObject(obj);
 	physicsObject.setToBox(
-		btVector3(40, 40, 20),
+		btVector3(50*x, 50*y, 50*z),
 		100,
 		btQuaternion(0, 0, 0, 1),
 		btVector3(pos.x, pos.y, pos.z)
