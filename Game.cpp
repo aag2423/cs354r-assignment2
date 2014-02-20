@@ -11,6 +11,7 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 	gameState.paused = false;
 	gameState.gameStarted = false;
 
+
 	physicsEngine.setGravity(0, EARTH_G, 0);
 
 	playerState.step = NORMAL_STEP;
@@ -28,9 +29,9 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 	court = new PlayGround(mSceneMgr, physicsEngine, 750, 500, 250);
 	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -80, 180));
 	player = new Player(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -125, 200));
-	target1 = new Target("t1", mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -300), "Examples/Target");
-	target2 = new Target("t2", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -300), "Examples/Target");
-	target3 = new Target("t3", mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -300), "Examples/Target");
+	target1 = new Target("t1", mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -375), "Examples/Target");
+	target2 = new Target("t2", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -375), "Examples/Target");
+	target3 = new Target("t3", mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -375), "Examples/Target");
 	//wall = new Target("wall", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -200, -200), "Examples/Rockwall", 6.0, 2.0, 0.05);
 	
 	toggleCamera();
@@ -52,7 +53,9 @@ Game::~Game(void) {
 
 void Game::reset(void) {
 	physicsEngine.setGravity(0, EARTH_G, 0);
-
+	target2->resetScore();
+	target3->resetScore();
+	target1->resetScore();
 	playerState.step = NORMAL_STEP;
 	playerState.strength = NORMAL_HIT;
 	playerState.movingLeft = false;
@@ -92,6 +95,24 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 		std::cout << "play sound ball hit floor"<<std::endl;		//soundHandler->play_sound(point_down);
 	if (be == HIT_WALL)
 		soundHandler->play_sound_chunk(point_up_c);//soundHandler->play_sound(point_up);
+		
+	BallCollisionEvent te = ball->hitTarget(target1, target2, target3);
+	if(te == HIT_TARGET_1) {
+		target1->setHitTexture();
+	}else {
+		target1->setNormalTexture();
+	}
+	if(te == HIT_TARGET_2) {
+		target2->setHitTexture();
+	}else {
+		target2->setNormalTexture();
+	}
+	if(te == HIT_TARGET_3) {
+		target3->setHitTexture();
+	}else {
+		target3->setNormalTexture();
+	}
+	
 	ball->updateGraphicsScene();
 }
 

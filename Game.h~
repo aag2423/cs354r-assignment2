@@ -21,6 +21,7 @@ game.reset();
 #include "Ball.h"
 #include "PlayGround.h"
 #include "Player.h"
+#include "Target.h"
 #include <OgreVector3.h>
 #include "Sound.h"
 
@@ -76,6 +77,10 @@ protected:
 	Ball* ball;
 	PlayGround* court;
 	Player* player;
+	Target* target1;
+	Target* target2;
+	Target* target3;
+	Target* wall;
 
 	PlayerState playerState;
 private:
@@ -85,6 +90,7 @@ public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod);
  	~Game(void);
 
+	int getScore(void) { return target1->getScore() + target2->getScore() + target3->getScore(); }
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);	

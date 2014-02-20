@@ -14,11 +14,14 @@ Jiawei Guo, jg44347
 #include "PlayGround.h"
 #include "PhysicsEngine.h"
 #include "Player.h"
+#include "Target.h"
 #include <iostream>
 #include <btBulletDynamicsCommon.h>
 
 enum BallCollisionEvent {
-	HIT_TARGET, HIT_WALL, HIT_FLOOR, HIT_CEILING, HIT_PLAYER, NOTHING_HAPPENED
+	NOTHING_HAPPENED,
+	HIT_TARGET_1, HIT_TARGET_2, HIT_TARGET_3,
+	HIT_WALL, HIT_FLOOR, HIT_CEILING, HIT_PLAYER
 };
 
 class Ball {
@@ -34,6 +37,7 @@ public:
 	~Ball(void);
 	Ogre::SceneNode* getNode() { return parentNode; }
 	bool hitBy(bool hitting, Player* player, Ogre::Vector3 shotDirection=Ogre::Vector3::ZERO);
+	BallCollisionEvent hitTarget(Target* t1, Target* t2, Target* t3);
 	BallCollisionEvent collidesWith(PlayGround* court, Player* p);
 	void updateGraphicsScene(void);
 	void setPositionAndPause(const Ogre::Vector3& pos=Ogre::Vector3::ZERO);

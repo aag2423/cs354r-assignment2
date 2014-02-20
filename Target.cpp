@@ -2,12 +2,15 @@
 
 Target::Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos, const Ogre::String& texture, Ogre::Real x, Ogre::Real y, Ogre::Real z) :
 	parentNode(0),
+	obj(NULL),
 	court(box),
 	length(x),
 	height(y),
-	width(z)
+	width(z),
+	start(0),
+	score(0)
 {
-	Ogre::Entity* obj = mSceneMgr->createEntity(name, "cube.mesh");
+	obj = mSceneMgr->createEntity(name, "cube.mesh");
 	obj->setCastShadows(true);
 	obj->setMaterialName(texture);
 	parentNode = box->getNode()->createChildSceneNode(pos);

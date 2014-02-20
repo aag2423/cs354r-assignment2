@@ -72,7 +72,7 @@ bool Ball::hitBy(bool hitting, Player* player, Ogre::Vector3 shotDirection) {
 		//physicsObject.setLinearVelocity(btVector3(0, 30, -100));
 		dir *= 100;
 		//physicsObject.setLinearVelocity(btVector3(dir.x, dir.y, dir.z));
-		if (shotDirection.y == 0) shotDirection.y = 10;
+		if (shotDirection.y == 0) shotDirection.y = 30;
 		physicsObject.setLinearVelocity(btVector3(shotDirection.x, shotDirection.y, -100));
 		if (!shooting)
 			playSound = true;
@@ -82,6 +82,26 @@ bool Ball::hitBy(bool hitting, Player* player, Ogre::Vector3 shotDirection) {
 	return playSound;
 }
 
+
+BallCollisionEvent Ball::hitTarget(Target* t1, Target* t2, Target* t3) {
+	MyPlaneContactResultCallback callback;
+        btDiscreteDynamicsWorld* world = physicsEngine->getPhysicsWorld();
+	btRigidBody* me = physicsObject.getRigidBody();
+
+	world->contactPairTest(me, t1->getPhysicsObject().getRigidBody(), callback);
+	if (callback.hit) {	
+		return HIT_TARGET_1;
+	}
+	world->contactPairTest(me, t2->getPhysicsObject().getRigidBody(), callback);
+	if (callback.hit) {	
+		return HIT_TARGET_2;
+	}
+	world->contactPairTest(me, t3->getPhysicsObject().getRigidBody(), callback);
+	if (callback.hit) {	
+		return HIT_TARGET_3;
+	}
+	return NOTHING_HAPPENED;
+}
 
 BallCollisionEvent Ball::collidesWith(PlayGround* court, Player* p) {
 	MyPlaneContactResultCallback callback;
@@ -111,7 +131,7 @@ BallCollisionEvent Ball::collidesWith(PlayGround* court, Player* p) {
 	}
 	world->contactPairTest(me, court->getPhysicsObject(BACK_PLANE).getRigidBody(), callback);
 	if (callback.hit) {	
-		result = HIT_TARGET;
+		result = HIT_WALL;
 	}
 	world->contactPairTest(me, court->getPhysicsObject(BOTTOM_PLANE).getRigidBody(), callback);
 	if (callback.hit) {	
