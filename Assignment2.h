@@ -8,6 +8,7 @@
 
 #include <CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
+#include <stdio.h>
 
 class Assignment2 : public BaseApplication
 {
@@ -39,8 +40,9 @@ protected:
 	bool quit(const CEGUI::EventArgs &e);
 	bool resume_game(const CEGUI::EventArgs &e);
 	bool configure_game(const CEGUI::EventArgs &e);
-	bool cancel_config(const CEGUI::EventArgs &e);
-
+	bool config_return(const CEGUI::EventArgs &e);
+	bool config_setVolume(const CEGUI::EventArgs &e);
+	
 	void updatePanel(void);
 	void moveBall(const Ogre::FrameEvent &evt);
 	virtual void createCamera(void);
