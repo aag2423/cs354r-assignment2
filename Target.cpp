@@ -6,7 +6,9 @@ Target::Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsE
 	court(box),
 	length(x),
 	height(y),
-	width(z)
+	width(z),
+	start(0),
+	score(0)
 {
 	obj = mSceneMgr->createEntity(name, "cube.mesh");
 	obj->setCastShadows(true);

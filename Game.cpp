@@ -11,6 +11,7 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 	gameState.paused = false;
 	gameState.gameStarted = false;
 
+
 	physicsEngine.setGravity(0, EARTH_G, 0);
 
 	playerState.step = NORMAL_STEP;
@@ -52,7 +53,9 @@ Game::~Game(void) {
 
 void Game::reset(void) {
 	physicsEngine.setGravity(0, EARTH_G, 0);
-
+	target2->resetScore();
+	target3->resetScore();
+	target1->resetScore();
 	playerState.step = NORMAL_STEP;
 	playerState.strength = NORMAL_HIT;
 	playerState.movingLeft = false;
@@ -109,7 +112,6 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	}else {
 		target3->setNormalTexture();
 	}
-	
 	
 	ball->updateGraphicsScene();
 }

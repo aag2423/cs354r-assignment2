@@ -13,6 +13,7 @@ protected:
 	PlayGround* court;
 	PhysicsObject physicsObject;
 	clock_t start;
+	int score;
 
 	Ogre::Real length;
 	Ogre::Real height;
@@ -22,6 +23,8 @@ public:
 	~Target(void);
 	Ogre::SceneNode* getNode(void) { return parentNode; }
 	PhysicsObject& getPhysicsObject(void) { return physicsObject; }
+	void resetScore(void) { score = 0; };
+	int getScore(void) { return score; }
 	void setHitTexture(void) {
 		start = std::clock();
 		obj->setMaterialName("Examples/TennisBall"); 
@@ -32,6 +35,7 @@ public:
 		if (diff > 0.5) {
 			obj->setMaterialName("Examples/Target");
 			start = 0;
+			score++;
 		}
 	}
 };

@@ -90,6 +90,7 @@ public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod);
  	~Game(void);
 
+	int getScore(void) { return target1->getScore() + target2->getScore() + target3->getScore(); }
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);	
