@@ -178,6 +178,7 @@ void Assignment2::createFrameListener(void) {
 //-------------------------------------------------------------------------------------
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+	static char score_buf[5];
 	if (mWindow->isClosed()) return false;
 	if (mShutDown) return false;
 	mKeyboard->capture();
@@ -185,6 +186,8 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//mTrayMgr->frameRenderingQueued(evt);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	game->runNextFrame(evt);
+	sprintf(score_buf, "%d", game->getScore());
+	CEGUI::WindowManager::getSingleton().getWindow("ScoreRoot")->setText(score_buf);
 	updatePanel();
         return true;
 }
