@@ -16,25 +16,18 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 
 	physicsEngine.setGravity(0, EARTH_G, 0);
 
-	playerState.step = NORMAL_STEP;
-	playerState.strength = NORMAL_HIT;
-	playerState.movingLeft = false;
-	playerState.movingRight = false;
-	playerState.movingForward = false;
-	playerState.movingBackward = false;
-	playerState.hitting = false;
-	playerState.shotDirection = 0;
-
 	graphicsEngine = mSceneMgr;
 	cameraNode = camNode;
 
 	court = new PlayGround(mSceneMgr, physicsEngine, COURT_LENGTH, COURT_WIDTH, COURT_HEIGHT);
-	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -80, 180));
-	player = new Player(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -125, 200));
+	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(5, -75, COURT_LENGTH/2 - 310));
+	player = new Player(mSceneMgr, physicsEngine, HUMAN, court, Ogre::Vector3(0, -125, COURT_LENGTH/2 - 300));
+	computer = new Player(mSceneMgr, physicsEngine, AI, court, Ogre::Vector3(0, -125, -COURT_LENGTH/2 + 300));
+	computer->getNode()->yaw(Ogre::Degree(180));
+	
 	target1 = new Target("t1", mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -COURT_LENGTH/2), "Examples/Target");
 	target2 = new Target("t2", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -COURT_LENGTH/2), "Examples/Target");
 	target3 = new Target("t3", mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -COURT_LENGTH/2), "Examples/Target");
-	//wall = new Target("wall", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -200, -200), "Examples/Rockwall", 6.0, 2.0, 0.05);
 	
 	toggleCamera();
 }
@@ -45,6 +38,7 @@ Game::~Game(void) {
 	delete ball;
 	delete court;
 	delete player;
+	delete computer;
 	delete target1;
 	delete target2;
 	delete target3;
@@ -54,47 +48,51 @@ Game::~Game(void) {
 //-------------------------------------------------------------------------------------
 
 void Game::reset(void) {
+
+	gameState.gameStarted = false;
 	physicsEngine.setGravity(0, EARTH_G, 0);
 	gameState.combo = false;
 	gameState.comboBonus = 0;
 	target2->resetScore();
 	target3->resetScore();
 	target1->resetScore();
-	playerState.step = NORMAL_STEP;
-	playerState.strength = NORMAL_HIT;
-	playerState.movingLeft = false;
-	playerState.movingRight = false;
-	playerState.movingForward = false;
-	playerState.movingBackward = false;
-	playerState.hitting = false;
-	playerState.shotDirection = 0;
 
-	ball->setPositionAndPause(Ogre::Vector3(0, -80, 180)); //this should set position both in physics engine and Ogre scene
-	player->setPosition(Ogre::Vector3(0, -125, 200)); // same as above
+	delete ball;
+	ball = new Ball(graphicsEngine, physicsEngine, court, Ogre::Vector3(5, -75, COURT_LENGTH/2 - 310));
 
-	gameState.gameStarted = false;
+	player->setPosition(Ogre::Vector3(5, -125, COURT_LENGTH/2 - 300));  
+	player->resetState(); 
+	computer->setPosition(Ogre::Vector3(5, -125, -COURT_LENGTH/2 + 300));
+	computer->getNode()->yaw(Ogre::Degree(180));
+	computer->resetState();
 }
 
 //-------------------------------------------------------------------------------------
 
-void Game::serveBall(void) {
-	if(!gameState.gameStarted)
-		ball->resume();
-	gameState.gameStarted = true;
+void Game::runAI(void) {
+	Ogre::Vector3 distance = ball->getNode()->getPosition() - computer->getNode()->getPosition();
+	if (distance.x > 0)  computer->playerState.movingLeft = true;
+	else  computer->playerState.movingLeft = false;
+	if (distance.x < 0)  computer->playerState.movingRight = true;
+	else  computer->playerState.movingRight = false;
 }
+
 
 //-------------------------------------------------------------------------------------
 
 void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if(gameState.paused) return;
 	if (!gameState.gameStarted) return;
-		player->move(playerState, evt);
-	if(ball->hitBy(playerState.hitting, player, playerState.shotDirection)){
-		soundHandler->play_sound(ball_hit);
-	}
-	physicsEngine.stepSimulation(evt.timeSinceLastFrame*10);
+
+	player->move(evt);
+	runAI();
+	computer->move(evt);
+	physicsEngine.stepSimulation(evt.timeSinceLastFrame*5);
+	if(ball->hitBy(player))	soundHandler->play_sound(ball_hit);
+	if(ball->hitBy(computer)) soundHandler->play_sound(ball_hit);
+
 	BallCollisionEvent be = ball->collidesWith(court, player);
-	if (be != NOTHING_HAPPENED) {
+	if (be == HIT_FLOOR) {
 		gameState.combo = false;
 		gameState.comboBonus = 0;
 	}
@@ -140,14 +138,14 @@ void Game::toggleCamera(void) {
 		gameState.camMode = THIRD_PERSON_CAM;
 		newCamParent = player->getNode();
 		newCamParent->addChild(cameraNode);
-		cameraNode->setPosition(0, 300, 200);
+		cameraNode->setPosition(0, 80, 50);
 		cameraNode->resetOrientation();
         	cameraNode->pitch(Ogre::Degree(-10));
 	} else if (gameState.camMode == THIRD_PERSON_CAM){
 		gameState.camMode = FIRST_PERSON_CAM;
 		newCamParent = player->getNode();
 		newCamParent->addChild(cameraNode);
-		cameraNode->setPosition(0, 180, 0);
+		cameraNode->setPosition(0, 60, 0);
 		cameraNode->resetOrientation();
         	cameraNode->pitch(Ogre::Degree(-15));
 	} else {
@@ -166,31 +164,31 @@ void Game::toggleCamera(void) {
 void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 	switch (evt) {
 	case GO_LEFT:
-		playerState.movingLeft = true; break;
+		player->playerState.movingLeft = true; break;
 	case GO_RIGHT:
-		playerState.movingRight = true; break;
+		player->playerState.movingRight = true; break;
 	case GO_FORWARD:
-		playerState.movingForward = true; break;
+		player->playerState.movingForward = true; break;
 	case GO_BACKWARD:
-		playerState.movingBackward = true; break;
+		player->playerState.movingBackward = true; break;
 	case STOP_LEFT:
-		playerState.movingLeft = false; break;
+		player->playerState.movingLeft = false; break;
 	case STOP_RIGHT:
-		playerState.movingRight = false; break;
+		player->playerState.movingRight = false; break;
 	case STOP_FORWARD:
-		playerState.movingForward = false; break;
+		player->playerState.movingForward = false; break;
 	case STOP_BACKWARD:
-		playerState.movingBackward = false; break;
+		player->playerState.movingBackward = false; break;
 	case RUN:
-	        playerState.step = RUN_STEP; break;
+	        player->playerState.step = RUN_STEP; break;
 	case STOP_RUN:
-	        playerState.step = NORMAL_STEP; break;
+	        player->playerState.step = NORMAL_STEP; break;
 	case USE_WEAK_HIT:
-        	playerState.strength = WEAK_HIT; break;
+        	player->playerState.strength = WEAK_HIT; break;
 	case USE_NORMAL_HIT:
-	        playerState.strength = NORMAL_HIT; break;
+	        player->playerState.strength = NORMAL_HIT; break;
 	case USE_STRONG_HIT:
-	        playerState.strength = STRONG_HIT; break;
+	        player->playerState.strength = STRONG_HIT; break;
 	case TOGGLE_CAMERA:
 		toggleCamera(); 
 		break;
@@ -203,15 +201,16 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 }
 
 void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
-	if (playerState.hitting) {
-		if (dx > 10 && playerState.shotDirection.x == 0)
-			playerState.shotDirection.x = BACKHAND;
-		else if (dx < -10 && playerState.shotDirection.x == 0)
-                        playerState.shotDirection.x = FOREHAND;
-		if (dy > 10 && playerState.shotDirection.y == 0) 
-			playerState.shotDirection.y = VOLLEY;
-		else if (dy < -10 && playerState.shotDirection.y == 0) 
-			playerState.shotDirection.y = SMASH;
+	PlayerState* playerState = &(player->playerState);
+	if (playerState->hitting) {
+		if (dx > 5 && playerState->shotDirection.x == 0)
+			playerState->shotDirection.x = BACKHAND;
+		else if (dx < -5 && playerState->shotDirection.x == 0)
+                        playerState->shotDirection.x = FOREHAND;
+		if (dy > 5 && playerState->shotDirection.y == 0) 
+			playerState->shotDirection.y = VOLLEY;
+		else if (dy < -5 && playerState->shotDirection.y == 0) 
+			playerState->shotDirection.y = SMASH;
 	}
 	if (gameState.camMode != ABOVE_CAM){
 		player->getNode()->yaw(Ogre::Degree(-0.15*dx), Ogre::Node::TS_LOCAL);
@@ -224,11 +223,12 @@ void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 void Game::handleMouseClick(enum MouseEvent evt) {
 	switch (evt) {
 	case HIT_START:
-		playerState.hitting = true;
+		player->playerState.hitting = true;
+		gameState.gameStarted = true;
 		break;
 	case HIT_STOP:
-		playerState.hitting = false;
-		playerState.shotDirection = 0; 
+		player->playerState.hitting = false;
+		player->playerState.shotDirection = 0; 
 		break;
 	default: break;
 	}

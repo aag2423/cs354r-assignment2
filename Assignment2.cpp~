@@ -91,7 +91,7 @@ void Assignment2::createCamera(void)
 {
 	mCamera = mSceneMgr->createCamera("MainCam");
 	mCamera->lookAt(Ogre::Vector3(0,0,0));
-	mCamera->setNearClipDistance(5);
+	mCamera->setNearClipDistance(10);
 	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("MainCamNode", Ogre::Vector3(0,100,300));
         mCamNode->attachObject(mCamera);
         //mCamNode->pitch(Ogre::Degree(360));
@@ -102,7 +102,7 @@ void Assignment2::createScene(void)
 {
 	setupCEGUI();
 
-	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
+	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	game = new Game(mSceneMgr, mCamNode);
@@ -177,18 +177,23 @@ void Assignment2::createFrameListener(void) {
 	updatePanel();
 }
 //-------------------------------------------------------------------------------------
+
+bool Assignment2::frameStarted (const Ogre::FrameEvent &evt) {
+	static char score_buf[5];
+	game->runNextFrame(evt);
+	sprintf(score_buf, "%d", game->getScore());
+	CEGUI::WindowManager::getSingleton().getWindow("ScoreRoot")->setText(score_buf);
+	return true;
+	
+}
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
-	static char score_buf[5];
 	if (mWindow->isClosed()) return false;
 	if (mShutDown) return false;
 	mKeyboard->capture();
 	mMouse->capture();
 	//mTrayMgr->frameRenderingQueued(evt);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-	game->runNextFrame(evt);
-	sprintf(score_buf, "%d", game->getScore());
-	CEGUI::WindowManager::getSingleton().getWindow("ScoreRoot")->setText(score_buf);
 	updatePanel();
         return true;
 }
@@ -328,7 +333,6 @@ bool Assignment2::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID i
 	switch (id)
 	{
 	case OIS::MB_Left:
-		game->serveBall();
 		game->handleMouseClick(HIT_START);
 		break;
 	default:

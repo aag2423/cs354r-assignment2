@@ -27,9 +27,9 @@ PlayGround::PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngi
 	backPlane.setToStaticPlane(btVector3(0,0,1), -l/2);
 	//bottomPlane.setFriction(0.5);  
 	//topPlane.setFriction(0.5);  
-	leftPlane.setFriction(1);  
-	rightPlane.setFriction(1);  
-	bottomPlane.setRestitution(0.9); 
+	leftPlane.setFriction(0.9);  
+	rightPlane.setFriction(0.9);  
+	bottomPlane.setRestitution(0.8); 
 	topPlane.setRestitution(0.5); 
 	leftPlane.setRestitution(0.8); 
 	rightPlane.setRestitution(0.8); 

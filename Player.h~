@@ -7,14 +7,16 @@
 #include "PhysicsEngine.h"
 
 
-enum PlayerStep { NORMAL_STEP = 200, RUN_STEP = 350 };
-enum HitStrength { WEAK_HIT, NORMAL_HIT, STRONG_HIT };
-enum shotMode{ FOREHAND = -45, BACKHAND = 45, VOLLEY = -30, SMASH = 30 };
+enum PlayerType { HUMAN, AI };
+enum PlayerStep { SMALL_STEP = 50, NORMAL_STEP = 200, RUN_STEP = 350 };
+enum HitStrength { WEAK_HIT = 50, NORMAL_HIT = 100, STRONG_HIT = 150 };
+enum shotMode{ FOREHAND = -30, BACKHAND = 30, VOLLEY = -35, SMASH = 30 };
 
 typedef struct PlayerState {
 	Ogre::Vector3 shotDirection;
 	enum PlayerStep step;
 	enum HitStrength strength;
+	enum PlayerType type;
 	bool movingLeft;
 	bool movingRight;
 	bool movingForward;
@@ -33,10 +35,12 @@ protected:
 	PhysicsObject physicsObject;
 	PlayGround* court;
 public:
+	PlayerState playerState;
 	const static Ogre::Real HEIGHT = 70.0f;
-	Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos=Ogre::Vector3::ZERO);
+	Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayerType type, PlayGround* box, const Ogre::Vector3& pos=Ogre::Vector3::ZERO);
 	~Player(void);
-	void move(PlayerState& playerState, const Ogre::Vector3& direction, const Ogre::FrameEvent& evt) ;
+	void resetState(void);
+	void move(const Ogre::FrameEvent& evt) ;
 	void setPosition(const Ogre::Vector3& pos);
 	Ogre::SceneNode* getNode(void) { return parentNode; }
 	PhysicsObject& getPhysicsObject(void) { return physicsObject; }

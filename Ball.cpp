@@ -20,11 +20,10 @@ Ball::Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& engine, PlayGround* box
 	entBall->setMaterialName("Examples/TennisBall");
 
 	parentNode = box->getNode()->createChildSceneNode(pos);
-	parentNode->attachObject(entBall);
-
-	Ogre::Real radius = entBall->getBoundingRadius()* (1.0f - Ogre::MeshManager::getSingleton().getBoundsPaddingFactor());
-	Ogre::Real ratio = BALL_RADIUS/radius;
-	parentNode->scale(ratio, ratio, ratio);
+	Ogre::SceneNode* tempNode = parentNode->createChildSceneNode();
+	tempNode->attachObject(entBall);
+	Ogre::Real ratio = BALL_RADIUS/100;
+	tempNode->scale(ratio, ratio, ratio);
 	
 	physicsObject.setToSphere(
 		BALL_RADIUS, 
@@ -36,13 +35,14 @@ Ball::Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& engine, PlayGround* box
 	physicsObject.setLinearVelocity(btVector3(0,0,0));
 	physicsObject.setFriction(0.5);  
 	physicsObject.setAngularVelocity(btVector3(0.2f, 0.5f, 0.2f));
-	physicsObject.toggleRigidBodyAndKinematic(); // change to Kinematic
 	engine.addObject(&physicsObject);
 }
 
 //-------------------------------------------------------------------------------------
 
 Ball::~Ball(void) {
+	physicsEngine->removeObject(&physicsObject);
+	parentNode->getParentSceneNode()->removeChild(parentNode);
 	std::cout << "========= Debug: Ball Deleted =========" << std::endl;
 }
 
@@ -59,8 +59,8 @@ void Ball::updateGraphicsScene(void) {
 
 //-------------------------------------------------------------------------------------
 
-bool Ball::hitBy(bool hitting, Player* player, Ogre::Vector3 shotDirection) {
-	if (!hitting) {
+bool Ball::hitBy(Player* player) {
+	if (!player->playerState.hitting) {
 		shooting =false;
 		return false;
 	}
@@ -68,17 +68,20 @@ bool Ball::hitBy(bool hitting, Player* player, Ogre::Vector3 shotDirection) {
 	Ogre::SceneNode* playerNode = player->getNode();
 	Ogre::Vector3 dir = playerNode->getOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 	Ogre::Vector3 distance = parentNode->getPosition() - (playerNode->getPosition() + Ogre::Vector3(0, 40, 0));
-	if(distance.length() < 150 && distance.dotProduct(dir) >= 0) {
+	Ogre::Real limit = player->playerState.type == AI ? 50 : 80;
+	if(distance.length() < limit && distance.dotProduct(dir) >= 0) {
 		//physicsObject.setLinearVelocity(btVector3(0, 30, -100));
 		dir *= 100;
 		//physicsObject.setLinearVelocity(btVector3(dir.x, dir.y, dir.z));
+		Ogre::Vector3 shotDirection = player->playerState.shotDirection;
 		if (shotDirection.y == 0) shotDirection.y = 20;
-		physicsObject.setLinearVelocity(btVector3(shotDirection.x, shotDirection.y, -100));
+		Ogre::Real z = player->playerState.strength;
+		if (player->playerState.type == HUMAN) {z = -z; }
+		physicsObject.setLinearVelocity(btVector3(shotDirection.x, shotDirection.y, z));
 		if (!shooting)
 			playSound = true;
 		shooting = true;
-	} else
-		shooting =false;
+	}
 	return playSound;
 }
 
@@ -146,23 +149,4 @@ BallCollisionEvent Ball::collidesWith(PlayGround* court, Player* p) {
 		if (result != NOTHING_HAPPENED) colliding = true;
 		return result;
 	}
-}
-//-------------------------------------------------------------------------------------
-void Ball::setPositionAndPause(const Ogre::Vector3& pos) {
-	parentNode->setPosition(pos);
-	physicsEngine->removeObject(&physicsObject);
-	physicsObject.toggleRigidBodyAndKinematic();
-	btTransform trans;
-	physicsObject.getWorldTransform(trans);
-	trans.setOrigin(btVector3(pos.x, pos.y, pos.z));
-	physicsObject.setWorldTransform(trans);
-	physicsEngine->addObject(&physicsObject);
-}
-
-//-------------------------------------------------------------------------------------
-
-void Ball::resume(void) {
-	physicsEngine->removeObject(&physicsObject);
-	physicsObject.toggleRigidBodyAndKinematic(2);
-	physicsEngine->addObject(&physicsObject);
 }

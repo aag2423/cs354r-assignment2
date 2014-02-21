@@ -1,21 +1,38 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos) :  
+Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayerType type, PlayGround* box, const Ogre::Vector3& pos) :  
 	parentNode(0),
 	court(box)
 {
-	playerEnt = mSceneMgr->createEntity( "playerEnt", "ninja.mesh" );
-	playerEnt->setCastShadows(true);
+	playerState.type = type;
+	resetState();
+
+
 	parentNode = box->getNode()->createChildSceneNode(pos);
-	parentNode->attachObject(playerEnt);
+	if (type == HUMAN) {
+		playerEnt = mSceneMgr->createEntity( "playerEnt", "ninja.mesh" );
+		walkAnimation = playerEnt->getAnimationState("Walk");
+		shootAnimation = playerEnt->getAnimationState("Attack3");
+		Ogre::SceneNode* tempNode = parentNode->createChildSceneNode();
+		tempNode->attachObject(playerEnt);
+		Ogre::Real ratio = HEIGHT/195.649;
+		tempNode->scale(ratio, ratio, ratio);
+	} else {
+		playerEnt = mSceneMgr->createEntity( "computerEnt", "robot.mesh" );
+		walkAnimation = playerEnt->getAnimationState("Walk");
+		shootAnimation = playerEnt->getAnimationState("Shoot");
+		Ogre::SceneNode* tempNode = parentNode->createChildSceneNode();
+		tempNode->attachObject(playerEnt);
+		tempNode->yaw(Ogre::Degree(90));
+		Ogre::Real ratio = HEIGHT/101.673;
+		tempNode->scale(ratio, ratio, ratio);
+	}
+	playerEnt->setCastShadows(true);
 
-
-	walkAnimation = playerEnt->getAnimationState("Walk");
         walkAnimation->setLoop(true);
         walkAnimation->setEnabled(true);
 
-	shootAnimation = playerEnt->getAnimationState("Attack3");
         shootAnimation->setLoop(true);
         shootAnimation->setEnabled(true);
 	/*
@@ -25,12 +42,6 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 	paddleNode->scale(0.5, 0.5, 0.1);
 	paddleNode->attachObject(paddleEnt);
 	*/
-
-	Ogre::Real height = playerEnt->getBoundingBox().getSize().y;
-	Ogre::Real ratio = HEIGHT/height;
-	parentNode->scale(ratio, ratio, ratio);
-
-	Ogre::Vector3 collsionBox = playerEnt->getBoundingBox().getSize();
 
 	physicsObject.setToBox(
 		btVector3(10,HEIGHT,5),
@@ -53,7 +64,25 @@ Player::~Player(void) {
 	std::cout << "========= Debug: Player Deleted =========" << std::endl;
 }
 
-void Player::move(PlayerState& playerState, const Ogre::FrameEvent& evt) {
+void Player::resetState(void) {
+	if (playerState.type == AI) {
+		playerState.strength = NORMAL_HIT;
+		playerState.step = SMALL_STEP;
+		playerState.hitting = true;
+		playerState.shotDirection = Ogre::Vector3(0, 30, 0);
+	} else {
+		playerState.strength = NORMAL_HIT;
+		playerState.step = NORMAL_STEP;
+		playerState.hitting = false;
+		playerState.shotDirection = 0;
+	}
+	playerState.movingLeft = false;
+	playerState.movingRight = false;
+	playerState.movingForward = false;
+	playerState.movingBackward = false;
+}
+
+void Player::move(const Ogre::FrameEvent& evt) {
 	
 	Ogre::Vector3 direction(0, 0, 0);
 	if (playerState.movingLeft)
@@ -81,7 +110,7 @@ void Player::move(PlayerState& playerState, const Ogre::FrameEvent& evt) {
 
 	if(direction.x != 0 || direction.z != 0)
 		if (playerState.step == NORMAL_STEP)
-			walkAnimation->addTime(evt.timeSinceLastFrame*4);
+			walkAnimation->addTime(evt.timeSinceLastFrame*2);
 		else		
 			walkAnimation->addTime(evt.timeSinceLastFrame*4);
 	if (playerState.hitting) 

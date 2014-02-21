@@ -102,7 +102,7 @@ void Assignment2::createScene(void)
 {
 	setupCEGUI();
 
-	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
+	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	game = new Game(mSceneMgr, mCamNode);
@@ -328,7 +328,6 @@ bool Assignment2::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID i
 	switch (id)
 	{
 	case OIS::MB_Left:
-		game->serveBall();
 		game->handleMouseClick(HIT_START);
 		break;
 	default:

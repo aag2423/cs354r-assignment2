@@ -26,8 +26,8 @@ game.reset();
 #include "Sound.h"
 
 enum {
-	COURT_LENGTH = 750,
-	COURT_WIDTH = 500,
+	COURT_LENGTH = 1200,
+	COURT_WIDTH = 600,
 	COURT_HEIGHT = 250,
 	BALL_SERVE_SPEED = 100
 };
@@ -64,12 +64,11 @@ protected:
 	Ball* ball;
 	PlayGround* court;
 	Player* player;
+	Player* computer;
 	Target* target1;
 	Target* target2;
 	Target* target3;
 	Target* wall;
-
-	PlayerState playerState;
 private:
 	void toggleCamera(void);
 public:
@@ -82,8 +81,8 @@ public:
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);	
 	void reset(void);
+	void runAI(void);
 	void runNextFrame(const Ogre::FrameEvent& evt);
-	void serveBall(void);
 };
 
 //GLOBAL SOUND OBJECT INSTANCE
