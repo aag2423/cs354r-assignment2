@@ -43,7 +43,7 @@ void PlayGround::setup(void) {
 
 	if (courtType == FULL_COURT) {
 		Ogre::SceneNode* temp = parentNode->createChildSceneNode("NetNode", Ogre::Vector3(0,-h/2+20, 0));
-		makePlane("net", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, l, 40, temp);
+		makePlane("net", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, l/2, 40, temp);
 		net.setToBox(
 			btVector3(w/2, 20, 2), 
 			0, 

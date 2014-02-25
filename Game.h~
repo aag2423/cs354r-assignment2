@@ -47,7 +47,9 @@ enum RoundProgress {
 	HIT_BY_OPPONENT, HIT_BY_OPPONENT_AND_FLOOR, 
 	ENDED
 };
-
+enum GameResult {
+	ONGOING, WIN, LOSE
+}
 
 typedef struct GameState {
 	enum CameraMode camMode;
@@ -58,6 +60,7 @@ typedef struct GameState {
 	int playerScore;
 	int computerScore;
 	enum RoundProgress progress;
+	GameResult result;
 } GameState;
 
 class Game
