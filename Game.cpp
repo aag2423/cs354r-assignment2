@@ -19,6 +19,7 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, GameMode mod
 	gameState.playerScore = 0;
 	gameState.computerScore = 0;
 	gameState.progress = ENDED;
+	gameState.result = ONGOING;
 
 
 	physicsEngine.setGravity(0, EARTH_G, 0);
@@ -102,6 +103,7 @@ void Game::reset(void) {
 	gameState.playerScore = 0;
 	gameState.computerScore = 0;
 	gameState.progress = ENDED;
+	gameState.result = ONGOING;
 	target2->resetScore();
 	target3->resetScore();
 	target1->resetScore();
@@ -180,25 +182,6 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if (!gameState.gameStarted) return;
 	bool isFullGame = gameMode == FULL_GAME;
 
-	if (isFullGame){
-		if (getScore() > 10) {
-			std::cout << "You win!"<<std::endl;
-			gameState.paused = true;
-			return;
-		}
-		if (getOpponentScore() > 10) {
-			std::cout << "You Lose!"<<std::endl;
-			gameState.paused = true;
-			return;
-		}
-	} else {
-		if (getScore() > 99999) {
-			std::cout << "You've played too much!"<<std::endl;
-			gameState.paused = true;
-			return;
-		}
-	}
-
 	player->move(evt, isFullGame);
 	if (isFullGame) {
 		runAI();
@@ -231,13 +214,37 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if (be == HIT_FLOOR) {
 		gameState.combo = false;
 		gameState.comboBonus = 0;
+		soundHandler->play_sound(ball_hit_floor);
 	}
 	if (be == HIT_PLAYER)
-		std::cout << "play sound ball hit player"<<std::endl;
-	if (be == HIT_FLOOR)
-		std::cout << "play sound ball hit floor"<<std::endl;		//soundHandler->play_sound(point_down);
+		soundHandler->play_sound(grunt);
+	if (be == HIT_WALL)
+		soundHandler->play_sound(ball_hit_floor);
 		
-	if (isFullGame) {checkScoring(be); return; }
+	if (isFullGame) {
+		checkScoring(be);
+		if (getScore() > 10) {
+			std::cout << "You win!"<<std::endl;
+			gameState.result = WIN;
+			gameState.gameStarted = false;
+			soundHandler->play_sound(player_win);
+		
+		}
+		if (getOpponentScore() > 10) {
+			std::cout << "You Lose!"<<std::endl;
+			gameState.result = LOSE;
+			gameState.gameStarted = false;
+			soundHandler->play_sound(player_lose);
+		
+		}
+		return;
+	} else {	
+		if (getScore() >= 99999) {
+			std::cout << "You've played too much!"<<std::endl;
+			gameState.paused = true;
+	
+		}
+	}
 	
 	BallCollisionEvent te = ball->hitTarget(target1, target2, target3);
 	if(te == HIT_TARGET_1 && target1->handleHit(gameState.comboBonus)) {
@@ -341,7 +348,7 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 }
 
 void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
-	if (gameState.paused) return;
+	if (gameState.paused || gameState.result != ONGOING) return;
 	PlayerState* playerState = &(player->playerState);
 	if (playerState->hitting) {
 		if (dx > 5 && playerState->shotDirection.x == 0)
@@ -362,7 +369,7 @@ void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 }
 
 void Game::handleMouseClick(enum MouseEvent evt) {
-	if (gameState.paused) return;
+	if (gameState.paused || gameState.result != ONGOING) return;
 	switch (evt) {
 	case HIT_START:
 		player->playerState.hitting = true;

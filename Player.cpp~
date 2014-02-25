@@ -122,11 +122,11 @@ void Player::move(const Ogre::FrameEvent& evt, bool isFullGame) {
 	if(playerPos.x < -range.x) playerPos.x = -range.x;
 	else if(playerPos.x > range.x) playerPos.x = range.x;
 	if (isFullGame){
-		if(playerPos.z < -range.z) playerPos.z = -range.z;
-		else if(playerPos.z > range.z) playerPos.z = range.z;
-	} else {
 		if (playerState.type == HUMAN && playerPos.z < 10) playerPos.z = 10;
 		if (playerState.type == AI && playerPos.z > -10) playerPos.z = -10;
+	} else {
+		if(playerPos.z < -range.z) playerPos.z = -range.z;
+		else if(playerPos.z > range.z) playerPos.z = range.z;
 	}
 	parentNode->setPosition(playerPos);
 	
