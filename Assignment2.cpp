@@ -41,12 +41,6 @@ CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
         return CEGUI::LeftButton;
     }
 }
-//-------------------------------------------------------------------------------------
-
-void Assignment2::updatePanel(void) {
-	//scorePanel->setParamValue(MAX_NUM_BALLS, Ogre::StringConverter::toString(bounces));
-	//scorePanel->setParamValue(MAX_NUM_BALLS+1, Ogre::StringConverter::toString(collisions));
-}
 
 //-------------------------------------------------------------------------------------
 void Assignment2::setupCEGUI(void) {
@@ -86,8 +80,9 @@ void Assignment2::setupCEGUI(void) {
 	wmgr.getWindow("PauseRoot/Menu/Config")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::configure_game, this));
 	wmgr.getWindow("ConfigRoot/Menu/Return")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::config_return, this));
 	wmgr.getWindow("ConfigRoot/Menu/VolumeScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setVolume, this));
+	wmgr.getWindow("ConfigRoot/Menu/RestitutionScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setRestitution, this));
 	wmgr.getWindow("ConfigRoot/Menu/ModeGame")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_mode_game, this));
-	//wmgr.getWindow("ConfigRoot/Menu/ModePractice")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_mode_practice, this));
+	wmgr.getWindow("ConfigRoot/Menu/GravityEarth")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_gravity, this));
 }
 
 //-------------------------------------------------------------------------------------
@@ -165,21 +160,6 @@ void Assignment2::createFrameListener(void) {
 
 	mRoot->addFrameListener(this);
 
-	Ogre::StringVector items;
-     	items.push_back("Ball 1");
-     	items.push_back("Ball 2");
-     	items.push_back("Ball 3");
-     	items.push_back("Ball 4");
-     	items.push_back("Ball 5");
-     	items.push_back("Ball 6");
-     	items.push_back("Ball 7");
-     	items.push_back("Ball 8");
-     	items.push_back("Ball 9");
-     	items.push_back("Ball 10");
-     	items.push_back("Bounces");	
-     	items.push_back("Collisions");
-     	items.push_back("Ball Speed");
-	updatePanel();
 }
 //-------------------------------------------------------------------------------------
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
@@ -231,7 +211,6 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScoreVal")->setText(score_buf);
 	}
 
-	updatePanel();
         return true;
 }
 //-------------------------------------------------------------------------------------
@@ -434,6 +413,13 @@ bool Assignment2::config_setVolume(const CEGUI::EventArgs &e) {
 }
 //-------------------------------------------------------------------------------------
 
+bool Assignment2::config_setRestitution(const CEGUI::EventArgs &e) {
+	CEGUI::Scrollbar *vol = (CEGUI::Scrollbar*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionScrollbar");
+	game->setBallRestitution(vol->getScrollPosition());
+	return true;
+}
+//-------------------------------------------------------------------------------------
+
 bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {
 	game->handleKeyboardEvent(TOGGLE_GAME_MODE);
 			if(game->getGameMode() == PRACTICE) {
@@ -447,11 +433,11 @@ bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {
 }
 //-------------------------------------------------------------------------------------
 
-bool Assignment2::config_mode_practice(const CEGUI::EventArgs &e) {
-	game->handleKeyboardEvent(TOGGLE_GAME_MODE);
+bool Assignment2::config_gravity(const CEGUI::EventArgs &e) {
+	game->toggleGravity();
 	return true;
 }
-//--------------
+//--------------------------------------------------------------------------------------
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"
