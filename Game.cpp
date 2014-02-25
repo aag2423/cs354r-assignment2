@@ -11,6 +11,8 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, GameMode mod
 	gameMode(mode)
 {
 
+	gameState.g = EARTH_G;
+	gameState.ballRestitution = 0.99;
 	gameState.camMode = ABOVE_CAM;
 	gameState.paused = false;
 	gameState.gameStarted = false;
@@ -75,7 +77,6 @@ void Game::toggleGameMode(void) {
 	target2->toggleVisible();
 	target3->toggleVisible();
 	reset();
-	gameState.paused = false;
 }
 
 void Game::rePosition(void) {
@@ -83,7 +84,7 @@ void Game::rePosition(void) {
 	Ogre::Vector3 halfDim;
 	court->getHalfDimension(halfDim);
 	ball = new Ball(graphicsEngine, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 320));
-
+	ball->getPhysicsObject().setRestitution(gameState.ballRestitution);
 	player->setPosition(Ogre::Vector3(5, -125, halfDim.z - 300));  
 	player->resetState(); 
 	computer->setPosition(Ogre::Vector3(5, -125, -halfDim.z + 300));
@@ -97,7 +98,6 @@ void Game::rePosition(void) {
 void Game::reset(void) {
 
 	gameState.gameStarted = false;
-	physicsEngine.setGravity(0, EARTH_G, 0);
 	gameState.combo = false;
 	gameState.comboBonus = 0;
 	gameState.playerScore = 0;
@@ -336,7 +336,6 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 		toggleCamera(); 
 		break;
 	case TOGGLE_GAME_MODE:
-		gameState.paused = true;
 		toggleGameMode(); 
 		break;
 	case RESTART:

@@ -52,6 +52,8 @@ enum GameResult {
 };
 
 typedef struct GameState {
+	Gravity g;
+	float ballRestitution;
 	enum CameraMode camMode;
 	bool paused;	// whether the game is paused (in menu)
 	bool gameStarted;
@@ -89,7 +91,21 @@ private:
 public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod, GameMode mode=FULL_GAME);
  	~Game(void);
-
+	
+	void setBallRestitution(Ogre::Real r) {
+		if(r == 1) r = 0.99;
+		gameState.ballRestitution = r;
+		ball->getPhysicsObject().setRestitution(r); }
+	void toggleGravity(void) { 
+		if (gameState.g == EARTH_G) {
+			physicsEngine.setGravity(0, MOON_G, 0); 
+			gameState.g = MOON_G;
+		} else {
+			physicsEngine.setGravity(0, EARTH_G, 0); 
+			gameState.g = EARTH_G;
+		}
+	}
+	
 	int getScore(void) { 
 		if (gameMode == PRACTICE)
 			return target1->getScore() + target2->getScore() + target3->getScore(); 
@@ -100,6 +116,7 @@ public:
 	int getComboBonus(void) { return gameState.comboBonus; }
 	HitStrength getPlayerHitStrength(void) { return player->playerState.strength; }
 	GameMode getGameMode(void) { return gameMode; }
+	GameResult getGameResult(void) { return gameState.result; }
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);

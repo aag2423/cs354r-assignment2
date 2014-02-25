@@ -40,34 +40,41 @@
 				<Property Name="StepSize" Value="0.2" />
 				<Property Name="ScrollPosition" Value="0.99" />
 			</Window>
-			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/GravityText">
-				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.65,0}}" />
-				<Property Name="Text" Value="Gravity" />
-			</Window>
-			<Window Type="TaharezLook/HorizontalScrollbar" Name="ConfigRoot/Menu/GravityScrollbar">
-				<Property Name="UnifiedSize" Value="{{0.3,0},{0.05,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.8,0}}" />
-				<Property Name="StepSize" Value="0.2" />
-				<Property Name="ScrollPosition" Value="0.6" />
-			</Window>
-			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/SceneText">
-				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
+			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/ModeText">
+				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.1,0}}" />
-				<Property Name="Text" Value="Radio" />
+				<Property Name="Text" Value="Game Mode" />
 			</Window>
-			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/Scene1">
+			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/ModeGame">
 				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.24,0}}" />
 				<Property Name="Selected" Value="True" />
-				<Property Name="Text" Value="Scene 1" />
+				<Property Name="Text" Value="Full Game" />
 				<Property Name="GroupID" Value="354" />
 			</Window>
-			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/Scene2">
+			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/ModePractice">
 				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.34,0}}" />
-				<Property Name="Text" Value="Scene 2" />
+				<Property Name="Text" Value="Practice" />
 				<Property Name="GroupID" Value="354" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/GravityText">
+				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.5,0}}" />
+				<Property Name="Text" Value="Gravity" />
+			</Window>
+			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/GravityEarth">
+				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.64,0}}" />
+				<Property Name="Selected" Value="True" />
+				<Property Name="Text" Value="Earth" />
+				<Property Name="GroupID" Value="867" />
+			</Window>
+			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/GravityMoon">
+				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.74,0}}" />
+				<Property Name="Text" Value="Moon" />
+				<Property Name="GroupID" Value="867" />
 			</Window>
 			<Window Type="TaharezLook/Button" Name="ConfigRoot/Menu/Return">
 				<Property Name="UnifiedSize" Value="{{0.28,0},{0.08,0}}" />
