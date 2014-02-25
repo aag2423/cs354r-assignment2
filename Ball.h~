@@ -21,13 +21,15 @@ Jiawei Guo, jg44347
 enum BallCollisionEvent {
 	NOTHING_HAPPENED,
 	HIT_TARGET_1, HIT_TARGET_2, HIT_TARGET_3,
-	HIT_WALL, HIT_FLOOR, HIT_CEILING, HIT_PLAYER
+	HIT_WALL, HIT_FLOOR, HIT_CEILING, HIT_PLAYER, HIT_OPPONENT
 };
 
 class Ball {
 protected:
 	const static Ogre::Real BALL_RADIUS = 5.0f;
+	Ogre::SceneManager* graphicsEngine;
 	Ogre::SceneNode* parentNode;
+	Ogre::Entity* entBall;
 	PhysicsEngine* physicsEngine;
 	PhysicsObject physicsObject;
 	bool colliding;

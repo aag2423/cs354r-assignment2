@@ -2,7 +2,10 @@
 #include <iostream>
 
 Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayerType type, PlayGround* box, const Ogre::Vector3& pos) :  
+	graphicsEngine(mSceneMgr),
 	parentNode(0),
+	visible(true),
+	engine(&physicsEngine),
 	court(box)
 {
 	playerState.type = type;
@@ -10,23 +13,24 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 
 
 	parentNode = box->getNode()->createChildSceneNode(pos);
+
 	if (type == HUMAN) {
 		playerEnt = mSceneMgr->createEntity( "playerEnt", "ninja.mesh" );
 		walkAnimation = playerEnt->getAnimationState("Walk");
 		shootAnimation = playerEnt->getAnimationState("Attack3");
-		Ogre::SceneNode* tempNode = parentNode->createChildSceneNode();
-		tempNode->attachObject(playerEnt);
+		playerNode = parentNode->createChildSceneNode();
+		playerNode->attachObject(playerEnt);
 		Ogre::Real ratio = HEIGHT/195.649;
-		tempNode->scale(ratio, ratio, ratio);
+		playerNode->scale(ratio, ratio, ratio);
 	} else {
 		playerEnt = mSceneMgr->createEntity( "computerEnt", "robot.mesh" );
 		walkAnimation = playerEnt->getAnimationState("Walk");
 		shootAnimation = playerEnt->getAnimationState("Shoot");
-		Ogre::SceneNode* tempNode = parentNode->createChildSceneNode();
-		tempNode->attachObject(playerEnt);
-		tempNode->yaw(Ogre::Degree(90));
+		playerNode = parentNode->createChildSceneNode();
+		playerNode->attachObject(playerEnt);
+		playerNode->yaw(Ogre::Degree(90));
 		Ogre::Real ratio = HEIGHT/101.673;
-		tempNode->scale(ratio, ratio, ratio);
+		playerNode->scale(ratio, ratio, ratio);
 	}
 	playerEnt->setCastShadows(true);
 
@@ -61,7 +65,22 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 //-------------------------------------------------------------------------------------
 
 Player::~Player(void) {
+	engine->removeObject(&physicsObject);
+	parentNode->removeAndDestroyAllChildren();
+	graphicsEngine->destroyEntity(playerEnt);
 	std::cout << "========= Debug: Player Deleted =========" << std::endl;
+}
+
+void Player::toggleVisible(void) {
+	if (visible) {
+		engine->removeObject(&physicsObject);
+		playerNode->detachObject(playerEnt);
+		visible = false;
+	} else {
+		engine->addObject(&physicsObject);
+		playerNode->attachObject(playerEnt);
+		visible = true;
+	}
 }
 
 void Player::resetState(void) {
@@ -82,7 +101,7 @@ void Player::resetState(void) {
 	playerState.movingBackward = false;
 }
 
-void Player::move(const Ogre::FrameEvent& evt) {
+void Player::move(const Ogre::FrameEvent& evt, bool isFullGame) {
 	
 	Ogre::Vector3 direction(0, 0, 0);
 	if (playerState.movingLeft)
@@ -102,8 +121,13 @@ void Player::move(const Ogre::FrameEvent& evt) {
 	Ogre::Vector3 playerPos = parentNode->getPosition();
 	if(playerPos.x < -range.x) playerPos.x = -range.x;
 	else if(playerPos.x > range.x) playerPos.x = range.x;
-	if(playerPos.z < -range.z) playerPos.z = -range.z;
-	else if(playerPos.z > range.z) playerPos.z = range.z;
+	if (isFullGame){
+		if (playerState.type == HUMAN && playerPos.z < 10) playerPos.z = 10;
+		if (playerState.type == AI && playerPos.z > -10) playerPos.z = -10;
+	} else {
+		if(playerPos.z < -range.z) playerPos.z = -range.z;
+		else if(playerPos.z > range.z) playerPos.z = range.z;
+	}
 	parentNode->setPosition(playerPos);
 	
 	Ogre::Quaternion q = parentNode->getOrientation();

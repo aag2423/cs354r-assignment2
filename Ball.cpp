@@ -10,12 +10,13 @@ Jiawei Guo, jg44347
 #include <iostream>
 
 Ball::Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& engine, PlayGround* box, const Ogre::Vector3& pos) :  
+	graphicsEngine(mSceneMgr),
 	parentNode(0),
 	physicsEngine(&engine),
 	colliding(false),
 	shooting(false)
 {
-	Ogre::Entity* entBall = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
+	entBall = mSceneMgr->createEntity(Ogre::SceneManager::PT_SPHERE);
 	entBall->setCastShadows(true);
 	entBall->setMaterialName("Examples/TennisBall");
 
@@ -42,7 +43,8 @@ Ball::Ball(Ogre::SceneManager* mSceneMgr, PhysicsEngine& engine, PlayGround* box
 
 Ball::~Ball(void) {
 	physicsEngine->removeObject(&physicsObject);
-	parentNode->getParentSceneNode()->removeChild(parentNode);
+	parentNode->removeAndDestroyAllChildren();
+	graphicsEngine->destroyEntity("entBall");
 	std::cout << "========= Debug: Ball Deleted =========" << std::endl;
 }
 
@@ -68,8 +70,7 @@ bool Ball::hitBy(Player* player) {
 	Ogre::SceneNode* playerNode = player->getNode();
 	Ogre::Vector3 dir = playerNode->getOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 	Ogre::Vector3 distance = parentNode->getPosition() - (playerNode->getPosition() + Ogre::Vector3(0, 40, 0));
-	Ogre::Real limit = player->playerState.type == AI ? 50 : 80;
-	if(distance.length() < limit && distance.dotProduct(dir) >= 0) {
+	if(distance.length() < 80 && distance.dotProduct(dir) >= 0) {
 		//physicsObject.setLinearVelocity(btVector3(0, 30, -100));
 		dir *= 100;
 		//physicsObject.setLinearVelocity(btVector3(dir.x, dir.y, dir.z));

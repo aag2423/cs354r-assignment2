@@ -11,7 +11,19 @@ enum PlaneNumber {
 	LEFT_PLANE,
 	RIGHT_PLANE,
 	FRONT_PLANE,
-	BACK_PLANE
+	BACK_PLANE,
+	NET
+};
+enum PlayGroundType {
+	FULL_COURT, PRACTICE_COURT
+};
+enum PlayGroundSize {
+	FULL_COURT_LENGTH = 1500,
+	FULL_COURT_WIDTH = 600,
+	FULL_COURT_HEIGHT = 250,
+	PRACTICE_COURT_LENGTH = 750,
+	PRACTICE_COURT_WIDTH = 500,
+	PRACTICE_COURT_HEIGHT = 250,
 };
 
 struct MyPlaneContactResultCallback : public btCollisionWorld::ContactResultCallback {
@@ -28,12 +40,18 @@ struct MyPlaneContactResultCallback : public btCollisionWorld::ContactResultCall
 
 class PlayGround {
 private:
-	void makePlane(Ogre::SceneManager* mSceneMgr, std::string name, const Ogre::Vector3& planeNormal, const Ogre::Vector3& textureUp, const Ogre::String& texture, const int distance, const int lenght, const int height);
+	void makePlane(std::string name, const Ogre::Vector3& planeNormal, const Ogre::Vector3& textureUp, const Ogre::String& texture, const int distance, const int lenght, const int height, Ogre::SceneNode* parent=NULL);
+	void setup(void);
+	void destroy(void);
 protected:
+	PlayGroundType courtType;
+	Ogre::SceneManager* graphicsEngine;
 	Ogre::SceneNode* parentNode;
-	Ogre::Real halfLength;
-	Ogre::Real halfWidth;
-	Ogre::Real halfHeight;
+	PhysicsEngine* physicsEngine;
+	Ogre::Real l;
+	Ogre::Real w;
+	Ogre::Real h;
+	PhysicsObject net;
 	PhysicsObject bottomPlane;
 	PhysicsObject topPlane;
 	PhysicsObject leftPlane;
@@ -41,19 +59,25 @@ protected:
 	PhysicsObject frontPlane;
 	PhysicsObject backPlane;
 public:
-	bool bRoll;
-	PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Ogre::Real l, Ogre::Real w, Ogre::Real h);
+	PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGroundType type);
 	~PlayGround(void);
+	void toggleType(void);
+
 	Ogre::SceneNode* getNode(void) { return parentNode; }
 	void getHalfDimension(Ogre::Vector3& result) { 
-		result.y = halfWidth;
-		result.z = halfHeight;
-		result.x = halfLength;
+		result.x = w/2;
+		result.y = h/2;
+		result.z = l/2;
 	}
 	void getHalfMovaRange(Ogre::Vector3& result) {
-		result.x = halfWidth - 10;
-		result.y = halfHeight - 20; 
-		result.z = halfLength - 10; 
+		result.x = w/2 - 10;
+		result.y = h - 70; 
+		result.z = l/2 - 10; 
+	}
+	void getBallInitialPosition(Ogre::Vector3& result) {
+		result.x = 5;
+		result.y = -(h - 70); 
+		result.z = l/2 - 310; 
 	}
 	PhysicsObject& getPhysicsObject(PlaneNumber i) { 
 		switch(i) {
@@ -62,7 +86,8 @@ public:
 		case LEFT_PLANE: return leftPlane;
 		case RIGHT_PLANE: return rightPlane;
 		case FRONT_PLANE: return frontPlane;
-		default: return backPlane;
+		case BACK_PLANE: return backPlane;
+		default: return net;
 		}
 	}
 };

@@ -9,18 +9,21 @@
 class Target {
 protected:
 	Ogre::SceneNode* parentNode;
+	Ogre::SceneManager* graphicsEngine;
 	Ogre::Entity* obj; 
 	PlayGround* court;
 	PhysicsObject physicsObject;
 	clock_t start;
 	int score;
-
+	PhysicsEngine* engine;
+	bool visible;
 	Ogre::Real length;
 	Ogre::Real height;
 	Ogre::Real width;
 public:
-	Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos, const Ogre::String& texture, Ogre::Real x = 0.8, Ogre::Real y = 0.8, Ogre::Real z = 0.05);
+	Target(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos, const Ogre::String& texture, Ogre::Real x = 0.8, Ogre::Real y = 0.8, Ogre::Real z = 0.05);
 	~Target(void);
+	void toggleVisible(void);
 	Ogre::SceneNode* getNode(void) { return parentNode; }
 	PhysicsObject& getPhysicsObject(void) { return physicsObject; }
 	void resetScore(void) { score = 0; };
