@@ -89,7 +89,11 @@ private:
 public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod, GameMode mode=FULL_GAME);
  	~Game(void);
-
+	
+	setBallRestitution(Ogre::Real r) { ball->getPhysicsObject().setRestitution(r); }
+	setGravity(Gravity g) { physicsEngine.setGravity(0, g, 0); }
+	setGravity(Gravity g) { physicsEngine.setGravity(0, g, 0); }
+	
 	int getScore(void) { 
 		if (gameMode == PRACTICE)
 			return target1->getScore() + target2->getScore() + target3->getScore(); 

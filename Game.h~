@@ -80,6 +80,7 @@ protected:
 	Target* target3;
 	Target* wall;
 private:
+	void toggleGameMode(void);
 	void toggleCamera(void);
 	void checkScoring(BallCollisionEvent ballEvent);
 	void rePosition(void);
@@ -88,8 +89,11 @@ private:
 public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod, GameMode mode=FULL_GAME);
  	~Game(void);
-
-	void toggleGameMode(void);
+	
+	setBallRestitution(Ogre::Real r) { ball->getPhysicsObject().setRestitution(r); }
+	setGravity(Gravity g) { physicsEngine.setGravity(0, g, 0); }
+	setGravity(Gravity g) { physicsEngine.setGravity(0, g, 0); }
+	
 	int getScore(void) { 
 		if (gameMode == PRACTICE)
 			return target1->getScore() + target2->getScore() + target3->getScore(); 
