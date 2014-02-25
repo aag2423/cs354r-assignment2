@@ -95,6 +95,8 @@ public:
 	}
 	int getOpponentScore(void) { return gameState.computerScore; }
 	int getComboBonus(void) { return gameState.comboBonus; }
+	HitStrength getPlayerHitStrength(void) { return player->playerState.strength; }
+	GameMode getGameMode(void) { return gameMode; }
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);

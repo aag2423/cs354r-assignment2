@@ -78,6 +78,9 @@ void Assignment2::setupCEGUI(void) {
 	CEGUI::Window *configRoot = wmgr.loadWindowLayout("GameConfig.layout");
 	sheet->addChildWindow(configRoot);
 
+	CEGUI::Window *endRoot = wmgr.loadWindowLayout("GameEnd.layout");
+	sheet->addChildWindow(endRoot);
+
 	wmgr.getWindow("PauseRoot/Menu/Resume")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::resume_game, this));
 	wmgr.getWindow("PauseRoot/Menu/Quit")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::quit, this));
 	wmgr.getWindow("PauseRoot/Menu/Config")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::configure_game, this));
@@ -179,8 +182,8 @@ void Assignment2::createFrameListener(void) {
 //-------------------------------------------------------------------------------------
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
-		std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"<<std::endl;
 	static char score_buf[5];
+	static int hit;
 	if (mWindow->isClosed()) return false;
 	if (mShutDown) return false;
 	mKeyboard->capture();
@@ -188,10 +191,34 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//mTrayMgr->frameRenderingQueued(evt);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	game->runNextFrame(evt);
-	sprintf(score_buf, "%d", game->getScore());
-	CEGUI::WindowManager::getSingleton().getWindow("ScoreRoot")->setText(score_buf);
+	switch(game->getPlayerHitStrength()) {
+		case WEAK_HIT:
+			CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setText("WEAK");
+			break;
+		case NORMAL_HIT:
+			CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setText("NORMAL");
+			break;
+		case STRONG_HIT:
+			CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setText("STRONG");
+			break;
+		default: break;
+	}
+	if(game->getGameMode() == PRACTICE) {
+		sprintf(score_buf, "%d", game->getScore());
+		CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setText(score_buf);
+	} else {
+		sprintf(score_buf, "%d", game->getScore());
+		CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/PlayerScoreVal")->setText(score_buf);
+		sprintf(score_buf, "%d", game->getOpponentScore());
+		CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScoreVal")->setText(score_buf);
+		if(game->getScore() > 10) {
+			CEGUI::WindowManager::getSingleton().getWindow("EndGameRoot/Win")->setVisible(true);
+		} else if(game->getOpponentScore() > 10) {
+			CEGUI::WindowManager::getSingleton().getWindow("EndGameRoot/Lose")->setVisible(true);
+		}
+	}
+
 	updatePanel();
-		std::cout << "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"<<std::endl;
         return true;
 }
 //-------------------------------------------------------------------------------------
@@ -259,6 +286,13 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
     			break;
 		case OIS::KC_M:
 			game->handleKeyboardEvent(TOGGLE_GAME_MODE);
+			if(game->getGameMode() == PRACTICE) {
+				CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(false);
+				CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(true);
+			} else {
+				CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
+				CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(false);
+			}
     			break;
 		case OIS::KC_1:
 			game->handleKeyboardEvent(USE_WEAK_HIT);

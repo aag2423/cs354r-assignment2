@@ -45,7 +45,7 @@ enum GameMode {
 enum RoundProgress {
 	HIT_BY_PLAYER, HIT_BY_PLAYER_AND_FLOOR, 
 	HIT_BY_OPPONENT, HIT_BY_OPPONENT_AND_FLOOR, 
-	NOT_STARTED
+	ENDED
 };
 
 
@@ -95,6 +95,7 @@ public:
 	}
 	int getOpponentScore(void) { return gameState.computerScore; }
 	int getComboBonus(void) { return gameState.comboBonus; }
+	GameMode getGameMode(void) { return gameMode; }
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);
