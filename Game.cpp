@@ -75,7 +75,6 @@ void Game::toggleGameMode(void) {
 	target2->toggleVisible();
 	target3->toggleVisible();
 	reset();
-	gameState.paused = false;
 }
 
 void Game::rePosition(void) {
@@ -336,7 +335,6 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 		toggleCamera(); 
 		break;
 	case TOGGLE_GAME_MODE:
-		gameState.paused = true;
 		toggleGameMode(); 
 		break;
 	case RESTART:

@@ -42,6 +42,8 @@ protected:
 	bool configure_game(const CEGUI::EventArgs &e);
 	bool config_return(const CEGUI::EventArgs &e);
 	bool config_setVolume(const CEGUI::EventArgs &e);
+	bool config_mode_game(const CEGUI::EventArgs &e);
+	bool config_mode_practice(const CEGUI::EventArgs &e);
 	
 	void updatePanel(void);
 	void moveBall(const Ogre::FrameEvent &evt);

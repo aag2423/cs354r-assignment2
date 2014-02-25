@@ -49,7 +49,7 @@ enum RoundProgress {
 };
 enum GameResult {
 	ONGOING, WIN, LOSE
-}
+};
 
 typedef struct GameState {
 	enum CameraMode camMode;
@@ -80,7 +80,6 @@ protected:
 	Target* target3;
 	Target* wall;
 private:
-	void toggleGameMode(void);
 	void toggleCamera(void);
 	void checkScoring(BallCollisionEvent ballEvent);
 	void rePosition(void);
@@ -90,6 +89,7 @@ public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod, GameMode mode=FULL_GAME);
  	~Game(void);
 
+	void toggleGameMode(void);
 	int getScore(void) { 
 		if (gameMode == PRACTICE)
 			return target1->getScore() + target2->getScore() + target3->getScore(); 
@@ -98,7 +98,9 @@ public:
 	}
 	int getOpponentScore(void) { return gameState.computerScore; }
 	int getComboBonus(void) { return gameState.comboBonus; }
+	HitStrength getPlayerHitStrength(void) { return player->playerState.strength; }
 	GameMode getGameMode(void) { return gameMode; }
+	GameResult getGameResult(void) { return gameState.result; }
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseClick(enum MouseEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);
