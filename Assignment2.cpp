@@ -255,6 +255,9 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 		case OIS::KC_C:
 			game->handleKeyboardEvent(TOGGLE_CAMERA);
     			break;
+		case OIS::KC_M:
+			game->handleKeyboardEvent(TOGGLE_GAME_MODE);
+    			break;
 		case OIS::KC_1:
 			game->handleKeyboardEvent(USE_WEAK_HIT);
     			break;

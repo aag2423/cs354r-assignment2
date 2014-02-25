@@ -1,16 +1,19 @@
 #include "Target.h"
 
-Target::Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos, const Ogre::String& texture, Ogre::Real x, Ogre::Real y, Ogre::Real z) :
+Target::Target(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGround* box, const Ogre::Vector3& pos, const Ogre::String& texture, Ogre::Real x, Ogre::Real y, Ogre::Real z) :
 	parentNode(0),
+	visible(true),
+	graphicsEngine(mSceneMgr),
 	obj(NULL),
 	court(box),
 	length(x),
 	height(y),
 	width(z),
 	start(0),
-	score(0)
+	score(0),
+	engine(&physicsEngine)
 {
-	obj = mSceneMgr->createEntity(name, "cube.mesh");
+	obj = mSceneMgr->createEntity("cube.mesh");
 	obj->setCastShadows(true);
 	obj->setMaterialName(texture);
 	parentNode = box->getNode()->createChildSceneNode(pos);
@@ -29,5 +32,20 @@ Target::Target(const Ogre::String& name, Ogre::SceneManager* mSceneMgr, PhysicsE
 }
 
 Target::~Target(void) {
+	engine->removeObject(&physicsObject);
+	parentNode->removeAndDestroyAllChildren();
+	graphicsEngine->destroyEntity(obj);
 	std::cout << "========= Debug: Target Deleted =========" << std::endl;
+}
+
+void Target::toggleVisible(void) {
+	if (visible) {
+		engine->removeObject(&physicsObject);
+		parentNode->detachObject(obj);
+		visible = false;
+	} else {
+		engine->addObject(&physicsObject);
+		parentNode->attachObject(obj);
+		visible = true;
+	}
 }

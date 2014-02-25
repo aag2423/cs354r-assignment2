@@ -177,24 +177,21 @@ void Assignment2::createFrameListener(void) {
 	updatePanel();
 }
 //-------------------------------------------------------------------------------------
-
-bool Assignment2::frameStarted (const Ogre::FrameEvent &evt) {
-	static char score_buf[5];
-	game->runNextFrame(evt);
-	sprintf(score_buf, "%d", game->getScore());
-	CEGUI::WindowManager::getSingleton().getWindow("ScoreRoot")->setText(score_buf);
-	return true;
-	
-}
 bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+		std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"<<std::endl;
+	static char score_buf[5];
 	if (mWindow->isClosed()) return false;
 	if (mShutDown) return false;
 	mKeyboard->capture();
 	mMouse->capture();
 	//mTrayMgr->frameRenderingQueued(evt);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+	game->runNextFrame(evt);
+	sprintf(score_buf, "%d", game->getScore());
+	CEGUI::WindowManager::getSingleton().getWindow("ScoreRoot")->setText(score_buf);
 	updatePanel();
+		std::cout << "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"<<std::endl;
         return true;
 }
 //-------------------------------------------------------------------------------------
@@ -259,6 +256,9 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
     			break;
 		case OIS::KC_C:
 			game->handleKeyboardEvent(TOGGLE_CAMERA);
+    			break;
+		case OIS::KC_M:
+			game->handleKeyboardEvent(TOGGLE_GAME_MODE);
     			break;
 		case OIS::KC_1:
 			game->handleKeyboardEvent(USE_WEAK_HIT);

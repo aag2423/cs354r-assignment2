@@ -861,7 +861,23 @@ material Examples/TennisCourt
 		{
 			texture_unit
 			{
-				texture tenniscourt.jpeg
+				texture tenniscourt.jpg
+				scale 5 4
+			}
+		}
+	}
+}
+
+material Examples/TennisNet
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture tennis_net.png
+				scale 0.1 10
 			}
 		}
 	}

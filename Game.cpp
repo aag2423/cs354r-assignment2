@@ -5,29 +5,44 @@
 #include <OgreSceneNode.h>
 #include <iostream>
 
-Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
+Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, GameMode mode) :
+	graphicsEngine(mSceneMgr),
+	cameraNode(camNode),
+	gameMode(mode)
+{
 
 	gameState.camMode = ABOVE_CAM;
 	gameState.paused = false;
 	gameState.gameStarted = false;
 	gameState.combo = false;
 	gameState.comboBonus = 0;
+	gameState.playerScore = 0;
+	gameState.computerScore = 0;
+	gameState.progress = ENDED;
 
 
 	physicsEngine.setGravity(0, EARTH_G, 0);
 
-	graphicsEngine = mSceneMgr;
-	cameraNode = camNode;
-
-	court = new PlayGround(mSceneMgr, physicsEngine, COURT_LENGTH, COURT_WIDTH, COURT_HEIGHT);
-	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(5, -75, COURT_LENGTH/2 - 310));
-	player = new Player(mSceneMgr, physicsEngine, HUMAN, court, Ogre::Vector3(0, -125, COURT_LENGTH/2 - 300));
-	computer = new Player(mSceneMgr, physicsEngine, AI, court, Ogre::Vector3(0, -125, -COURT_LENGTH/2 + 300));
-	computer->getNode()->yaw(Ogre::Degree(180));
+	court = new PlayGround(mSceneMgr, physicsEngine, FULL_COURT);
 	
-	target1 = new Target("t1", mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -COURT_LENGTH/2), "Examples/Target");
-	target2 = new Target("t2", mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -COURT_LENGTH/2), "Examples/Target");
-	target3 = new Target("t3", mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -COURT_LENGTH/2), "Examples/Target");
+	target1 = new Target(mSceneMgr, physicsEngine, court, Ogre::Vector3(-150, 0, -PRACTICE_COURT_LENGTH/2), "Examples/Target");
+	target2 = new Target(mSceneMgr, physicsEngine, court, Ogre::Vector3(0, -50, -PRACTICE_COURT_LENGTH/2), "Examples/Target");
+	target3 = new Target(mSceneMgr, physicsEngine, court, Ogre::Vector3(150, 0, -PRACTICE_COURT_LENGTH/2), "Examples/Target");
+
+	Ogre::Vector3 halfDim;
+	court->getHalfDimension(halfDim);
+
+	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 320));
+	player = new Player(mSceneMgr, physicsEngine, HUMAN, court, Ogre::Vector3(0, -125, halfDim.z - 300));
+
+	computer = new Player(mSceneMgr, physicsEngine, AI, court, Ogre::Vector3(0, -125, -FULL_COURT_LENGTH/2 + 300));
+	computer->getNode()->yaw(Ogre::Degree(180));
+	if (mode == FULL_GAME) {
+		target1->toggleVisible();
+		target2->toggleVisible();
+		target3->toggleVisible();
+	} else 
+		computer->toggleVisible();
 	
 	toggleCamera();
 }
@@ -36,14 +51,45 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode) {
 
 Game::~Game(void) {
 	delete ball;
-	delete court;
 	delete player;
 	delete computer;
 	delete target1;
 	delete target2;
 	delete target3;
+	delete court; // must be deleted last
 	std::cout << "========= Debug: Game Deleted =========" << std::endl;
 }
+
+//-------------------------------------------------------------------------------------
+
+void Game::toggleGameMode(void) {
+	if (gameMode == PRACTICE) {
+		gameMode = FULL_GAME;
+	} else {
+		gameMode = PRACTICE;
+	}
+	court->toggleType();
+	computer->toggleVisible();
+	target1->toggleVisible();
+	target2->toggleVisible();
+	target3->toggleVisible();
+	reset();
+	gameState.paused = false;
+}
+
+void Game::rePosition(void) {
+	delete ball;
+	Ogre::Vector3 halfDim;
+	court->getHalfDimension(halfDim);
+	ball = new Ball(graphicsEngine, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 320));
+
+	player->setPosition(Ogre::Vector3(5, -125, halfDim.z - 300));  
+	player->resetState(); 
+	computer->setPosition(Ogre::Vector3(5, -125, -halfDim.z + 300));
+	computer->getNode()->yaw(Ogre::Degree(180));
+	computer->resetState();
+}
+
 
 //-------------------------------------------------------------------------------------
 
@@ -53,18 +99,14 @@ void Game::reset(void) {
 	physicsEngine.setGravity(0, EARTH_G, 0);
 	gameState.combo = false;
 	gameState.comboBonus = 0;
+	gameState.playerScore = 0;
+	gameState.computerScore = 0;
+	gameState.progress = ENDED;
 	target2->resetScore();
 	target3->resetScore();
 	target1->resetScore();
-
-	delete ball;
-	ball = new Ball(graphicsEngine, physicsEngine, court, Ogre::Vector3(5, -75, COURT_LENGTH/2 - 310));
-
-	player->setPosition(Ogre::Vector3(5, -125, COURT_LENGTH/2 - 300));  
-	player->resetState(); 
-	computer->setPosition(Ogre::Vector3(5, -125, -COURT_LENGTH/2 + 300));
-	computer->getNode()->yaw(Ogre::Degree(180));
-	computer->resetState();
+	rePosition();
+	
 }
 
 //-------------------------------------------------------------------------------------
@@ -80,18 +122,112 @@ void Game::runAI(void) {
 
 //-------------------------------------------------------------------------------------
 
+
+void Game::checkScoring(BallCollisionEvent ballEvent) {
+	Ogre::Real ballPosZ = ball->getNode()->getPosition().z;
+	if (gameState.progress == HIT_BY_PLAYER) {
+		switch(ballEvent){
+			case HIT_CEILING:
+			case HIT_WALL: 
+			case HIT_PLAYER:
+				gameState.computerScore++; gameState.progress = ENDED; break;
+			case HIT_FLOOR: 
+				if (ballPosZ > 0){
+					gameState.computerScore++; gameState.progress = ENDED;
+				}else
+					gameState.progress = HIT_BY_PLAYER_AND_FLOOR; 
+				break;
+			case HIT_OPPONENT:
+				gameState.playerScore++; gameState.progress = ENDED; break;
+			default: break;
+		}
+	} else if (gameState.progress == HIT_BY_PLAYER_AND_FLOOR) {
+		if(ballEvent != NOTHING_HAPPENED) {
+				gameState.playerScore++;
+				gameState.progress = ENDED;
+		}
+	} else if (gameState.progress == HIT_BY_OPPONENT) {
+		switch(ballEvent){
+			case HIT_CEILING:
+			case HIT_WALL: 
+			case HIT_OPPONENT:
+				gameState.playerScore++; gameState.progress = ENDED; break;
+			case HIT_FLOOR: 
+				if (ballPosZ < 0){
+					gameState.playerScore++; gameState.progress = ENDED;
+				}else
+					gameState.progress = HIT_BY_OPPONENT_AND_FLOOR; 
+				break;
+			case HIT_PLAYER:
+				gameState.computerScore++; gameState.progress = ENDED; break;
+			default: break;
+		}
+	} else if (gameState.progress == HIT_BY_OPPONENT_AND_FLOOR) {
+		if(ballEvent != NOTHING_HAPPENED) {
+				gameState.computerScore++;
+				gameState.progress = ENDED;
+		}
+	}
+	if (gameState.progress == ENDED) {
+		gameState.gameStarted = false;
+		rePosition();
+	}
+}
+
+
 void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if(gameState.paused) return;
 	if (!gameState.gameStarted) return;
+	bool isFullGame = gameMode == FULL_GAME;
 
-	player->move(evt);
-	runAI();
-	computer->move(evt);
+	if (isFullGame){
+		if (getScore() > 10) {
+			std::cout << "You win!"<<std::endl;
+			gameState.paused = true;
+			return;
+		}
+		if (getOpponentScore() > 10) {
+			std::cout << "You Lose!"<<std::endl;
+			gameState.paused = true;
+			return;
+		}
+	} else {
+		if (getScore() > 99999) {
+			std::cout << "You've played too much!"<<std::endl;
+			gameState.paused = true;
+			return;
+		}
+	}
+
+	player->move(evt, isFullGame);
+	if (isFullGame) {
+		runAI();
+		computer->move(evt);
+	}
 	physicsEngine.stepSimulation(evt.timeSinceLastFrame*5);
-	if(ball->hitBy(player))	soundHandler->play_sound(ball_hit);
-	if(ball->hitBy(computer)) soundHandler->play_sound(ball_hit);
+	ball->updateGraphicsScene();
+
+	if(ball->hitBy(player))	{
+		soundHandler->play_sound(ball_hit);
+		if (gameState.progress == HIT_BY_PLAYER_AND_FLOOR) {
+			gameState.computerScore++;
+			gameState.progress = ENDED;
+		} else
+			gameState.progress = HIT_BY_PLAYER;
+	}
+	if (isFullGame && ball->hitBy(computer)) {
+		soundHandler->play_sound(ball_hit);
+		if (gameState.progress == HIT_BY_OPPONENT_AND_FLOOR) {
+			gameState.playerScore++;
+			gameState.progress = ENDED;
+		} else
+			gameState.progress = HIT_BY_OPPONENT;
+	}
 
 	BallCollisionEvent be = ball->collidesWith(court, player);
+	
+
+
 	if (be == HIT_FLOOR) {
 		gameState.combo = false;
 		gameState.comboBonus = 0;
@@ -101,8 +237,9 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	if (be == HIT_FLOOR)
 		std::cout << "play sound ball hit floor"<<std::endl;		//soundHandler->play_sound(point_down);
 		
+	if (isFullGame) {checkScoring(be); return; }
+	
 	BallCollisionEvent te = ball->hitTarget(target1, target2, target3);
-
 	if(te == HIT_TARGET_1 && target1->handleHit(gameState.comboBonus)) {
 		gameState.comboBonus++;
 		gameState.combo = true;
@@ -124,13 +261,12 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	}else {
 		target3->setNormalTexture();
 	}
-	
-	ball->updateGraphicsScene();
 }
 
 //-------------------------------------------------------------------------------------
 
 void Game::toggleCamera(void) {
+	if (gameState.paused) return;
 	Ogre::Node* oldCamParent = cameraNode->getParent();
 	oldCamParent->removeChild(cameraNode);
 	Ogre::SceneNode* newCamParent;
@@ -192,6 +328,10 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 	case TOGGLE_CAMERA:
 		toggleCamera(); 
 		break;
+	case TOGGLE_GAME_MODE:
+		gameState.paused = true;
+		toggleGameMode(); 
+		break;
 	case RESTART:
 		reset(); break;
 	case PAUSE:
@@ -201,6 +341,7 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 }
 
 void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
+	if (gameState.paused) return;
 	PlayerState* playerState = &(player->playerState);
 	if (playerState->hitting) {
 		if (dx > 5 && playerState->shotDirection.x == 0)
@@ -221,6 +362,7 @@ void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 }
 
 void Game::handleMouseClick(enum MouseEvent evt) {
+	if (gameState.paused) return;
 	switch (evt) {
 	case HIT_START:
 		player->playerState.hitting = true;
