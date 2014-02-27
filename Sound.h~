@@ -22,6 +22,8 @@ static const char *player_win = "./media/sounds/player_win.wav";
 static const char *player_lose = "./media/sounds/player_lose.wav";
 static const char *grunt = "./media/sounds/grunt.wav";
 
+static bool sound_effects = false;
+
 class Sound{
 public:
 	Sound(void);

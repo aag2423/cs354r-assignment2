@@ -37,6 +37,8 @@ void Sound::start_ambient(){
 void Sound::play_sound(const char* current)
 {
 //	std::cout << "in play_sound \n";
+	if (!sound_effects)
+		return;
 	sound_c = NULL;
 	sound_c = Mix_LoadWAV(current);
 	if(sound_c == NULL){
