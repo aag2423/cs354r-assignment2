@@ -42,6 +42,7 @@ protected:
 	bool configure_game(const CEGUI::EventArgs &e);
 	bool config_return(const CEGUI::EventArgs &e);
 	bool config_setVolume(const CEGUI::EventArgs &e);
+	bool config_setSFXVolume(const CEGUI::EventArgs &e);
 	bool config_setRestitution(const CEGUI::EventArgs &e);
 	bool config_mode_game(const CEGUI::EventArgs &e);
 	bool config_gravity(const CEGUI::EventArgs &e);

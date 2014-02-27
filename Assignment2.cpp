@@ -80,6 +80,7 @@ void Assignment2::setupCEGUI(void) {
 	wmgr.getWindow("PauseRoot/Menu/Config")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::configure_game, this));
 	wmgr.getWindow("ConfigRoot/Menu/Return")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::config_return, this));
 	wmgr.getWindow("ConfigRoot/Menu/VolumeScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setVolume, this));
+	wmgr.getWindow("ConfigRoot/Menu/SFXScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setSFXVolume, this));
 	wmgr.getWindow("ConfigRoot/Menu/RestitutionScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setRestitution, this));
 	wmgr.getWindow("ConfigRoot/Menu/ModeGame")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_mode_game, this));
 	wmgr.getWindow("ConfigRoot/Menu/GravityEarth")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_gravity, this));
@@ -409,6 +410,13 @@ bool Assignment2::config_return(const CEGUI::EventArgs &e) {
 bool Assignment2::config_setVolume(const CEGUI::EventArgs &e) {
 	CEGUI::Scrollbar *vol = (CEGUI::Scrollbar*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/VolumeScrollbar");
 	soundHandler->set_ambient_volume(a_channel, (vol->getScrollPosition() * 128));
+	return true;
+}
+//-------------------------------------------------------------------------------------
+
+bool Assignment2::config_setSFXVolume(const CEGUI::EventArgs &e) {
+	CEGUI::Scrollbar *vol = (CEGUI::Scrollbar*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/SFXScrollbar");
+	soundHandler->set_effects_volume(vol->getScrollPosition() * 128);
 	return true;
 }
 //-------------------------------------------------------------------------------------

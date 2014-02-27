@@ -43,7 +43,7 @@ void PlayGround::setup(void) {
 
 	if (courtType == FULL_COURT) {
 		Ogre::SceneNode* temp = parentNode->createChildSceneNode("NetNode", Ogre::Vector3(0,-h/2+20, 0));
-		makePlane("net", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, l/2, 40, temp);
+		makePlane("net", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, temp);
 		net.setToBox(
 			btVector3(w/2, 20, 2), 
 			0, 
@@ -107,10 +107,13 @@ void PlayGround::destroy(void) {
 //-------------------------------------------------------------------------------------
 
 void PlayGround::makePlane(std::string name, const Ogre::Vector3& planeNormal, const Ogre::Vector3& textureUp, const Ogre::String& texture, const int distance, const int length, const int height, Ogre::SceneNode* parent) {
+	Ogre::Real tile = 5;
+	if(texture == "Examples/TennisCourt")
+		tile = 1;
 	Ogre::Plane plane(planeNormal, -distance);
 	Ogre::MeshManager::getSingleton().createPlane(
 		name, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-        	plane, length, height, 1, 1, true, 1, 5, 5, textureUp
+        	plane, length, height, 1, 1, true, 1, tile, tile, textureUp
 	);
 	Ogre::Entity* entSide = graphicsEngine->createEntity(name);
 	if (parent == NULL)

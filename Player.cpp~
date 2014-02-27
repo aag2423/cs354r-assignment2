@@ -17,7 +17,7 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 	if (type == HUMAN) {
 		playerEnt = mSceneMgr->createEntity( "playerEnt", "ninja.mesh" );
 		walkAnimation = playerEnt->getAnimationState("Walk");
-		shootAnimation = playerEnt->getAnimationState("Attack3");
+		shootAnimation = playerEnt->getAnimationState("SideKick");
 		playerNode = parentNode->createChildSceneNode();
 		playerNode->attachObject(playerEnt);
 		Ogre::Real ratio = HEIGHT/195.649;

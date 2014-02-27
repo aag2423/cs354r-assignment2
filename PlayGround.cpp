@@ -36,7 +36,7 @@ void PlayGround::setup(void) {
 	Ogre::SceneNode* wallNode = parentNode->createChildSceneNode("WallNode");
 	makePlane("wallf", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
 	makePlane("wallb", Ogre::Vector3::NEGATIVE_UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
-	makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/TennisCourt", h/2, w, l, wallNode);
+	makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, (courtType == FULL_COURT) ? "Examples/TennisCourt" : "Examples/GrassFloor", h/2, w, l, wallNode);
 	makePlane("ceiling", Ogre::Vector3::NEGATIVE_UNIT_Y, Ogre::Vector3::UNIT_X, "Examples/Flare", h/2, w, l, wallNode);
 	makePlane("walll", Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);
 	makePlane("wallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);
@@ -107,10 +107,13 @@ void PlayGround::destroy(void) {
 //-------------------------------------------------------------------------------------
 
 void PlayGround::makePlane(std::string name, const Ogre::Vector3& planeNormal, const Ogre::Vector3& textureUp, const Ogre::String& texture, const int distance, const int length, const int height, Ogre::SceneNode* parent) {
+	Ogre::Real tile = 5;
+	if(texture == "Examples/TennisCourt")
+		tile = 1;
 	Ogre::Plane plane(planeNormal, -distance);
 	Ogre::MeshManager::getSingleton().createPlane(
 		name, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-        	plane, length, height, 1, 1, true, 1, 5, 5, textureUp
+        	plane, length, height, 1, 1, true, 1, tile, tile, textureUp
 	);
 	Ogre::Entity* entSide = graphicsEngine->createEntity(name);
 	if (parent == NULL)

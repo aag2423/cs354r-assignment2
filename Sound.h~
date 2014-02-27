@@ -22,7 +22,7 @@ static const char *player_win = "./media/sounds/player_win.wav";
 static const char *player_lose = "./media/sounds/player_lose.wav";
 static const char *grunt = "./media/sounds/grunt.wav";
 
-static bool sound_effects = false;
+static bool sound_effects = true;
 
 class Sound{
 public:
@@ -31,6 +31,7 @@ public:
 	void play_sound(const char*);
 	void start_ambient();
 	void set_ambient_volume(int chan, int vol);
+	void set_effects_volume(int vol);
 };
 
 static SDL_AudioSpec s_wanted;
@@ -40,5 +41,5 @@ static Mix_Chunk *point_up_c;
 static Uint8 *audio_chunk;
 static Uint32 audio_len;
 static Uint8 *audio_pos;
-static int channel, a_channel, p_u_chan;
+static int channel, a_channel, p_u_chan, effects_vol;
 #endif
