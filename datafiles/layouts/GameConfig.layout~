@@ -19,9 +19,9 @@
 			<Property Name="SizingEnabled" Value="False" />
 			<Property Name="AlwaysOnTop" Value="True" />
 			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/VolumeText">
-				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
+				<Property Name="UnifiedSize" Value="{{0.15,0},{0.1,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.05,0}}" />
-				<Property Name="Text" Value="Volume" />
+				<Property Name="Text" Value="BG Volume" />
 			</Window>
 			<Window Type="TaharezLook/HorizontalScrollbar" Name="ConfigRoot/Menu/VolumeScrollbar">
 				<Property Name="UnifiedSize" Value="{{0.3,0},{0.05,0}}" />
@@ -29,27 +29,27 @@
 				<Property Name="StepSize" Value="0.2" />
 				<Property Name="ScrollPosition" Value="1.0" />
 			</Window>
+			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/SFXText">
+				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.35,0}}" />
+				<Property Name="Text" Value="SFX Volume" />
+			</Window>
+			<Window Type="TaharezLook/HorizontalScrollbar" Name="ConfigRoot/Menu/SFXScrollbar">
+				<Property Name="UnifiedSize" Value="{{0.3,0},{0.05,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.5,0}}" />
+				<Property Name="StepSize" Value="0.2" />
+				<Property Name="ScrollPosition" Value="1.0" />
+			</Window>
 			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/RestitutionText">
 				<Property Name="UnifiedSize" Value="{{0.25,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.35,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.65,0}}" />
 				<Property Name="Text" Value="Ball Restitution" />
 			</Window>
 			<Window Type="TaharezLook/HorizontalScrollbar" Name="ConfigRoot/Menu/RestitutionScrollbar">
 				<Property Name="UnifiedSize" Value="{{0.3,0},{0.05,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.5,0}}" />
-				<Property Name="StepSize" Value="0.2" />
-				<Property Name="ScrollPosition" Value="0.99" />
-			</Window>
-			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/GravityText">
-				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.65,0}}" />
-				<Property Name="Text" Value="Gravity" />
-			</Window>
-			<Window Type="TaharezLook/HorizontalScrollbar" Name="ConfigRoot/Menu/GravityScrollbar">
-				<Property Name="UnifiedSize" Value="{{0.3,0},{0.05,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.8,0}}" />
 				<Property Name="StepSize" Value="0.2" />
-				<Property Name="ScrollPosition" Value="0.6" />
+				<Property Name="ScrollPosition" Value="0.99" />
 			</Window>
 			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/ModeText">
 				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
@@ -68,6 +68,24 @@
 				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.34,0}}" />
 				<Property Name="Text" Value="Practice" />
 				<Property Name="GroupID" Value="354" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/GravityText">
+				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.5,0}}" />
+				<Property Name="Text" Value="Gravity" />
+			</Window>
+			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/GravityEarth">
+				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.64,0}}" />
+				<Property Name="Selected" Value="True" />
+				<Property Name="Text" Value="Earth" />
+				<Property Name="GroupID" Value="867" />
+			</Window>
+			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/GravityMoon">
+				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.74,0}}" />
+				<Property Name="Text" Value="Moon" />
+				<Property Name="GroupID" Value="867" />
 			</Window>
 			<Window Type="TaharezLook/Button" Name="ConfigRoot/Menu/Return">
 				<Property Name="UnifiedSize" Value="{{0.28,0},{0.08,0}}" />

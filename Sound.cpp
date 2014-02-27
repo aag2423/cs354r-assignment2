@@ -11,7 +11,6 @@ Sound::Sound(void){
 	s_wanted.channels = 2; // 1 = mono, 2 = stereo
 	s_wanted.samples = 4096; // good low-latency value for callback
 	s_wanted.userdata = NULL;
-	
 	/* Open the audio device, forcing the desired format */
 	if (Mix_OpenAudio(s_wanted.freq, s_wanted.format, s_wanted.channels, s_wanted.samples) != 0){
 		fprintf(stdout, "Couldn't open audio: %s\n", SDL_GetError());
@@ -45,7 +44,7 @@ void Sound::play_sound(const char* current)
 		fprintf(stdout, "Unable to load wav file: %s \n", Mix_GetError());
 		return;
 	}
-	Mix_VolumeChunk(sound_c, 64);
+	Mix_VolumeChunk(sound_c, effects_vol);
 	channel = Mix_PlayChannel(-1, sound_c, 0);
 	if(channel == -1)
 		fprintf(stdout, "Unable to play wav file: %s \n", Mix_GetError());
@@ -54,4 +53,8 @@ void Sound::play_sound(const char* current)
 void Sound::set_ambient_volume(int chan, int vol)
 {
 		Mix_Volume(chan, vol);
+}
+
+void Sound::set_effects_volume(int vol){
+	effects_vol = vol;
 }

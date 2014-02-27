@@ -861,8 +861,7 @@ material Examples/TennisCourt
 		{
 			texture_unit
 			{
-				texture tenniscourt.jpg
-				scale 0.2635 0.4601
+				texture tenniscourt2.jpg
 			}
 		}
 	}
