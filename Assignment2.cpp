@@ -428,6 +428,19 @@ bool Assignment2::config_setRestitution(const CEGUI::EventArgs &e) {
 }
 //-------------------------------------------------------------------------------------
 
+/*
+bool Assignment2::config_court(const CEGUI::EventArgs &e) {
+	// Case 0: Tennis Court
+		game->getCourt()->toggleCourt(0);
+	// Case 1: Grid
+		game->getCourt()->toggleCourt(1);
+	// Case 2: Cloudy
+		game->getCourt()->toggleCourt(2);
+
+	return true;	
+}
+*/
+
 bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {
 	game->handleKeyboardEvent(TOGGLE_GAME_MODE);
 			if(game->getGameMode() == PRACTICE) {

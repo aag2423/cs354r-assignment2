@@ -92,6 +92,7 @@ public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod, GameMode mode=FULL_GAME);
  	~Game(void);
 	
+	PlayGround* getCourt(void) { return court; }
 	void setBallRestitution(Ogre::Real r) {
 		if(r == 1) r = 0.99;
 		gameState.ballRestitution = r;

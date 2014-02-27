@@ -79,6 +79,7 @@ void Game::toggleGameMode(void) {
 	reset();
 }
 
+
 void Game::rePosition(void) {
 	delete ball;
 	Ogre::Vector3 halfDim;

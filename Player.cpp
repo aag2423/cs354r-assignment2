@@ -13,7 +13,7 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 
 
 	parentNode = box->getNode()->createChildSceneNode(pos);
-
+	Ogre::String paddleName;
 	if (type == HUMAN) {
 		playerEnt = mSceneMgr->createEntity( "playerEnt", "ninja.mesh" );
 		walkAnimation = playerEnt->getAnimationState("Walk");
@@ -22,6 +22,7 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 		playerNode->attachObject(playerEnt);
 		Ogre::Real ratio = HEIGHT/195.649;
 		playerNode->scale(ratio, ratio, ratio);
+		paddleName = "playerPaddle";
 	} else {
 		playerEnt = mSceneMgr->createEntity( "computerEnt", "robot.mesh" );
 		walkAnimation = playerEnt->getAnimationState("Walk");
@@ -31,6 +32,7 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 		playerNode->yaw(Ogre::Degree(90));
 		Ogre::Real ratio = HEIGHT/101.673;
 		playerNode->scale(ratio, ratio, ratio);
+		paddleName = "CPUPaddle";
 	}
 	playerEnt->setCastShadows(true);
 
@@ -39,14 +41,7 @@ Player::Player(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, Play
 
         shootAnimation->setLoop(true);
         shootAnimation->setEnabled(true);
-	/*
-	Ogre::Entity* paddleEnt = mSceneMgr->createEntity( "paddleEnt", "cube.mesh" );
-	paddleEnt->setCastShadows(true);
-	paddleNode = parentNode->createChildSceneNode(Ogre::Vector3(pos.x, pos.y + 300.0, pos.z - 250));
-	paddleNode->scale(0.5, 0.5, 0.1);
-	paddleNode->attachObject(paddleEnt);
-	*/
-
+	
 	physicsObject.setToBox(
 		btVector3(10,HEIGHT,5),
 		100,

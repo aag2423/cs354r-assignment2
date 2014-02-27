@@ -7,7 +7,8 @@ PlayGround::PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& engine, Pla
 	courtType(type),
 	graphicsEngine(mSceneMgr),
 	physicsEngine(&engine),
-	parentNode(0)
+	parentNode(0),
+	courtNum(0)
 {
 	parentNode = graphicsEngine->getRootSceneNode()->createChildSceneNode();
 	setup();
@@ -29,18 +30,41 @@ void PlayGround::toggleType(void) {
 	std::cout << "========= Debug: Play Ground Type Changed =========" << std::endl;
 }
 
+void PlayGround::toggleCourt(const int court) {
+	destroy();
+	courtNum = court;
+	setup();
+	std::cout << "========= Debug: Play Ground Type Changed =========" << std::endl;
+}
 void PlayGround::setup(void) {
 	l = (courtType == FULL_COURT) ? FULL_COURT_LENGTH : PRACTICE_COURT_LENGTH;
 	w = (courtType == FULL_COURT) ? FULL_COURT_WIDTH : PRACTICE_COURT_WIDTH;
 	h = (courtType == FULL_COURT) ? FULL_COURT_HEIGHT : PRACTICE_COURT_HEIGHT;
 	Ogre::SceneNode* wallNode = parentNode->createChildSceneNode("WallNode");
-	makePlane("wallf", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
-	makePlane("wallb", Ogre::Vector3::NEGATIVE_UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
-	makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, (courtType == FULL_COURT) ? "Examples/TennisCourt" : "Examples/GrassFloor", h/2, w, l, wallNode);
-	makePlane("ceiling", Ogre::Vector3::NEGATIVE_UNIT_Y, Ogre::Vector3::UNIT_X, "Examples/Flare", h/2, w, l, wallNode);
-	makePlane("walll", Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);
-	makePlane("wallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);
-
+	if(courtNum == 0) {
+		makePlane("wallf", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
+		makePlane("wallb", Ogre::Vector3::NEGATIVE_UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
+		makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, (courtType == FULL_COURT) ? "Examples/TennisCourt" : "Examples/GrassFloor", h/2, w, l, wallNode);
+		makePlane("ceiling", Ogre::Vector3::NEGATIVE_UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/Flare", h/2, w, l, wallNode);
+		makePlane("walll", Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);
+		makePlane("wallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);
+	}
+	else if(courtNum == 1) {
+		makePlane("wallf", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/Tron", l/2, w, h, wallNode);
+		makePlane("wallb", Ogre::Vector3::NEGATIVE_UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/Tron", l/2, w, h, wallNode);
+		makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/Grid", h/2, w, l, wallNode);
+		makePlane("ceiling", Ogre::Vector3::NEGATIVE_UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/Grid", h/2, w, l, wallNode);
+		makePlane("walll", Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/Tron", w/2, l, h, wallNode);
+		makePlane("wallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/Tron", w/2, l, h, wallNode);
+	}
+	else {
+		makePlane("wallf", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/CloudySky", l/2, w, h, wallNode);
+		makePlane("wallb", Ogre::Vector3::NEGATIVE_UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/CloudySky", l/2, w, h, wallNode);
+		makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/CloudySky", h/2, w, l, wallNode);
+		makePlane("ceiling", Ogre::Vector3::NEGATIVE_UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/CloudySky", h/2, w, l, wallNode);
+		makePlane("walll", Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/CloudySky", w/2, l, h, wallNode);
+		makePlane("wallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/CloudySky", w/2, l, h, wallNode);
+	}
 	if (courtType == FULL_COURT) {
 		Ogre::SceneNode* temp = parentNode->createChildSceneNode("NetNode", Ogre::Vector3(0,-h/2+20, 0));
 		makePlane("net", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, temp);

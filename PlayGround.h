@@ -41,7 +41,7 @@ struct MyPlaneContactResultCallback : public btCollisionWorld::ContactResultCall
 class PlayGround {
 private:
 	void makePlane(std::string name, const Ogre::Vector3& planeNormal, const Ogre::Vector3& textureUp, const Ogre::String& texture, const int distance, const int lenght, const int height, Ogre::SceneNode* parent=NULL);
-	void setup(void);
+	void setup();
 	void destroy(void);
 protected:
 	PlayGroundType courtType;
@@ -58,10 +58,12 @@ protected:
 	PhysicsObject rightPlane;
 	PhysicsObject frontPlane;
 	PhysicsObject backPlane;
+	int courtNum;
 public:
 	PlayGround(Ogre::SceneManager* mSceneMgr, PhysicsEngine& physicsEngine, PlayGroundType type);
 	~PlayGround(void);
 	void toggleType(void);
+	void toggleCourt(const int court);
 
 	Ogre::SceneNode* getNode(void) { return parentNode; }
 	void getHalfDimension(Ogre::Vector3& result) { 

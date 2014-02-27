@@ -381,6 +381,34 @@ material Examples/RustySteel
 	}
 }
 
+material Examples/Grid
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture grid.jpg
+			}
+		}
+	}
+}
+
+material Examples/Tron
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture tron.png
+			}
+		}
+	}
+}
+
 material Examples/Target
 {
 	technique
@@ -852,6 +880,19 @@ material Examples/GrassFloor
 	}
 }
 
+material Examples/Blue
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				blue.jpg
+			}
+		}
+	}
+}
 
 material Examples/TennisCourt
 {
@@ -861,7 +902,7 @@ material Examples/TennisCourt
 		{
 			texture_unit
 			{
-				texture tenniscourt2.jpg
+				texture tenniscourt.jpg
 			}
 		}
 	}

@@ -361,7 +361,7 @@ material Examples/CloudySky
 			texture_unit
 			{
 				texture clouds.jpg
-				scroll_anim 0.15 0
+				scroll_anim 0.50 0
 			}
 		}
 	}
@@ -376,6 +376,34 @@ material Examples/RustySteel
 			texture_unit
 			{
 				texture RustySteel.jpg
+			}
+		}
+	}
+}
+
+material Examples/Grid
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture grid.jpg
+			}
+		}
+	}
+}
+
+material Examples/Tron
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture tron.png
 			}
 		}
 	}
@@ -852,6 +880,19 @@ material Examples/GrassFloor
 	}
 }
 
+material Examples/Blue
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				blue.jpg
+			}
+		}
+	}
+}
 
 material Examples/TennisCourt
 {
