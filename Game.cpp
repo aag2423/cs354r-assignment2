@@ -35,8 +35,8 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, GameMode mod
 	Ogre::Vector3 halfDim;
 	court->getHalfDimension(halfDim);
 
-	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 320));
-	player = new Player(mSceneMgr, physicsEngine, HUMAN, court, Ogre::Vector3(0, -125, halfDim.z - 300));
+	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 340));
+	player = new Player(mSceneMgr, physicsEngine, HUMAN, court, Ogre::Vector3(0, -125, halfDim.z - 320));
 
 	computer = new Player(mSceneMgr, physicsEngine, AI, court, Ogre::Vector3(0, -125, -FULL_COURT_LENGTH/2 + 300));
 	computer->getNode()->yaw(Ogre::Degree(180));
@@ -83,9 +83,9 @@ void Game::rePosition(void) {
 	delete ball;
 	Ogre::Vector3 halfDim;
 	court->getHalfDimension(halfDim);
-	ball = new Ball(graphicsEngine, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 320));
+	ball = new Ball(graphicsEngine, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 340));
 	ball->getPhysicsObject().setRestitution(gameState.ballRestitution);
-	player->setPosition(Ogre::Vector3(5, -125, halfDim.z - 300));  
+	player->setPosition(Ogre::Vector3(5, -125, halfDim.z - 320));  
 	player->resetState(); 
 	computer->setPosition(Ogre::Vector3(5, -125, -halfDim.z + 300));
 	computer->getNode()->yaw(Ogre::Degree(180));
@@ -191,6 +191,7 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	ball->updateGraphicsScene();
 
 	if(ball->hitBy(player))	{
+		player->playerState.hitting = false;
 		soundHandler->play_sound(ball_hit);
 		if (gameState.progress == HIT_BY_PLAYER_AND_FLOOR) {
 			gameState.computerScore++;
@@ -350,14 +351,18 @@ void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 	if (gameState.paused || gameState.result != ONGOING) return;
 	PlayerState* playerState = &(player->playerState);
 	if (playerState->hitting) {
+		/*
 		if (dx > 5 && playerState->shotDirection.x == 0)
 			playerState->shotDirection.x = BACKHAND;
 		else if (dx < -5 && playerState->shotDirection.x == 0)
-                        playerState->shotDirection.x = FOREHAND;
+            playerState->shotDirection.x = FOREHAND;
+           */
+		playerState->shotDirection.x = dx;
+          
 		if (dy > 5 && playerState->shotDirection.y == 0) 
-			playerState->shotDirection.y = VOLLEY;
-		else if (dy < -5 && playerState->shotDirection.y == 0) 
 			playerState->shotDirection.y = SMASH;
+		else if (dy < -5 && playerState->shotDirection.y == 0) 
+			playerState->shotDirection.y = VOLLEY;
 	}
 	if (gameState.camMode != ABOVE_CAM){
 		player->getNode()->yaw(Ogre::Degree(-0.15*dx), Ogre::Node::TS_LOCAL);

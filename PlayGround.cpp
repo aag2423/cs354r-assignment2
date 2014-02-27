@@ -36,7 +36,7 @@ void PlayGround::setup(void) {
 	Ogre::SceneNode* wallNode = parentNode->createChildSceneNode("WallNode");
 	makePlane("wallf", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
 	makePlane("wallb", Ogre::Vector3::NEGATIVE_UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", l/2, w, h, wallNode);
-	makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/TennisCourt", h/2, w, l, wallNode);
+	makePlane("floor", Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, "Examples/GrassFloor", h/2, w, l, wallNode);
 	makePlane("ceiling", Ogre::Vector3::NEGATIVE_UNIT_Y, Ogre::Vector3::UNIT_X, "Examples/Flare", h/2, w, l, wallNode);
 	makePlane("walll", Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);
 	makePlane("wallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/KAMEN", w/2, l, h, wallNode);

@@ -8,9 +8,9 @@
 
 
 enum PlayerType { HUMAN, AI };
-enum PlayerStep { SMALL_STEP = 80, NORMAL_STEP = 200, RUN_STEP = 350 };
+enum PlayerStep { SMALL_STEP = 100, NORMAL_STEP = 200, RUN_STEP = 350 };
 enum HitStrength { WEAK_HIT = 50, NORMAL_HIT = 100, STRONG_HIT = 150 };
-enum shotMode{ ./ = -30, BACKHAND = 30, VOLLEY = -35, SMASH = 20 };
+enum shotMode{ FOREHAND = -30, BACKHAND = 30, VOLLEY = 35, SMASH = -10 };
 
 typedef struct PlayerState {
 	Ogre::Vector3 shotDirection;

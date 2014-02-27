@@ -70,7 +70,8 @@ bool Ball::hitBy(Player* player) {
 	Ogre::SceneNode* playerNode = player->getNode();
 	Ogre::Vector3 dir = playerNode->getOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 	Ogre::Vector3 distance = parentNode->getPosition() - (playerNode->getPosition() + Ogre::Vector3(0, 40, 0));
-	if(distance.length() < 80 && distance.dotProduct(dir) >= 0) {
+	Ogre::Real limit = player->playerState.type==AI ? 50 : 80;
+	if(distance.length() < limit && distance.dotProduct(dir) >= 0) {
 		//physicsObject.setLinearVelocity(btVector3(0, 30, -100));
 		dir *= 100;
 		//physicsObject.setLinearVelocity(btVector3(dir.x, dir.y, dir.z));
@@ -78,6 +79,7 @@ bool Ball::hitBy(Player* player) {
 		if (shotDirection.y == 0) shotDirection.y = 20;
 		Ogre::Real z = player->playerState.strength;
 		if (player->playerState.type == HUMAN) {z = -z; }
+			
 		physicsObject.setLinearVelocity(btVector3(shotDirection.x, shotDirection.y, z));
 		if (!shooting)
 			playSound = true;
