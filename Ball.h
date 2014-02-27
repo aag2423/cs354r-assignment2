@@ -25,6 +25,8 @@ enum BallCollisionEvent {
 };
 
 class Ball {
+private:
+	BallCollisionEvent collidesWithHelper(BallCollisionEvent result);
 protected:
 	const static Ogre::Real BALL_RADIUS = 5.0f;
 	Ogre::SceneManager* graphicsEngine;

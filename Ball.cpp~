@@ -109,6 +109,17 @@ BallCollisionEvent Ball::hitTarget(Target* t1, Target* t2, Target* t3) {
 	return NOTHING_HAPPENED;
 }
 
+BallCollisionEvent Ball::collidesWithHelper(BallCollisionEvent result) {
+	if (colliding) {
+		if (result == NOTHING_HAPPENED)
+			colliding = false;
+		return NOTHING_HAPPENED;
+	} else {
+		if (result != NOTHING_HAPPENED) colliding = true;
+		return result;
+	}
+}
+
 BallCollisionEvent Ball::collidesWith(PlayGround* court, Player* p) {
 	MyPlaneContactResultCallback callback;
 	BallCollisionEvent result = NOTHING_HAPPENED;
@@ -118,38 +129,38 @@ BallCollisionEvent Ball::collidesWith(PlayGround* court, Player* p) {
 	world->contactPairTest(me, p->getPhysicsObject().getRigidBody(), callback);
 	if (callback.hit) {	
 		result = HIT_PLAYER;
-	} else {
+		return collidesWithHelper(result);
+	}
 	world->contactPairTest(me, court->getPhysicsObject(TOP_PLANE).getRigidBody(), callback);
 	if (callback.hit) {	
 		result = HIT_CEILING;
-	}
-	world->contactPairTest(me, court->getPhysicsObject(LEFT_PLANE).getRigidBody(), callback);
-	if (callback.hit) {	
-		result = HIT_WALL;
-	}
-	world->contactPairTest(me, court->getPhysicsObject(RIGHT_PLANE).getRigidBody(), callback);
-	if (callback.hit) {	
-		result = HIT_WALL;
-	}
-	world->contactPairTest(me, court->getPhysicsObject(FRONT_PLANE).getRigidBody(), callback);
-	if (callback.hit) {	
-		result = HIT_WALL;
-	}
-	world->contactPairTest(me, court->getPhysicsObject(BACK_PLANE).getRigidBody(), callback);
-	if (callback.hit) {	
-		result = HIT_WALL;
+		return collidesWithHelper(result);
 	}
 	world->contactPairTest(me, court->getPhysicsObject(BOTTOM_PLANE).getRigidBody(), callback);
 	if (callback.hit) {	
 		result = HIT_FLOOR;
+		return collidesWithHelper(result);
 	}
+	world->contactPairTest(me, court->getPhysicsObject(LEFT_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_WALL;
+		return collidesWithHelper(result);
 	}
-	if (colliding) {
-		if (result == NOTHING_HAPPENED)
-			colliding = false;
-		return NOTHING_HAPPENED;
-	} else {
-		if (result != NOTHING_HAPPENED) colliding = true;
-		return result;
+	world->contactPairTest(me, court->getPhysicsObject(RIGHT_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_WALL;
+		return collidesWithHelper(result);
 	}
+	world->contactPairTest(me, court->getPhysicsObject(FRONT_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_WALL;
+		return collidesWithHelper(result);
+	}
+	world->contactPairTest(me, court->getPhysicsObject(BACK_PLANE).getRigidBody(), callback);
+	if (callback.hit) {	
+		result = HIT_WALL;
+		return collidesWithHelper(result);
+	}
+	return collidesWithHelper(result);
+	
 }
