@@ -90,8 +90,9 @@ void PlayGround::setup(void) {
 	topPlane.setRestitution(0.5); 
 	leftPlane.setRestitution(0.8); 
 	rightPlane.setRestitution(0.8); 
-	frontPlane.setRestitution(0.01); 
+	frontPlane.setRestitution(0.1); 
 	backPlane.setRestitution(0.8); 
+	net.setRestitution(0.02); 
 	physicsEngine->addObject(&bottomPlane);
 	physicsEngine->addObject(&topPlane);
 	physicsEngine->addObject(&leftPlane);

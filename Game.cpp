@@ -351,20 +351,21 @@ void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 	if (gameState.paused || gameState.result != ONGOING) return;
 	PlayerState* playerState = &(player->playerState);
-	if (playerState->hitting) {
 		/*
+	if (playerState->hitting) {
 		if (dx > 5 && playerState->shotDirection.x == 0)
 			playerState->shotDirection.x = BACKHAND;
 		else if (dx < -5 && playerState->shotDirection.x == 0)
             playerState->shotDirection.x = FOREHAND;
-           */
-		playerState->shotDirection.x = dx;
           
 		if (dy > 5 && playerState->shotDirection.y == 0) 
 			playerState->shotDirection.y = SMASH;
 		else if (dy < -5 && playerState->shotDirection.y == 0) 
 			playerState->shotDirection.y = VOLLEY;
 	}
+           */
+		playerState->shotDirection.x = dx;
+		playerState->shotDirection.y = -dy + 20;
 	if (gameState.camMode != ABOVE_CAM){
 		player->getNode()->yaw(Ogre::Degree(-0.15*dx), Ogre::Node::TS_LOCAL);
 	}

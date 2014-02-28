@@ -21,6 +21,7 @@ protected:
 	Game* game;
 
 	bool mouseClicked;
+	bool mPaused;
 	Ogre::Real mRotate;       
     	Ogre::Real mMove;
     	Ogre::Vector3 mDirection;
@@ -30,7 +31,6 @@ protected:
 	//OgreBites::ParamsPanel* scorePanel; 
 	const static int MAX_NUM_BALLS = 10;
 	bool pauses [MAX_NUM_BALLS];
-	bool mPaused;
 	int bounces;
 	int collisions;
 	

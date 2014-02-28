@@ -85,7 +85,7 @@ void Player::resetState(void) {
 		playerState.hitting = true;
 		playerState.shotDirection = Ogre::Vector3(0, 30, 0);
 	} else {
-		playerState.strength = NORMAL_HIT;
+		playerState.strength = STRONG_HIT;
 		playerState.step = NORMAL_STEP;
 		playerState.hitting = false;
 		playerState.shotDirection = 0;
