@@ -1,0 +1,47 @@
+======== Build steps ========
+1. Go to turnin folder
+2. run ./buildit; ./OgreApp
+
+
+======== User Manual ========
+Game Mode:
+Full Game - Play with AI
+Practice  - Hit targets
+
+GamePlay:
+Press left mouse button to serve ball.
+Move mouse to swing "paddle" in the desired direction
+Press left mouse button to shoot
+Get 11 points first to win in full-game mode
+Hit targets without letting the ball hitting other objects (player, wall, floor) to get combos in practice Mode
+
+Key bindinds:
+W,A,S,D - Move Player
+LControl - Run
+1,2,3 - Player Hit Strength
+C - Toggle Camera Mode
+R - Restart game
+I,J,K,L,U,O - Move Camera
+Space - Enter PauseMenu
+Esc - Quit game
+
+For More settings:
+Go to Pause Menu
+
+
+======== Project Summary ========
+Required Features:
+User-controlled "racquet" - Animated Ninja for gamer and Robot for AI
+Camera control - Both camera mode toggling and user-controlled camera move
+Sound effects - Background sound, sound effects for any collision, controlled by GUI
+Physics - Simulated ball movement, kinematic player object, collision detection
+
+Additional Features:
+1. AI Opponent
+2. PauseMenu GUI, score display
+3. Animation when ball hits target
+
+Better than planed:
+We made the full-game mode with AI so that we can play "real" tennis now.
+Not done:
+We did not make a animated paddle object. Instead, we just used the animation of Ninja and Robot mesh.
