@@ -11,7 +11,7 @@
 			<Property Name="Image" Value="set:Background image:full_image" />
 		</Window>
 		<Window Type="TaharezLook/FrameWindow" Name="PauseRoot/Menu">
-			<Property Name="UnifiedSize" Value="{{0.2,0},{0.25,0}}" />
+			<Property Name="UnifiedSize" Value="{{0.2,0},{0.3,0}}" />
 			<Property Name="UnifiedPosition" Value="{{0.4,0},{0.4,0}}" />
 			<Property Name="Text" Value="Paused" />
 			<Property Name="DragMovingEnabled" Value="False" />
@@ -20,18 +20,43 @@
 			<Property Name="AlwaysOnTop" Value="True" />
 			<Window Type="TaharezLook/Button" Name="PauseRoot/Menu/Resume">
 				<Property Name="Text" Value="Resume" />
-				<Property Name="UnifiedSize" Value="{{0.95,0},{0.2,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.1,0}}" />
+				<Property Name="UnifiedSize" Value="{{0.95,0},{0.16,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.06,0}}" />
 			</Window>
 			<Window Type="TaharezLook/Button" Name="PauseRoot/Menu/Config">
 				<Property Name="Text" Value="Config" />
-				<Property Name="UnifiedSize" Value="{{0.95,0},{0.2,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.4,0}}" />
+				<Property Name="UnifiedSize" Value="{{0.95,0},{0.16,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.3,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="PauseRoot/Menu/Controls">
+				<Property Name="Text" Value="Controls" />
+				<Property Name="UnifiedSize" Value="{{0.95,0},{0.16,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.54,0}}" />
 			</Window>
 			<Window Type="TaharezLook/Button" Name="PauseRoot/Menu/Quit">
 				<Property Name="Text" Value="Quit" />
-				<Property Name="UnifiedSize" Value="{{0.95,0},{0.2,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.7,0}}" />
+				<Property Name="UnifiedSize" Value="{{0.95,0},{0.16,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.025,0},{0.78,0}}" />
+			</Window>
+		</Window>
+		<Window Type="TaharezLook/Editbox" Name="PauseRoot/ControlScreen">
+			<Property Name="UnifiedSize" Value="{{0.8,0},{0.75,0}}" />
+			<Property Name="UnifiedPosition" Value="{{0.1,0},{0.125,0}}" />
+			<Property Name="ReadOnly" Value="True" />
+			<Property Name="AlwaysOnTop" Value="True" />
+			<Property Name="Visible" Value="False" />
+			<Window Type="TaharezLook/StaticText" Name="PauseRoot/ControlScreen/Text">
+				<Property Name="UnifiedSize" Value="{{0.94,0},{0.84,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.03,0},{0.08,0}}" />
+				<Property Name="FrameEnabled" Value="False" />
+				<Property Name="HorzFormatting" Value="WordWrapLeftAligned" />
+				<Property Name="VertFormatting" Value="TopAligned" />
+				<Property Name="Text" Value="Controls text goes here" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="PauseRoot/ControlScreen/Return">
+				<Property Name="UnifiedSize" Value="{{0.25,0},{0.08,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.75,0},{0.92,0}}" />
+				<Property Name="Text" Value="Return" />
 			</Window>
 		</Window>
 	</Window>

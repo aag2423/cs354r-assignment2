@@ -75,13 +75,33 @@ void Assignment2::setupCEGUI(void) {
 	CEGUI::Window *endRoot = wmgr.loadWindowLayout("GameEnd.layout");
 	sheet->addChildWindow(endRoot);
 
+	// set controls text
+	std::string controlText ("");
+	controlText += " \n- SPACE:   Pause/Unpause game\n \n";
+	controlText += "- WASD:    Move player\n \n";
+	controlText += "- UIOJKL:  Move camera\n\n";
+	controlText += "- Left Mouse Button:   Hit ball\n \n";
+	controlText += "- 1:   Weak hit\n \n";
+	controlText += "- 2:   Normal hit\n \n";
+	controlText += "- 3:   Strong hit\n \n";
+	controlText += "- C:   Toggle camera type\n \n";
+	controlText += "- R:   Reset game\n \n";
+	controlText += "- ESCAPE:  Quit game";
+	wmgr.getWindow("PauseRoot/ControlScreen/Text")->setText(controlText);
+
+	// subscribe events
 	wmgr.getWindow("PauseRoot/Menu/Resume")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::resume_game, this));
 	wmgr.getWindow("PauseRoot/Menu/Quit")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::quit, this));
+	wmgr.getWindow("PauseRoot/Menu/Controls")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::game_controls, this));
+	wmgr.getWindow("PauseRoot/ControlScreen/Return")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::game_controls_return, this));
 	wmgr.getWindow("PauseRoot/Menu/Config")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::configure_game, this));
 	wmgr.getWindow("ConfigRoot/Menu/Return")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::config_return, this));
 	wmgr.getWindow("ConfigRoot/Menu/VolumeScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setVolume, this));
 	wmgr.getWindow("ConfigRoot/Menu/SFXScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setSFXVolume, this));
 	wmgr.getWindow("ConfigRoot/Menu/RestitutionScrollbar")->subscribeEvent(CEGUI::Scrollbar::EventScrollPositionChanged, CEGUI::Event::Subscriber(&Assignment2::config_setRestitution, this));
+	wmgr.getWindow("ConfigRoot/Menu/Court1")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_court, this));
+	wmgr.getWindow("ConfigRoot/Menu/Court2")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_court, this));
+	wmgr.getWindow("ConfigRoot/Menu/Court3")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_court, this));
 	wmgr.getWindow("ConfigRoot/Menu/ModeGame")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_mode_game, this));
 	wmgr.getWindow("ConfigRoot/Menu/GravityEarth")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_gravity, this));
 }
@@ -232,7 +252,9 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 			game->handleKeyboardEvent(PAUSE);
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);
+			CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu")->setVisible(true);
 			CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot")->setVisible(false);
+			CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/ControlScreen")->setVisible(false);
 			if(mPaused)
 				CEGUI::MouseCursor::getSingleton().show();
 			else
@@ -393,6 +415,20 @@ bool Assignment2::resume_game(const CEGUI::EventArgs &e) {
 }
 //-------------------------------------------------------------------------------------
 
+bool Assignment2::game_controls(const CEGUI::EventArgs &e) {
+        CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu")->setVisible(false);
+        CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/ControlScreen")->setVisible(true);
+        return true;
+}
+//-------------------------------------------------------------------------------------
+
+bool Assignment2::game_controls_return(const CEGUI::EventArgs &e) {
+        CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu")->setVisible(true);
+        CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/ControlScreen")->setVisible(false);
+        return true;
+}
+//-------------------------------------------------------------------------------------
+
 bool Assignment2::configure_game(const CEGUI::EventArgs &e) {
         CEGUI::WindowManager::getSingleton().getWindow("PauseRoot")->setVisible(false);
         CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot")->setVisible(true);
@@ -416,7 +452,7 @@ bool Assignment2::config_setVolume(const CEGUI::EventArgs &e) {
 
 bool Assignment2::config_setSFXVolume(const CEGUI::EventArgs &e) {
 	CEGUI::Scrollbar *vol = (CEGUI::Scrollbar*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/SFXScrollbar");
-	soundHandler->set_effects_volume(a_channel, (vol->getScrollPosition() * 128));
+	soundHandler->set_effects_volume(vol->getScrollPosition() * 128);
 	return true;
 }
 //-------------------------------------------------------------------------------------
@@ -427,6 +463,24 @@ bool Assignment2::config_setRestitution(const CEGUI::EventArgs &e) {
 	return true;
 }
 //-------------------------------------------------------------------------------------
+
+bool Assignment2::config_court(const CEGUI::EventArgs &e) {
+	static CEGUI::RadioButton *b1 = (CEGUI::RadioButton*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/Court1");
+	static CEGUI::RadioButton *b2 = (CEGUI::RadioButton*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/Court2");
+	if(b1->isSelected()) {
+		game->getCourt()->toggleCourt(0);
+	} else if (b2->isSelected()) {
+		game->getCourt()->toggleCourt(1);
+	} else {
+		game->getCourt()->toggleCourt(2);
+	}
+	// Case 0: Tennis Court
+	// Case 1: Grid
+	// Case 2: Cloudy
+
+	return true;	
+}
+//--------------------------------------------------------------------------------------
 
 bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {
 	game->handleKeyboardEvent(TOGGLE_GAME_MODE);
