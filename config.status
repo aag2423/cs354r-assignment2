@@ -885,6 +885,11 @@ S["am__EXEEXT_FALSE"]=""
 S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
+<<<<<<< HEAD
+=======
+S["SDL_NET_LIBS"]=""
+S["SDL_NET_CFLAGS"]=""
+>>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
 S["SDL_net_LIBS"]="-lSDL_net -lSDL  "
 S["SDL_net_CFLAGS"]="-D_GNU_SOURCE=1 -D_REENTRANT -I/usr/include/SDL  "
 S["SDL_MIXER_CFLAGS"]=""

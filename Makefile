@@ -177,6 +177,8 @@ RANLIB = ranlib
 SDL_CFLAGS = 
 SDL_LIBS = 
 SDL_MIXER_CFLAGS = 
+SDL_NET_CFLAGS = 
+SDL_NET_LIBS = 
 SDL_mixer_CFLAGS = -D_GNU_SOURCE=1 -D_REENTRANT -I/usr/include/SDL  
 SDL_mixer_LIBS = -lSDL_mixer -lSDL  
 SDL_net_CFLAGS = -D_GNU_SOURCE=1 -D_REENTRANT -I/usr/include/SDL  
@@ -247,8 +249,13 @@ ACLOCAL_AMFLAGS = -I m4
 noinst_HEADERS = Target.h PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h Sound.h
 OgreApp_CPPFLAGS = -I$(top_srcdir)
 OgreApp_SOURCES = Target.cpp PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp Sound.cpp
+<<<<<<< HEAD
 OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS) $(SDL_net_CFLAGS)
 OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS) $(SDL_net_LIBS)
+=======
+OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS) $(SDL_NET_CFLAGS)
+OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS) $(SDL_NET_LIBS)
+>>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
 EXTRA_DIST = buildit makeit
 AUTOMAKE_OPTIONS = foreign
 all: config.h

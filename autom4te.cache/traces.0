@@ -2623,6 +2623,7 @@ m4trace:configure.ac:33: -1- PKG_CHECK_EXISTS([SDL_mixer >= 1.2], [pkg_cv_[]SDL_
 m4trace:configure.ac:33: -1- _PKG_SHORT_ERRORS_SUPPORTED
 m4trace:configure.ac:34: -1- m4_pattern_allow([^SDL_MIXER_CFLAGS$])
 m4trace:configure.ac:35: -1- m4_pattern_allow([^SDL_LIBS$])
+<<<<<<< HEAD
 m4trace:configure.ac:37: -1- PKG_CHECK_MODULES([SDL_net], [SDL_net])
 m4trace:configure.ac:37: -1- m4_pattern_allow([^SDL_net_CFLAGS$])
 m4trace:configure.ac:37: -1- m4_pattern_allow([^SDL_net_LIBS$])
@@ -2633,6 +2634,18 @@ m4trace:configure.ac:37: -1- PKG_CHECK_EXISTS([SDL_net], [pkg_cv_[]SDL_net_LIBS=
 m4trace:configure.ac:37: -1- _PKG_SHORT_ERRORS_SUPPORTED
 m4trace:configure.ac:38: -1- m4_pattern_allow([^SDL_net_CFLAGS$])
 m4trace:configure.ac:39: -1- m4_pattern_allow([^SDL_net_LIBS$])
+=======
+m4trace:configure.ac:37: -1- PKG_CHECK_MODULES([SDL_net], [SDL_net >= 1.2])
+m4trace:configure.ac:37: -1- m4_pattern_allow([^SDL_net_CFLAGS$])
+m4trace:configure.ac:37: -1- m4_pattern_allow([^SDL_net_LIBS$])
+m4trace:configure.ac:37: -1- PKG_CHECK_EXISTS([SDL_net >= 1.2], [pkg_cv_[]SDL_net_CFLAGS=`$PKG_CONFIG --[]cflags "SDL_net >= 1.2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:37: -1- PKG_CHECK_EXISTS([SDL_net >= 1.2], [pkg_cv_[]SDL_net_LIBS=`$PKG_CONFIG --[]libs "SDL_net >= 1.2" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:37: -1- _PKG_SHORT_ERRORS_SUPPORTED
+m4trace:configure.ac:38: -1- m4_pattern_allow([^SDL_NET_CFLAGS$])
+m4trace:configure.ac:39: -1- m4_pattern_allow([^SDL_NET_LIBS$])
+>>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
 m4trace:configure.ac:42: -1- m4_pattern_allow([^LIB@&t@OBJS$])
 m4trace:configure.ac:42: -1- m4_pattern_allow([^LTLIBOBJS$])
 m4trace:configure.ac:42: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])

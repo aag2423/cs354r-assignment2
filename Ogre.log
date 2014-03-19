@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 13:04:48: Creating resource group General
 13:04:48: Creating resource group Internal
 13:04:48: Creating resource group Autodetect
@@ -454,3 +455,115 @@
 13:05:01: Plugin successfully uninstalled
 13:05:01: Unloading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/RenderSystem_GL
 13:05:01: Unregistering ResourceManager for type Material
+=======
+13:34:16: Creating resource group General
+13:34:16: Creating resource group Internal
+13:34:16: Creating resource group Autodetect
+13:34:16: SceneManagerFactory for type 'DefaultSceneManager' registered.
+13:34:16: Registering ResourceManager for type Material
+13:34:16: Registering ResourceManager for type Mesh
+13:34:16: Registering ResourceManager for type Skeleton
+13:34:16: MovableObjectFactory for type 'ParticleSystem' registered.
+13:34:16: OverlayElementFactory for type Panel registered.
+13:34:16: OverlayElementFactory for type BorderPanel registered.
+13:34:16: OverlayElementFactory for type TextArea registered.
+13:34:16: Registering ResourceManager for type Font
+13:34:16: ArchiveFactory for archive type FileSystem registered.
+13:34:16: ArchiveFactory for archive type Zip registered.
+13:34:16: DDS codec registering
+13:34:16: FreeImage version: 3.15.1
+13:34:16: This program uses FreeImage, a free, open source image library supporting all common bitmap formats. See http://freeimage.sourceforge.net for details
+13:34:16: Supported formats: bmp,ico,jpg,jif,jpeg,jpe,jng,koa,iff,lbm,mng,pbm,pbm,pcd,pcx,pgm,pgm,png,ppm,ppm,ras,tga,targa,tif,tiff,wap,wbmp,wbm,psd,cut,xbm,xpm,gif,hdr,g3,sgi,exr,j2k,j2c,jp2,pfm,pct,pict,pic,3fr,arw,bay,bmq,cap,cine,cr2,crw,cs1,dc2,dcr,drf,dsc,dng,erf,fff,ia,iiq,k25,kc2,kdc,mdc,mef,mos,mrw,nef,nrw,orf,pef,ptx,pxn,qtk,raf,raw,rdc,rw2,rwl,rwz,sr2,srf,sti
+13:34:16: Registering ResourceManager for type HighLevelGpuProgram
+13:34:16: Registering ResourceManager for type Compositor
+13:34:16: MovableObjectFactory for type 'Entity' registered.
+13:34:16: MovableObjectFactory for type 'Light' registered.
+13:34:16: MovableObjectFactory for type 'BillboardSet' registered.
+13:34:16: MovableObjectFactory for type 'ManualObject' registered.
+13:34:16: MovableObjectFactory for type 'BillboardChain' registered.
+13:34:16: MovableObjectFactory for type 'RibbonTrail' registered.
+13:34:16: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/RenderSystem_GL
+13:34:16: Installing plugin: GL RenderSystem
+13:34:16: OpenGL Rendering Subsystem created.
+13:34:16: Plugin successfully installed
+13:34:16: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_ParticleFX
+13:34:16: Installing plugin: ParticleFX
+13:34:16: Particle Emitter Type 'Point' registered
+13:34:16: Particle Emitter Type 'Box' registered
+13:34:16: Particle Emitter Type 'Ellipsoid' registered
+13:34:16: Particle Emitter Type 'Cylinder' registered
+13:34:16: Particle Emitter Type 'Ring' registered
+13:34:16: Particle Emitter Type 'HollowEllipsoid' registered
+13:34:16: Particle Affector Type 'LinearForce' registered
+13:34:16: Particle Affector Type 'ColourFader' registered
+13:34:16: Particle Affector Type 'ColourFader2' registered
+13:34:16: Particle Affector Type 'ColourImage' registered
+13:34:16: Particle Affector Type 'ColourInterpolator' registered
+13:34:16: Particle Affector Type 'Scaler' registered
+13:34:16: Particle Affector Type 'Rotator' registered
+13:34:16: Particle Affector Type 'DirectionRandomiser' registered
+13:34:16: Particle Affector Type 'DeflectorPlane' registered
+13:34:16: Plugin successfully installed
+13:34:16: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_BSPSceneManager
+13:34:16: Installing plugin: BSP Scene Manager
+13:34:16: Plugin successfully installed
+13:34:16: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_PCZSceneManager
+13:34:16: Installing plugin: Portal Connected Zone Scene Manager
+13:34:16: PCZone Factory Type 'ZoneType_Default' registered
+13:34:16: Plugin successfully installed
+13:34:16: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_OctreeZone
+13:34:16: Installing plugin: Octree Zone Factory
+13:34:16: Plugin successfully installed
+13:34:16: Loading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_OctreeSceneManager
+13:34:16: Installing plugin: Octree & Terrain Scene Manager
+13:34:16: Plugin successfully installed
+13:34:16: *-*-* OGRE Initialising
+13:34:16: *-*-* Version 1.7.4 (Cthugha)
+13:34:16: Creating resource group Essential
+13:34:16: Added resource location 'media/packs/SdkTrays.zip' of type 'Zip' to resource group 'Essential'
+13:34:16: Creating resource group Fonts
+13:34:16: Added resource location 'datafiles/fonts' of type 'FileSystem' to resource group 'Fonts'
+13:34:16: Added resource location 'media' of type 'FileSystem' to resource group 'General'
+13:34:16: Added resource location 'media/materials/programs' of type 'FileSystem' to resource group 'General'
+13:34:16: Added resource location 'media/materials/scripts' of type 'FileSystem' to resource group 'General'
+13:34:16: Added resource location 'media/materials/textures' of type 'FileSystem' to resource group 'General'
+13:34:16: Added resource location 'media/models' of type 'FileSystem' to resource group 'General'
+13:34:16: Added resource location 'media/sounds' of type 'FileSystem' to resource group 'General'
+13:34:16: Creating resource group Imagesets
+13:34:16: Added resource location 'datafiles/imagesets' of type 'FileSystem' to resource group 'Imagesets'
+13:34:16: Creating resource group Layouts
+13:34:16: Added resource location 'datafiles/layouts' of type 'FileSystem' to resource group 'Layouts'
+13:34:16: Creating resource group LookNFeel
+13:34:16: Added resource location 'datafiles/looknfeel' of type 'FileSystem' to resource group 'LookNFeel'
+13:34:16: Creating resource group Schemes
+13:34:16: Added resource location 'datafiles/schemes' of type 'FileSystem' to resource group 'Schemes'
+13:34:16: Added resource location 'datafiles/xml_schemas' of type 'FileSystem' to resource group 'Schemes'
+13:34:18: *-*-* OGRE Shutdown
+13:34:18: Unregistering ResourceManager for type Compositor
+13:34:18: Unregistering ResourceManager for type Font
+13:34:18: Unregistering ResourceManager for type Skeleton
+13:34:18: Unregistering ResourceManager for type Mesh
+13:34:18: Unregistering ResourceManager for type HighLevelGpuProgram
+13:34:18: Uninstalling plugin: Octree & Terrain Scene Manager
+13:34:18: Plugin successfully uninstalled
+13:34:18: Unloading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_OctreeSceneManager
+13:34:18: Uninstalling plugin: Octree Zone Factory
+13:34:18: Plugin successfully uninstalled
+13:34:18: Unloading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_OctreeZone
+13:34:18: Uninstalling plugin: Portal Connected Zone Scene Manager
+13:34:18: Plugin successfully uninstalled
+13:34:18: Unloading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_PCZSceneManager
+13:34:18: Uninstalling plugin: BSP Scene Manager
+13:34:18: Plugin successfully uninstalled
+13:34:18: Unloading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_BSPSceneManager
+13:34:18: Uninstalling plugin: ParticleFX
+13:34:18: Plugin successfully uninstalled
+13:34:18: Unloading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/Plugin_ParticleFX
+13:34:18: Uninstalling plugin: GL RenderSystem
+13:34:18: ******************************
+*** Stopping GLX Subsystem ***
+******************************
+13:34:18: Plugin successfully uninstalled
+13:34:18: Unloading library /usr/lib/x86_64-linux-gnu/OGRE-1.7.4/RenderSystem_GL
+13:34:18: Unregistering ResourceManager for type Material
+>>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
