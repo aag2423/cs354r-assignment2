@@ -63,7 +63,8 @@ OgreApp_OBJECTS = $(am_OgreApp_OBJECTS)
 am__DEPENDENCIES_1 =
 OgreApp_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 OgreApp_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(OgreApp_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -100,12 +101,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run aclocal-1.11
+ACLOCAL = ${SHELL} /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AR = ar
-AUTOCONF = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run autoconf
-AUTOHEADER = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run autoheader
-AUTOMAKE = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run automake-1.11
+AUTOCONF = ${SHELL} /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2/missing --run autoconf
+AUTOHEADER = ${SHELL} /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2/missing --run autoheader
+AUTOMAKE = ${SHELL} /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2/missing --run automake-1.11
 AWK = gawk
 BULLET_CFLAGS = 
 BULLET_LIBS = 
@@ -148,7 +149,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/missing --run makeinfo
+MAKEINFO = ${SHELL} /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2/missing --run makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -178,15 +179,17 @@ SDL_LIBS =
 SDL_MIXER_CFLAGS = 
 SDL_mixer_CFLAGS = -D_GNU_SOURCE=1 -D_REENTRANT -I/usr/include/SDL  
 SDL_mixer_LIBS = -lSDL_mixer -lSDL  
+SDL_net_CFLAGS = -D_GNU_SOURCE=1 -D_REENTRANT -I/usr/include/SDL  
+SDL_net_LIBS = -lSDL_net -lSDL  
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/agarza/game_tech/cs354r-assignment2
-abs_srcdir = /u/agarza/game_tech/cs354r-assignment2
-abs_top_builddir = /u/agarza/game_tech/cs354r-assignment2
-abs_top_srcdir = /u/agarza/game_tech/cs354r-assignment2
+abs_builddir = /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2
+abs_srcdir = /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2
+abs_top_builddir = /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2
+abs_top_srcdir = /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -218,7 +221,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/agarza/game_tech/cs354r-assignment2/install-sh
+install_sh = ${SHELL} /v/filer4b/v38q001/chooper9/cs354r/cs354r-assignment2/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -244,8 +247,8 @@ ACLOCAL_AMFLAGS = -I m4
 noinst_HEADERS = Target.h PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h Sound.h
 OgreApp_CPPFLAGS = -I$(top_srcdir)
 OgreApp_SOURCES = Target.cpp PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp Sound.cpp
-OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS)
-OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS)
+OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS) $(SDL_net_CFLAGS)
+OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS) $(SDL_net_LIBS)
 EXTRA_DIST = buildit makeit
 AUTOMAKE_OPTIONS = foreign
 all: config.h

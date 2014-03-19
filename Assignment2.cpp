@@ -53,7 +53,7 @@ void Assignment2::setupCEGUI(void) {
 
 	CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
 	CEGUI::System::getSingleton().setDefaultMouseCursor("TaharezLook", "MouseArrow");
-	CEGUI::MouseCursor::getSingleton().hide();
+	// CEGUI::MouseCursor::getSingleton().hide();
 
 	// GUI imageset(s)
 	CEGUI::Imageset *PauseImageset = &CEGUI::ImagesetManager::getSingleton().createFromImageFile("Background", "black_bg.jpg");
@@ -62,6 +62,9 @@ void Assignment2::setupCEGUI(void) {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "Game/Sheet");
 	CEGUI::System::getSingleton().setGUISheet(sheet);
+
+	CEGUI::Window *titleRoot = wmgr.loadWindowLayout("GameTitle.layout");
+	sheet->addChildWindow(titleRoot);
 
 	CEGUI::Window *scoreRoot = wmgr.loadWindowLayout("GameScore.layout");
 	sheet->addChildWindow(scoreRoot);
@@ -89,7 +92,40 @@ void Assignment2::setupCEGUI(void) {
 	controlText += "- ESCAPE:  Quit game";
 	wmgr.getWindow("PauseRoot/ControlScreen/Text")->setText(controlText);
 
+	// animation
+	CEGUI::AnimationManager::getSingleton().loadAnimationsFromXML("example.xml");
+	CEGUI::Animation* anim = CEGUI::AnimationManager::getSingleton().getAnimation("TestA");
+	CEGUI::Animation* anim2 = CEGUI::AnimationManager::getSingleton().getAnimation("TestB");
+	CEGUI::AnimationInstance* anmtn = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	CEGUI::AnimationInstance* anmtn2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	anmtn->setTargetWindow(wmgr.getWindow("TitleRoot/Menu/SinglePlayer"));
+	anmtn2->setTargetWindow(wmgr.getWindow("TitleRoot/Menu/SinglePlayer"));
+	anmtn = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	anmtn2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	anmtn->setTargetWindow(wmgr.getWindow("TitleRoot/Menu/Multiplayer"));
+	anmtn2->setTargetWindow(wmgr.getWindow("TitleRoot/Menu/Multiplayer"));
+	anmtn = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	anmtn2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	anmtn->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Resume"));
+	anmtn2->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Resume"));
+	anmtn = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	anmtn2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	anmtn->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Quit"));
+	anmtn2->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Quit"));
+	anmtn = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	anmtn2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	anmtn->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Controls"));
+	anmtn2->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Controls"));
+	anmtn = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim);
+	anmtn2 = CEGUI::AnimationManager::getSingleton().instantiateAnimation(anim2);
+	anmtn->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Config"));
+	anmtn2->setTargetWindow(wmgr.getWindow("PauseRoot/Menu/Config"));
+
 	// subscribe events
+	wmgr.getWindow("TitleRoot/Menu/SinglePlayer")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_start_sp_game, this));
+	wmgr.getWindow("TitleRoot/Menu/Multiplayer")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_mp_menu, this));
+	wmgr.getWindow("TitleRoot/MP/Host")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_host_game, this));
+	wmgr.getWindow("TitleRoot/MP/Connect")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_connect_to_game, this));
 	wmgr.getWindow("PauseRoot/Menu/Resume")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::resume_game, this));
 	wmgr.getWindow("PauseRoot/Menu/Quit")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::quit, this));
 	wmgr.getWindow("PauseRoot/Menu/Controls")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::game_controls, this));
@@ -127,6 +163,7 @@ void Assignment2::createScene(void)
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	game = new Game(mSceneMgr, mCamNode);
+	game->handleKeyboardEvent(PAUSE);
 
 	Ogre::Light* spotLight1 = mSceneMgr->createLight("spotLight1");
     	spotLight1->setType(Ogre::Light::LT_SPOTLIGHT);
@@ -192,7 +229,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mShutDown) return false;
 	mKeyboard->capture();
 	mMouse->capture();
-	//mTrayMgr->frameRenderingQueued(evt);
+	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 	game->runNextFrame(evt);
 	switch(game->getPlayerHitStrength()) {
@@ -400,6 +437,57 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 //-------------------------------------------------------------------------------------
 
 // CEGUI events
+bool Assignment2::title_start_sp_game(const CEGUI::EventArgs &e) {
+	game->handleKeyboardEvent(PAUSE);
+	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
+	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
+	CEGUI::MouseCursor::getSingleton().hide();
+    return true;
+}
+
+//--------------------------------------------------------------------------------------
+bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
+	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/Menu")->setVisible(false);
+	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP")->setVisible(true);
+    return true;
+}
+
+//--------------------------------------------------------------------------------------
+bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
+	// Network server setup here
+
+
+
+	game->handleKeyboardEvent(PAUSE);
+	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
+	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
+	CEGUI::MouseCursor::getSingleton().hide();
+    return true;
+}
+
+//--------------------------------------------------------------------------------------
+bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
+	CEGUI::String ad = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->getText();
+	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
+	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
+
+	const char* addr = ad.c_str();
+	int port = atoi(prt.c_str());
+	// Network client setup here
+
+
+
+	game->handleKeyboardEvent(PAUSE);
+	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
+	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
+	CEGUI::MouseCursor::getSingleton().hide();
+    return true;
+}
+
+//--------------------------------------------------------------------------------------
 bool Assignment2::quit(const CEGUI::EventArgs &e) {
         mShutDown = true;
         return true;

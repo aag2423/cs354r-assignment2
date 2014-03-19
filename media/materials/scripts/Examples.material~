@@ -361,7 +361,7 @@ material Examples/CloudySky
 			texture_unit
 			{
 				texture clouds.jpg
-				scroll_anim 0.15 0
+				scroll_anim 0.50 0
 			}
 		}
 	}
@@ -914,10 +914,12 @@ material Examples/TennisNet
 	{
 		pass
 		{
+			scene_blend alpha_blend
+			depth_write off
 			texture_unit
 			{
 				texture tennis_net.png
-				scale 0.2 10
+				scale 0.6 10
 			}
 		}
 	}

@@ -914,10 +914,12 @@ material Examples/TennisNet
 	{
 		pass
 		{
+			scene_blend alpha_blend
+			depth_write off
 			texture_unit
 			{
 				texture tennis_net.png
-				scale 0.2 10
+				scale 1 10
 			}
 		}
 	}

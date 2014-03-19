@@ -37,6 +37,10 @@ protected:
 	CEGUI::OgreRenderer* mRenderer;	
 
 	void setupCEGUI(void);
+	bool title_start_sp_game(const CEGUI::EventArgs &e);
+	bool title_mp_menu(const CEGUI::EventArgs &e);
+	bool title_host_game(const CEGUI::EventArgs &e);
+	bool title_connect_to_game(const CEGUI::EventArgs &e);
 	bool quit(const CEGUI::EventArgs &e);
 	bool resume_game(const CEGUI::EventArgs &e);
 	bool game_controls(const CEGUI::EventArgs &e);

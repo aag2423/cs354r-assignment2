@@ -135,6 +135,7 @@ void PlayGround::makePlane(std::string name, const Ogre::Vector3& planeNormal, c
 	Ogre::Real tile = 5;
 	if(texture == "Examples/TennisCourt")
 		tile = 1;
+
 	Ogre::Plane plane(planeNormal, -distance);
 	Ogre::MeshManager::getSingleton().createPlane(
 		name, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,

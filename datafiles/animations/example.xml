@@ -17,5 +17,23 @@
         <Subscription event="MouseEntersArea" action="Start" />
     </AnimationDefinition>
 
+    <AnimationDefinition name="TestA" duration="0.4" replayMode="once">
+        <Affector property="Alpha" interpolator="float">
+            <KeyFrame position="0" value="1" />
+            <KeyFrame position="0.4" value=".4" progression="quadratic accelerating" />
+    	</Affector>
+	<Subscription event="MouseEntersArea" action="Start" />
+	<Subscription event="MouseLeavesArea" action="Stop" />
+    </AnimationDefinition>
+
+    <AnimationDefinition name="TestB" duration="0.2" replayMode="once">
+        <Affector property="Alpha" interpolator="float">
+            <KeyFrame position="0" value="0.4" />
+            <KeyFrame position="0.2" value="1" progression="linear" />
+    	</Affector>
+	<Subscription event="MouseLeavesArea" action="Start" />
+	<Subscription event="MouseEntersArea" action="Stop" />
+    </AnimationDefinition>
+
 </Animations>
 
