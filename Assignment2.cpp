@@ -167,6 +167,7 @@ void Assignment2::createScene(void)
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
+	appMode = SINGLE_PLAYER;
 	game = new Game(mSceneMgr, mCamNode);
 	game->handleKeyboardEvent(PAUSE);
 
@@ -464,6 +465,7 @@ bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	conn = new Network(true, "", 0);
 	//conn->sendPacket();
 
+	appMode = MULTI_PLAYER_SERVER;
 
 	game->handleKeyboardEvent(PAUSE);
 	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
@@ -478,6 +480,8 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	CEGUI::String ad = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->getText();
 	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
 	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
+
+	appMode = MULTI_PLAYER_CLIENT;
 
 	const char* addr = ad.c_str();
 	int port = atoi(prt.c_str());
