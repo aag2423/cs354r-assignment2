@@ -1,0 +1,61 @@
+
+#ifndef __ServerCourt_h_
+#define __ServerCourt_h_
+
+#include <Ogre.h>
+#include "PlayGround.h"
+
+class ServerCourt {
+private:
+	void setup();
+	void destroy(void);
+protected:
+	PlayGroundType courtType;
+	PhysicsEngine& physicsEngine;
+	Ogre::Real l;
+	Ogre::Real w;
+	Ogre::Real h;
+	PhysicsObject net;
+	PhysicsObject bottomPlane;
+	PhysicsObject topPlane;
+	PhysicsObject leftPlane;
+	PhysicsObject rightPlane;
+	PhysicsObject frontPlane;
+	PhysicsObject backPlane;
+public:
+	ServerCourt(PhysicsEngine& physicsEngine, PlayGroundType type);
+	~ServerCourt(void);
+	void toggleType(void);
+	void getHalfDimension(Ogre::Vector3& result) { 
+		result.x = w/2;
+		result.y = h/2;
+		result.z = l/2;
+	}
+	void getHalfMoveRange(Ogre::Vector3& result) {
+		result.x = w/2 - 10;
+		result.y = h - 70; 
+		result.z = l/2 - 10; 
+	}
+	void getBallInitialPosition(Ogre::Vector3& result) {
+		result.x = courtType == PRACTICE_COURT ? (-45) : 5;
+		result.y = -(h/2 - 50); 
+		result.z = l/2 - 310; 
+	}
+	void getPlayerInitialPosition(Ogre::Vector3& result) {
+		result.x = courtType == PRACTICE_COURT ? (-50) : 0;
+		result.y = -h/2; 
+		result.z = l/2 - 290; 
+	}
+	PhysicsObject& getPhysicsObject(PlaneNumber i) { 
+		switch(i) {
+		case BOTTOM_PLANE: return bottomPlane;
+		case TOP_PLANE: return topPlane;
+		case LEFT_PLANE: return leftPlane;
+		case RIGHT_PLANE: return rightPlane;
+		case FRONT_PLANE: return frontPlane;
+		case BACK_PLANE: return backPlane;
+		default: return net;
+		}
+	}
+};
+#endif // #ifndef __ServerCourt_h_

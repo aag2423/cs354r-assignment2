@@ -7,6 +7,7 @@
 #include "PhysicsEngine.h"
 
 
+enum PlayerSide { SIDE_NEAR, SIDE_FAR };
 enum PlayerType { HUMAN, AI };
 enum PlayerStep { SMALL_STEP = 100, NORMAL_STEP = 200, RUN_STEP = 350 };
 enum HitStrength { WEAK_HIT = 100, NORMAL_HIT = 150, STRONG_HIT = 200 };
@@ -23,6 +24,19 @@ typedef struct PlayerState {
 	bool movingBackward;
 	bool hitting;
 } PlayerState;
+
+typedef struct InputPlayerState {
+	enum PlayerSide serverPlayerSide;
+	enum PlayerStep step;
+	enum HitStrength strength;
+	Ogre::Vector3 shotDirection;
+	Ogre::Real yaw;
+	bool movingLeft;
+	bool movingRight;
+	bool movingForward;
+	bool movingBackward;
+	bool hitting;
+} InputPlayerState;
 
 class Player {
 protected:
