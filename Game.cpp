@@ -24,7 +24,7 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, GameMode mod
 	gameState.result = ONGOING;
 
 
-	physicsEngine.setGravity(0, EARTH_G, 0);
+	physicsEngine.setGravity(0, -15, 0);
 
 	court = new PlayGround(mSceneMgr, physicsEngine, FULL_COURT);
 	
@@ -364,8 +364,9 @@ void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 			playerState->shotDirection.y = VOLLEY;
 	}
            */
-		playerState->shotDirection.x = dx;
-		playerState->shotDirection.y = -dy + 20;
+		Ogre::Vector3 dir = cameraNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
+		playerState->shotDirection.x = dir.x * 100;
+		playerState->shotDirection.y = (dir.y * 100) + 50;
 	if (gameState.camMode != ABOVE_CAM){
 		player->getNode()->yaw(Ogre::Degree(-0.15*dx), Ogre::Node::TS_LOCAL);
 	}
