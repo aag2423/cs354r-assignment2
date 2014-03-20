@@ -165,6 +165,7 @@ void Assignment2::createScene(void)
 	game = new Game(mSceneMgr, mCamNode);
 	game->handleKeyboardEvent(PAUSE);
 
+	
 	Ogre::Light* spotLight1 = mSceneMgr->createLight("spotLight1");
     	spotLight1->setType(Ogre::Light::LT_SPOTLIGHT);
 	spotLight1->setDiffuseColour(Ogre::ColourValue::Blue);
@@ -301,22 +302,28 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 			game->handleKeyboardEvent(RESTART);
     			break;
 		case OIS::KC_J:
-    			mDirection.x = -mMove;
+				if (!mPaused)
+    				mDirection.x = -mMove;
     			break;
 		case OIS::KC_L:
-    			mDirection.x = mMove;
+				if (!mPaused)
+    				mDirection.x = mMove;
     			break;
 		case OIS::KC_U:
-    			mDirection.y = mMove;
+				if (!mPaused)
+    				mDirection.y = mMove;
     			break;
 		case OIS::KC_O:
-    			mDirection.y = -mMove;
+				if (!mPaused)
+    				mDirection.y = -mMove;
     			break;
 		case OIS::KC_I:
-    			mDirection.z = -mMove;
+				if (!mPaused)
+    				mDirection.z = -mMove;
     			break;
 		case OIS::KC_K:
-    			mDirection.z = mMove;
+				if (!mPaused)
+    				mDirection.z = mMove;
     			break;
 		case OIS::KC_W:
 			game->handleKeyboardEvent(GO_FORWARD);
