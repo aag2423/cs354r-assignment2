@@ -464,6 +464,8 @@ bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	// Network server setup here
 	conn = new Network(true, "", 0);
 	OutputState empty;
+		empty.collisionEvent = HIT_PLAYER;
+
 	conn->sendOutputState(empty);
 
 	appMode = MULTI_PLAYER_SERVER;
@@ -493,6 +495,8 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 
 		std::cout << "ddddddddddddddd" << os.collisionEvent << std::endl;
 	while(!conn->receiveOutputState(&os)) {}
+
+		std::cout << "ddddddddddddddd" << os.collisionEvent << std::endl;
 		std::cout << "ddddddddddddddss" << std::endl;
 
 
