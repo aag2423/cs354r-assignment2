@@ -8,6 +8,12 @@
 #include "Target.h"
 #include <OgreVector3.h>
 #include "Sound.h"
+#include "ServerPlayer.h"
+#include "ServerCourt.h"
+#include "ServerBall.h"
+#include "ClientCourt.h"
+#include "ClientPlayer.h"
+#include "ClientBall.h"
 
 enum {
 	BALL_SERVE_SPEED = 100
@@ -29,7 +35,7 @@ enum GameMode {
 enum RoundProgress {
 	HIT_BY_PLAYER, HIT_BY_PLAYER_AND_FLOOR, 
 	HIT_BY_OPPONENT, HIT_BY_OPPONENT_AND_FLOOR, 
-	ENDED
+	NOT_STARTED, ENDED
 };
 enum GameResult {
 	ONGOING, WIN, LOSE
@@ -48,6 +54,47 @@ typedef struct GameState {
 	enum RoundProgress progress;
 	GameResult result;
 } GameState;
+
+
+typedef struct InitializationData {
+	bool isClientNearSide;
+	GameMode gameMode;
+	GameResult result; 
+} InitializationData;
+
+typedef struct OutputSceneState {
+	Ogre::Vector3 ballPos;
+	Ogre::Quaternion ballOrient;
+	Ogre::Vector3 playerNearPos;
+	Ogre::Vector3 playerFarPos;
+	Ogre::Quaternion playerNearOrient;
+	Ogre::Quaternion playerFarOrient;
+	bool playerNearMoving;
+	bool playerFarMoving;
+	bool playerNearHitting;
+	bool playerFarHitting;
+	bool isClientNearSide;
+} OutputSceneState;
+
+typedef struct OutputGameState {
+	RoundProgress roundProgress;
+	GameResult result; 
+	int playerScore;
+	int opponentScore;
+	int combo;
+} OutputGameState;
+
+typedef struct OutputState {
+	OutputGameState gameState;
+	OutputSceneState sceneState;
+	BallCollisionEvent collisionEvent;
+} OutputState;
+
+typedef struct InputState {
+	InputPlayerState playerState;
+	bool startRound;
+	bool startGame;
+} InputState;
 
 class Game
 {

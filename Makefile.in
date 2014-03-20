@@ -57,7 +57,11 @@ am_OgreApp_OBJECTS = OgreApp-Target.$(OBJEXT) \
 	OgreApp-PhysicsObject.$(OBJEXT) \
 	OgreApp-PhysicsEngine.$(OBJEXT) OgreApp-Ball.$(OBJEXT) \
 	OgreApp-PlayGround.$(OBJEXT) OgreApp-Player.$(OBJEXT) \
-	OgreApp-Game.$(OBJEXT) OgreApp-BaseApplication.$(OBJEXT) \
+	OgreApp-Game.$(OBJEXT) OgreApp-ClientPlayer.$(OBJEXT) \
+	OgreApp-ServerPlayer.$(OBJEXT) OgreApp-ServerBall.$(OBJEXT) \
+	OgreApp-ClientBall.$(OBJEXT) OgreApp-ServerCourt.$(OBJEXT) \
+	OgreApp-ClientCourt.$(OBJEXT) OgreApp-ServerGame.$(OBJEXT) \
+	OgreApp-ClientGame.$(OBJEXT) OgreApp-BaseApplication.$(OBJEXT) \
 	OgreApp-Assignment2.$(OBJEXT) OgreApp-Sound.$(OBJEXT) \
 	OgreApp-Network.$(OBJEXT)
 OgreApp_OBJECTS = $(am_OgreApp_OBJECTS)
@@ -245,9 +249,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-noinst_HEADERS = Target.h PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h BaseApplication.h Assignment2.h Sound.h Network.h
+noinst_HEADERS = Target.h PhysicsObject.h PhysicsEngine.h Ball.h PlayGround.h Player.h Game.h ClientPlayer.h ServerPlayer.h ServerBall.h ClientBall.h ServerCourt.h ClientCourt.h ServerGame.h ClientGame.h BaseApplication.h Assignment2.h Sound.h Network.h
 OgreApp_CPPFLAGS = -I$(top_srcdir)
-OgreApp_SOURCES = Target.cpp PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp BaseApplication.cpp Assignment2.cpp Sound.cpp Network.cpp
+OgreApp_SOURCES = Target.cpp PhysicsObject.cpp PhysicsEngine.cpp Ball.cpp PlayGround.cpp Player.cpp Game.cpp ClientPlayer.cpp ServerPlayer.cpp ServerBall.cpp ClientBall.cpp ServerCourt.cpp ClientCourt.cpp ServerGame.cpp ClientGame.cpp BaseApplication.cpp Assignment2.cpp Sound.cpp Network.cpp
 OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS) $(SDL_net_CFLAGS)
 OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS) $(SDL_net_LIBS)
 EXTRA_DIST = buildit makeit
@@ -362,12 +366,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Assignment2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Ball.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-BaseApplication.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ClientBall.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ClientCourt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ClientGame.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ClientPlayer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Game.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Network.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-PhysicsEngine.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-PhysicsObject.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-PlayGround.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Player.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ServerBall.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ServerCourt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ServerGame.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-ServerPlayer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Sound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Target.Po@am__quote@
 
@@ -489,6 +501,118 @@ OgreApp-Game.obj: Game.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Game.cpp' object='OgreApp-Game.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Game.obj `if test -f 'Game.cpp'; then $(CYGPATH_W) 'Game.cpp'; else $(CYGPATH_W) '$(srcdir)/Game.cpp'; fi`
+
+OgreApp-ClientPlayer.o: ClientPlayer.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientPlayer.o -MD -MP -MF $(DEPDIR)/OgreApp-ClientPlayer.Tpo -c -o OgreApp-ClientPlayer.o `test -f 'ClientPlayer.cpp' || echo '$(srcdir)/'`ClientPlayer.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientPlayer.Tpo $(DEPDIR)/OgreApp-ClientPlayer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientPlayer.cpp' object='OgreApp-ClientPlayer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientPlayer.o `test -f 'ClientPlayer.cpp' || echo '$(srcdir)/'`ClientPlayer.cpp
+
+OgreApp-ClientPlayer.obj: ClientPlayer.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientPlayer.obj -MD -MP -MF $(DEPDIR)/OgreApp-ClientPlayer.Tpo -c -o OgreApp-ClientPlayer.obj `if test -f 'ClientPlayer.cpp'; then $(CYGPATH_W) 'ClientPlayer.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientPlayer.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientPlayer.Tpo $(DEPDIR)/OgreApp-ClientPlayer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientPlayer.cpp' object='OgreApp-ClientPlayer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientPlayer.obj `if test -f 'ClientPlayer.cpp'; then $(CYGPATH_W) 'ClientPlayer.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientPlayer.cpp'; fi`
+
+OgreApp-ServerPlayer.o: ServerPlayer.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerPlayer.o -MD -MP -MF $(DEPDIR)/OgreApp-ServerPlayer.Tpo -c -o OgreApp-ServerPlayer.o `test -f 'ServerPlayer.cpp' || echo '$(srcdir)/'`ServerPlayer.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerPlayer.Tpo $(DEPDIR)/OgreApp-ServerPlayer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerPlayer.cpp' object='OgreApp-ServerPlayer.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerPlayer.o `test -f 'ServerPlayer.cpp' || echo '$(srcdir)/'`ServerPlayer.cpp
+
+OgreApp-ServerPlayer.obj: ServerPlayer.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerPlayer.obj -MD -MP -MF $(DEPDIR)/OgreApp-ServerPlayer.Tpo -c -o OgreApp-ServerPlayer.obj `if test -f 'ServerPlayer.cpp'; then $(CYGPATH_W) 'ServerPlayer.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerPlayer.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerPlayer.Tpo $(DEPDIR)/OgreApp-ServerPlayer.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerPlayer.cpp' object='OgreApp-ServerPlayer.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerPlayer.obj `if test -f 'ServerPlayer.cpp'; then $(CYGPATH_W) 'ServerPlayer.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerPlayer.cpp'; fi`
+
+OgreApp-ServerBall.o: ServerBall.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerBall.o -MD -MP -MF $(DEPDIR)/OgreApp-ServerBall.Tpo -c -o OgreApp-ServerBall.o `test -f 'ServerBall.cpp' || echo '$(srcdir)/'`ServerBall.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerBall.Tpo $(DEPDIR)/OgreApp-ServerBall.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerBall.cpp' object='OgreApp-ServerBall.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerBall.o `test -f 'ServerBall.cpp' || echo '$(srcdir)/'`ServerBall.cpp
+
+OgreApp-ServerBall.obj: ServerBall.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerBall.obj -MD -MP -MF $(DEPDIR)/OgreApp-ServerBall.Tpo -c -o OgreApp-ServerBall.obj `if test -f 'ServerBall.cpp'; then $(CYGPATH_W) 'ServerBall.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerBall.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerBall.Tpo $(DEPDIR)/OgreApp-ServerBall.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerBall.cpp' object='OgreApp-ServerBall.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerBall.obj `if test -f 'ServerBall.cpp'; then $(CYGPATH_W) 'ServerBall.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerBall.cpp'; fi`
+
+OgreApp-ClientBall.o: ClientBall.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientBall.o -MD -MP -MF $(DEPDIR)/OgreApp-ClientBall.Tpo -c -o OgreApp-ClientBall.o `test -f 'ClientBall.cpp' || echo '$(srcdir)/'`ClientBall.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientBall.Tpo $(DEPDIR)/OgreApp-ClientBall.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientBall.cpp' object='OgreApp-ClientBall.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientBall.o `test -f 'ClientBall.cpp' || echo '$(srcdir)/'`ClientBall.cpp
+
+OgreApp-ClientBall.obj: ClientBall.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientBall.obj -MD -MP -MF $(DEPDIR)/OgreApp-ClientBall.Tpo -c -o OgreApp-ClientBall.obj `if test -f 'ClientBall.cpp'; then $(CYGPATH_W) 'ClientBall.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientBall.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientBall.Tpo $(DEPDIR)/OgreApp-ClientBall.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientBall.cpp' object='OgreApp-ClientBall.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientBall.obj `if test -f 'ClientBall.cpp'; then $(CYGPATH_W) 'ClientBall.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientBall.cpp'; fi`
+
+OgreApp-ServerCourt.o: ServerCourt.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerCourt.o -MD -MP -MF $(DEPDIR)/OgreApp-ServerCourt.Tpo -c -o OgreApp-ServerCourt.o `test -f 'ServerCourt.cpp' || echo '$(srcdir)/'`ServerCourt.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerCourt.Tpo $(DEPDIR)/OgreApp-ServerCourt.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerCourt.cpp' object='OgreApp-ServerCourt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerCourt.o `test -f 'ServerCourt.cpp' || echo '$(srcdir)/'`ServerCourt.cpp
+
+OgreApp-ServerCourt.obj: ServerCourt.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerCourt.obj -MD -MP -MF $(DEPDIR)/OgreApp-ServerCourt.Tpo -c -o OgreApp-ServerCourt.obj `if test -f 'ServerCourt.cpp'; then $(CYGPATH_W) 'ServerCourt.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerCourt.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerCourt.Tpo $(DEPDIR)/OgreApp-ServerCourt.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerCourt.cpp' object='OgreApp-ServerCourt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerCourt.obj `if test -f 'ServerCourt.cpp'; then $(CYGPATH_W) 'ServerCourt.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerCourt.cpp'; fi`
+
+OgreApp-ClientCourt.o: ClientCourt.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientCourt.o -MD -MP -MF $(DEPDIR)/OgreApp-ClientCourt.Tpo -c -o OgreApp-ClientCourt.o `test -f 'ClientCourt.cpp' || echo '$(srcdir)/'`ClientCourt.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientCourt.Tpo $(DEPDIR)/OgreApp-ClientCourt.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientCourt.cpp' object='OgreApp-ClientCourt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientCourt.o `test -f 'ClientCourt.cpp' || echo '$(srcdir)/'`ClientCourt.cpp
+
+OgreApp-ClientCourt.obj: ClientCourt.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientCourt.obj -MD -MP -MF $(DEPDIR)/OgreApp-ClientCourt.Tpo -c -o OgreApp-ClientCourt.obj `if test -f 'ClientCourt.cpp'; then $(CYGPATH_W) 'ClientCourt.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientCourt.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientCourt.Tpo $(DEPDIR)/OgreApp-ClientCourt.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientCourt.cpp' object='OgreApp-ClientCourt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientCourt.obj `if test -f 'ClientCourt.cpp'; then $(CYGPATH_W) 'ClientCourt.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientCourt.cpp'; fi`
+
+OgreApp-ServerGame.o: ServerGame.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerGame.o -MD -MP -MF $(DEPDIR)/OgreApp-ServerGame.Tpo -c -o OgreApp-ServerGame.o `test -f 'ServerGame.cpp' || echo '$(srcdir)/'`ServerGame.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerGame.Tpo $(DEPDIR)/OgreApp-ServerGame.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerGame.cpp' object='OgreApp-ServerGame.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerGame.o `test -f 'ServerGame.cpp' || echo '$(srcdir)/'`ServerGame.cpp
+
+OgreApp-ServerGame.obj: ServerGame.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ServerGame.obj -MD -MP -MF $(DEPDIR)/OgreApp-ServerGame.Tpo -c -o OgreApp-ServerGame.obj `if test -f 'ServerGame.cpp'; then $(CYGPATH_W) 'ServerGame.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerGame.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ServerGame.Tpo $(DEPDIR)/OgreApp-ServerGame.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ServerGame.cpp' object='OgreApp-ServerGame.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ServerGame.obj `if test -f 'ServerGame.cpp'; then $(CYGPATH_W) 'ServerGame.cpp'; else $(CYGPATH_W) '$(srcdir)/ServerGame.cpp'; fi`
+
+OgreApp-ClientGame.o: ClientGame.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientGame.o -MD -MP -MF $(DEPDIR)/OgreApp-ClientGame.Tpo -c -o OgreApp-ClientGame.o `test -f 'ClientGame.cpp' || echo '$(srcdir)/'`ClientGame.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientGame.Tpo $(DEPDIR)/OgreApp-ClientGame.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientGame.cpp' object='OgreApp-ClientGame.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientGame.o `test -f 'ClientGame.cpp' || echo '$(srcdir)/'`ClientGame.cpp
+
+OgreApp-ClientGame.obj: ClientGame.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ClientGame.obj -MD -MP -MF $(DEPDIR)/OgreApp-ClientGame.Tpo -c -o OgreApp-ClientGame.obj `if test -f 'ClientGame.cpp'; then $(CYGPATH_W) 'ClientGame.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientGame.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-ClientGame.Tpo $(DEPDIR)/OgreApp-ClientGame.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ClientGame.cpp' object='OgreApp-ClientGame.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ClientGame.obj `if test -f 'ClientGame.cpp'; then $(CYGPATH_W) 'ClientGame.cpp'; else $(CYGPATH_W) '$(srcdir)/ClientGame.cpp'; fi`
 
 OgreApp-BaseApplication.o: BaseApplication.cpp
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-BaseApplication.o -MD -MP -MF $(DEPDIR)/OgreApp-BaseApplication.Tpo -c -o OgreApp-BaseApplication.o `test -f 'BaseApplication.cpp' || echo '$(srcdir)/'`BaseApplication.cpp

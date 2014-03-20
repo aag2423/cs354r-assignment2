@@ -11,6 +11,10 @@
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
 #include <stdio.h>
 
+enum AppMode {
+	SINGLE_PLAYER, MULTI_PLAYER_SERVER, MULTI_PLAYER_CLIENT
+};
+
 class Assignment2 : public BaseApplication
 {
 public:
@@ -21,6 +25,11 @@ protected:
 
 	Game* game;
 
+
+	ServerGame* sGame;
+	ClientGame* cGame;
+
+	enum AppMode appMode;
 	// NETWORK OBJECT
 	Network* conn;
 

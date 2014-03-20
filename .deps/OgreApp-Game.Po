@@ -863,7 +863,9 @@ OgreApp-Game.o: Game.cpp Game.h PhysicsEngine.h PhysicsObject.h \
  /usr/include/SDL/SDL_joystick.h /usr/include/SDL/SDL_quit.h \
  /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h \
  /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_mixer.h \
- /usr/include/SDL/SDL_types.h /usr/include/OGRE/OgreFrameListener.h \
+ /usr/include/SDL/SDL_types.h ServerPlayer.h Player.h ServerCourt.h \
+ ServerBall.h ClientCourt.h ClientPlayer.h ClientBall.h \
+ /usr/include/OGRE/OgreFrameListener.h \
  /usr/include/OGRE/OgreSceneManager.h /usr/include/OGRE/OgreSceneNode.h
 
 Game.h:
@@ -2897,6 +2899,20 @@ Sound.h:
 /usr/include/SDL/SDL_mixer.h:
 
 /usr/include/SDL/SDL_types.h:
+
+ServerPlayer.h:
+
+Player.h:
+
+ServerCourt.h:
+
+ServerBall.h:
+
+ClientCourt.h:
+
+ClientPlayer.h:
+
+ClientBall.h:
 
 /usr/include/OGRE/OgreFrameListener.h:
 
