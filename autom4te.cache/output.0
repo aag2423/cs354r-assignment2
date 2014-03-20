@@ -613,11 +613,6 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIB@&t@OBJS
-<<<<<<< HEAD
-=======
-SDL_NET_LIBS
-SDL_NET_CFLAGS
->>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
 SDL_net_LIBS
 SDL_net_CFLAGS
 SDL_MIXER_CFLAGS
@@ -15773,21 +15768,12 @@ if test -n "$SDL_net_CFLAGS"; then
     pkg_cv_SDL_net_CFLAGS="$SDL_net_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-<<<<<<< HEAD
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"SDL_net\""; } >&5
   ($PKG_CONFIG --exists --print-errors "SDL_net") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_SDL_net_CFLAGS=`$PKG_CONFIG --cflags "SDL_net" 2>/dev/null`
-=======
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"SDL_net >= 1.2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "SDL_net >= 1.2") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_SDL_net_CFLAGS=`$PKG_CONFIG --cflags "SDL_net >= 1.2" 2>/dev/null`
->>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -15799,21 +15785,12 @@ if test -n "$SDL_net_LIBS"; then
     pkg_cv_SDL_net_LIBS="$SDL_net_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-<<<<<<< HEAD
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"SDL_net\""; } >&5
   ($PKG_CONFIG --exists --print-errors "SDL_net") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_SDL_net_LIBS=`$PKG_CONFIG --libs "SDL_net" 2>/dev/null`
-=======
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"SDL_net >= 1.2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "SDL_net >= 1.2") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_SDL_net_LIBS=`$PKG_CONFIG --libs "SDL_net >= 1.2" 2>/dev/null`
->>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -15834,24 +15811,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-<<<<<<< HEAD
 	        SDL_net_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "SDL_net" 2>&1`
         else 
 	        SDL_net_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "SDL_net" 2>&1`
-=======
-	        SDL_net_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "SDL_net >= 1.2" 2>&1`
-        else 
-	        SDL_net_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "SDL_net >= 1.2" 2>&1`
->>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$SDL_net_PKG_ERRORS" >&5
 
-<<<<<<< HEAD
 	as_fn_error $? "Package requirements (SDL_net) were not met:
-=======
-	as_fn_error $? "Package requirements (SDL_net >= 1.2) were not met:
->>>>>>> 81ebdebdf481c8fe9b1b0b804ce445ee76a145c0
 
 $SDL_net_PKG_ERRORS
 

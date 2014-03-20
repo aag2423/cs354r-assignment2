@@ -2,16 +2,53 @@
 
 using namespace std;
 
-Network::Network() {
+Network::Network(bool s, const char* h, int p) {
 	if (SDLNet_Init() < 0)
 	{
 		printf("SDLNet_Init: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
+
+	serve = s;
+	if (serve){
+		server();
+	}
+	else {
+		client(h, p);
+	}
 }
 
 Network::~Network() {
+	SDLNet_TCP_Close(sd);
+	SDLNet_TCP_Close(csd);
 	SDLNet_Quit();
+}
+
+bool Network::receivePacket(){
+	if (serve){
+		if(SDLNet_TCP_Recv(csd, buffer, 512) > 0)
+		{
+
+			return true;
+		}
+	}
+	else 
+	{
+
+	}
+	return false;
+}
+
+bool Network::sendPacket(){
+	if(serve)
+	{
+
+	}
+	else 
+	{
+
+	}
+	return false;
 }
 
 void Network::server() {
@@ -44,7 +81,10 @@ void Network::server() {
 				printf("Host connected: %x %d\n", SDLNet_Read32(&remoteIP->host), SDLNet_Read16(&remoteIP->port));
 			else
 				printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
- 
+			quit = 1;
+
+
+ 			/*
 			quit2 = 0;
 			while (!quit2)
 			{
@@ -52,12 +92,12 @@ void Network::server() {
 				{
 					printf("Client say: %s\n", buffer);
  
-					if(strcmp(buffer, "exit") == 0)	/* Terminate this connection */
+					if(strcmp(buffer, "exit") == 0)	/* Terminate this connection 
 					{
 						quit2 = 1;
 						printf("Terminate connection\n");
 					}
-					if(strcmp(buffer, "quit") == 0)	/* Quit the program */
+					if(strcmp(buffer, "quit") == 0)	/* Quit the program 
 					{
 						quit2 = 1;
 						quit = 1;
@@ -65,15 +105,12 @@ void Network::server() {
 					}
 				}
 			}
- 
-			/* Close the client socket */
-			SDLNet_TCP_Close(csd);
+			*/
 		}
 	}
-	SDLNet_TCP_Close(sd);
 }
 
-void Network::client(char* d, int p) {
+void Network::client(const char* d, int p) {
 	/* Resolve the host we are connecting to */
 	if (SDLNet_ResolveHost(&ip, d, p) < 0)
 	{
@@ -100,21 +137,6 @@ void Network::client(char* d, int p) {
 			printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
 			exit(EXIT_FAILURE);
 		}
- 
-		if(strcmp(buffer, "exit") == 0)
-			quit = 1;
-		if(strcmp(buffer, "quit") == 0)
-			quit = 1;
+		quit = 1;
 	}
-	SDLNet_TCP_Close(sd);
-}
-
-int main (int argc, char **argv) {
-	int mode = atoi(argv[1]);
-	Network n;
-	if(mode == 0)
-		n.server();
-	else
-		n.client(argv[2], atoi(argv[3]));
-	return 0;
 }

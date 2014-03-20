@@ -10,14 +10,17 @@ using namespace std;
 
 class Network {
 public:
-	Network();
+	Network(bool s, const char* h, int p);
 	~Network();
 	void server();
-	void client(char* d, int p);
+	void client(const char* d, int p);
+	bool receivePacket();
+	bool sendPacket();
 	TCPsocket sd, csd;
 	IPaddress ip, *remoteIP;
 	int quit, quit2, len;
 	char buffer[512];
+	bool serve;
 };
 
 #endif

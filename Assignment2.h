@@ -5,6 +5,7 @@
 #include "BaseApplication.h"
 #include "Game.h"
 #include "Sound.h"
+#include "Network.h"
 
 #include <CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
@@ -19,6 +20,9 @@ protected:
 	const static Ogre::Real BOX_SIDE_LENGTH = 200.0f;
 
 	Game* game;
+
+	// NETWORK OBJECT
+	Network* conn;
 
 	bool mouseClicked;
 	bool mPaused;
