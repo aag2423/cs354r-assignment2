@@ -13,6 +13,7 @@ Assignment2::Assignment2(void) :
 	collisions(0),
 	mRotate(0.15),
 	mMove(250),
+	conn(NULL),
 	mDirection(Ogre::Vector3::ZERO)
 {
 }
@@ -21,6 +22,10 @@ Assignment2::~Assignment2(void)
 {
 	delete game;
 	delete soundHandler;
+	if (conn != NULL)
+		delete conn;
+	std::cout << "========= Debug: Sound Deleted =========" << std::endl;
+	std::cout << "========= Debug: Network Deleted =========" << std::endl;
 	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
 //------------------------------------------------------------------------------------
@@ -456,7 +461,8 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	// Network server setup here
-	conn = new Network(true, NULL, NULL);
+	conn = new Network(true, "", 0);
+	//conn->sendPacket();
 
 
 	game->handleKeyboardEvent(PAUSE);
@@ -477,7 +483,7 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	int port = atoi(prt.c_str());
 	// Network client setup here
 	conn = new Network(false, addr, port);
-
+	//conn->sendPacket();
 
 	game->handleKeyboardEvent(PAUSE);
 	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);

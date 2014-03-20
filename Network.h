@@ -13,9 +13,10 @@ public:
 	Network(bool s, const char* h, int p);
 	~Network();
 	void server();
-	void client(const char* d, int p);
+	void client(const char* d, int p = 2000);
 	bool receivePacket();
 	bool sendPacket();
+	SDLNet_SocketSet set;
 	TCPsocket sd, csd;
 	IPaddress ip, *remoteIP;
 	int quit, quit2, len;

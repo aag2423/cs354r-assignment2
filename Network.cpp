@@ -3,10 +3,15 @@
 using namespace std;
 
 Network::Network(bool s, const char* h, int p) {
+	
 	if (SDLNet_Init() < 0)
 	{
 		printf("SDLNet_Init: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
+	}
+	set = SDLNet_AllocSocketSet(2);
+	if(!set) {
+    	printf("SDLNet_AllocSocketSet: %s\n", SDLNet_GetError());
 	}
 
 	serve = s;
@@ -19,6 +24,7 @@ Network::Network(bool s, const char* h, int p) {
 }
 
 Network::~Network() {
+	SDLNet_FreeSocketSet(set);
 	SDLNet_TCP_Close(sd);
 	SDLNet_TCP_Close(csd);
 	SDLNet_Quit();
@@ -28,13 +34,17 @@ bool Network::receivePacket(){
 	if (serve){
 		if(SDLNet_TCP_Recv(csd, buffer, 512) > 0)
 		{
-
+			printf("Client say: %s\n", buffer);
 			return true;
 		}
 	}
 	else 
 	{
-
+		if(SDLNet_TCP_Recv(sd, buffer, 512) > 0)
+		{
+			printf("Server say: %s\n", buffer);
+			return true;
+		}
 	}
 	return false;
 }
@@ -42,11 +52,27 @@ bool Network::receivePacket(){
 bool Network::sendPacket(){
 	if(serve)
 	{
-
+		char* m = "Server message";
+		len = strlen(m) + 1;
+		if (SDLNet_TCP_Send(csd, (void *)m, len) < len)
+		{
+			printf("SDLNet_TCP_Send Error: %s\n", SDLNet_GetError());
+			//exit(EXIT_FAILURE);
+			return false;
+		}
+		return true;
 	}
 	else 
 	{
-
+		char* m = "client message";
+		len = strlen(m) + 1;
+		if (SDLNet_TCP_Send(sd, (void *)m, len) < len)
+		{
+			printf("SDLNet_TCP_Send Error: %s\n", SDLNet_GetError());
+			//exit(EXIT_FAILURE);
+			return false;
+		}
+		return true;
 	}
 	return false;
 }
@@ -56,18 +82,18 @@ void Network::server() {
 	if (SDLNet_ResolveHost(&ip, NULL, 2000) < 0)
 	{
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
 	}
 
 	/* Open a connection with the IP provided (listen on the host's port) */
 	if (!(sd = SDLNet_TCP_Open(&ip)))
 	{
 		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
 	}
 	quit = 0;
+	printf("DEBUG: WAITING FOR CONNECTION========================== \n");
 	while (!quit)
 	{
+		
 		/* This check the sd if there is a pending connection.
 		* If there is one, accept that, and open a new socket for communicating */
 		if ((csd = SDLNet_TCP_Accept(sd)))
@@ -82,61 +108,30 @@ void Network::server() {
 			else
 				printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
 			quit = 1;
-
-
- 			/*
-			quit2 = 0;
-			while (!quit2)
-			{
-				if (SDLNet_TCP_Recv(csd, buffer, 512) > 0)
-				{
-					printf("Client say: %s\n", buffer);
- 
-					if(strcmp(buffer, "exit") == 0)	/* Terminate this connection 
-					{
-						quit2 = 1;
-						printf("Terminate connection\n");
-					}
-					if(strcmp(buffer, "quit") == 0)	/* Quit the program 
-					{
-						quit2 = 1;
-						quit = 1;
-						printf("Quit program\n");
-					}
-				}
-			}
-			*/
 		}
 	}
+	printf("DEBUG: CONNECTION MADE ========================== \n");
+	SDLNet_TCP_AddSocket(set,sd);
+	SDLNet_TCP_AddSocket(set,csd);
+	
 }
 
 void Network::client(const char* d, int p) {
 	/* Resolve the host we are connecting to */
+
 	if (SDLNet_ResolveHost(&ip, d, p) < 0)
 	{
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
+		//exit(EXIT_FAILURE);
 	}
  
 	/* Open a connection with the IP provided (listen on the host's port) */
 	if (!(sd = SDLNet_TCP_Open(&ip)))
 	{
 		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
+		//exit(EXIT_FAILURE);
 	}
+	printf("DEBUG: CLIENT CONNECTED TO SERVER ========================== \n");
 	/* Send messages */
-	quit = 0;
-	while (!quit)
-	{
-		printf("Write something:\n>");
-		scanf("%s", buffer);
- 
-		len = strlen(buffer) + 1;
-		if (SDLNet_TCP_Send(sd, (void *)buffer, len) < len)
-		{
-			printf("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
-			exit(EXIT_FAILURE);
-		}
-		quit = 1;
-	}
+	SDLNet_TCP_AddSocket(set,sd);
 }
