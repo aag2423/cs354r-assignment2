@@ -463,7 +463,8 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	// Network server setup here
 	conn = new Network(true, "", 0);
-	//conn->sendPacket();
+	OutputState empty;
+	conn->sendOutputState(empty);
 
 	appMode = MULTI_PLAYER_SERVER;
 
@@ -487,7 +488,13 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	int port = atoi(prt.c_str());
 	// Network client setup here
 	conn = new Network(false, addr, port);
-	//conn->sendPacket();
+	OutputState os;
+	os.collisionEvent = HIT_PLAYER;
+
+		std::cout << "ddddddddddddddd" << os.collisionEvent << std::endl;
+	while(!conn->receiveOutputState(&os)) {}
+		std::cout << "ddddddddddddddss" << std::endl;
+
 
 	game->handleKeyboardEvent(PAUSE);
 	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);

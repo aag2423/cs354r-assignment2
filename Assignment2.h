@@ -6,6 +6,8 @@
 #include "Game.h"
 #include "Sound.h"
 #include "Network.h"
+#include "ServerGame.h"
+#include "ClientGame.h"
 
 #include <CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
