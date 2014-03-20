@@ -5,6 +5,7 @@
 #include "BaseApplication.h"
 #include "Game.h"
 #include "Sound.h"
+#include "Network.h"
 
 #include <CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
@@ -19,7 +20,7 @@ protected:
 	const static Ogre::Real BOX_SIDE_LENGTH = 200.0f;
 
 	Game* game;
-
+	
 	bool mouseClicked;
 	bool mPaused;
 	Ogre::Real mRotate;       
@@ -37,6 +38,10 @@ protected:
 	CEGUI::OgreRenderer* mRenderer;	
 
 	void setupCEGUI(void);
+	bool title_start_sp_game(const CEGUI::EventArgs &e);
+	bool title_mp_menu(const CEGUI::EventArgs &e);
+	bool title_host_game(const CEGUI::EventArgs &e);
+	bool title_connect_to_game(const CEGUI::EventArgs &e);
 	bool quit(const CEGUI::EventArgs &e);
 	bool resume_game(const CEGUI::EventArgs &e);
 	bool game_controls(const CEGUI::EventArgs &e);

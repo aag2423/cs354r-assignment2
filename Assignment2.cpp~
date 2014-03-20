@@ -456,7 +456,7 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	// Network server setup here
-
+	net = new Network(true, NULL, NULL);
 
 
 	game->handleKeyboardEvent(PAUSE);
@@ -476,7 +476,7 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	const char* addr = ad.c_str();
 	int port = atoi(prt.c_str());
 	// Network client setup here
-
+	net = new Network(false, addr, port);
 
 
 	game->handleKeyboardEvent(PAUSE);
