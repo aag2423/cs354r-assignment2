@@ -20,6 +20,8 @@ public:
 	bool sendPacket();
 	bool receiveOutputState(OutputState* os);
 	bool sendOutputState(OutputState os);
+	bool receiveInputState(InputState* in);
+	bool sendInputState(InputState in);
 	SDLNet_SocketSet set;
 	TCPsocket sd, csd, c2sd;
 	IPaddress ip, *remoteIP;

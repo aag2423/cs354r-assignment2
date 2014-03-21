@@ -87,6 +87,42 @@ bool Network::sendOutputState(OutputState os)
 	return true;
 }
 
+bool Network::receiveInputState(InputState* in)
+{
+	//OutputState os;
+	SDLNet_CheckSockets(set, 100);
+	if(SDLNet_SocketReady(sd)){
+		std::cout << "wwwww SOCKET READY wwwwwwww" << std::endl;
+		if(SDLNet_TCP_Recv(sd, buffer, 512) > 0)
+		{
+			std::cout << "sssssssssssssssssssss RECEIVE INPUT STATE ssssssssssssssssssssssss" << std::endl;
+			memcpy(in, buffer, sizeof(InputState));
+			printf("Server say: %s\n", buffer);
+			return true;
+		}
+	}
+	std::cout << "fail" << std::endl;
+	return false;
+}
+
+bool Network::sendInputState(InputState in)
+{
+	if(serve)
+	{
+		len = sizeof(InputState) + 1;
+		memcpy(buffer, &in, sizeof(InputState));
+		if (SDLNet_TCP_Send(csd, (void *)buffer, len) < len)
+		{
+			printf("SDLNet_TCP_Send Error: %s\n", SDLNet_GetError());
+			//exit(EXIT_FAILURE);
+			return false;
+		}else{	
+			printf("SDLNet_TCP_Send\n");
+		}
+	}
+	return true;
+}
+
 bool Network::sendPacket(){
 	if(serve)
 	{
