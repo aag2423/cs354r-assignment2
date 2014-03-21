@@ -237,6 +237,13 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mMouse->capture();
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+
+        if (conn) {
+	OutputState empty;
+	empty.collisionEvent = HIT_PLAYER;
+	conn->sendOutputState(empty);
+	}
+
 	game->runNextFrame(evt);
 	switch(game->getPlayerHitStrength()) {
 		case WEAK_HIT:

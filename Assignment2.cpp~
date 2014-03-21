@@ -13,6 +13,7 @@ Assignment2::Assignment2(void) :
 	collisions(0),
 	mRotate(0.15),
 	mMove(250),
+	conn(NULL),
 	mDirection(Ogre::Vector3::ZERO)
 {
 }
@@ -21,6 +22,10 @@ Assignment2::~Assignment2(void)
 {
 	delete game;
 	delete soundHandler;
+	if (conn != NULL)
+		delete conn;
+	std::cout << "========= Debug: Sound Deleted =========" << std::endl;
+	std::cout << "========= Debug: Network Deleted =========" << std::endl;
 	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
 //------------------------------------------------------------------------------------
@@ -232,6 +237,11 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mMouse->capture();
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+
+	OutputState empty;
+	empty.collisionEvent = HIT_PLAYER;
+	conn->sendOutputState(empty);
+
 	game->runNextFrame(evt);
 	switch(game->getPlayerHitStrength()) {
 		case WEAK_HIT:
@@ -457,7 +467,11 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	// Network server setup here
-	conn = new Network(true, NULL, NULL);
+	conn = new Network(true, "", 0);
+	OutputState empty;
+		empty.collisionEvent = HIT_PLAYER;
+
+	conn->sendOutputState(empty);
 
 	appMode = MULTI_PLAYER_SERVER;
 
@@ -475,10 +489,20 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
 	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
 
+	appMode = MULTI_PLAYER_CLIENT;
+
 	const char* addr = ad.c_str();
 	int port = atoi(prt.c_str());
 	// Network client setup here
 	conn = new Network(false, addr, port);
+	OutputState os;
+	os.collisionEvent = HIT_PLAYER;
+
+		std::cout << "ddddddddddddddd" << os.collisionEvent << std::endl;
+	while(!conn->receiveOutputState(&os)) {}
+
+		std::cout << "ddddddddddddddd" << os.collisionEvent << std::endl;
+		std::cout << "ddddddddddddddss" << std::endl;
 
 
 	game->handleKeyboardEvent(PAUSE);

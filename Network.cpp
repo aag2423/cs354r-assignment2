@@ -55,7 +55,7 @@ bool Network::receivePacket(){
 bool Network::receiveOutputState(OutputState* os){
 	//OutputState os;
 	SDLNet_CheckSockets(set, 100);
-	if(SDLNet_SocketReady(csd)){
+	if(SDLNet_SocketReady(sd)){
 		std::cout << "wwwww SOCKET READY wwwwwwww" << std::endl;
 		if(SDLNet_TCP_Recv(sd, buffer, 512) > 0)
 		{
@@ -80,6 +80,8 @@ bool Network::sendOutputState(OutputState os)
 			printf("SDLNet_TCP_Send Error: %s\n", SDLNet_GetError());
 			//exit(EXIT_FAILURE);
 			return false;
+		}else{	
+			printf("SDLNet_TCP_Send\n");
 		}
 	}
 	return true;
