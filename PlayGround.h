@@ -12,7 +12,8 @@ enum PlaneNumber {
 	RIGHT_PLANE,
 	FRONT_PLANE,
 	BACK_PLANE,
-	NET
+	NET_FRONT,
+	NET_BACK
 };
 enum PlayGroundType {
 	FULL_COURT, PRACTICE_COURT
@@ -30,8 +31,8 @@ struct MyPlaneContactResultCallback : public btCollisionWorld::ContactResultCall
     MyPlaneContactResultCallback(void) : hit(false){}
 
     virtual btScalar addSingleResult(btManifoldPoint& cp,
-	const btCollisionObject* colObj0, int partId0, int index0,
-	const btCollisionObject* colObj1, int partId1, int index)
+	const btCollisionObjectWrapper* colObj0, int partId0, int index0,
+	const btCollisionObjectWrapper* colObj1, int partId1, int index)
     {
 	hit = true;
     }
@@ -51,7 +52,8 @@ protected:
 	Ogre::Real l;
 	Ogre::Real w;
 	Ogre::Real h;
-	PhysicsObject net;
+	PhysicsObject netFront;
+	PhysicsObject netBack;
 	PhysicsObject bottomPlane;
 	PhysicsObject topPlane;
 	PhysicsObject leftPlane;
@@ -89,7 +91,8 @@ public:
 		case RIGHT_PLANE: return rightPlane;
 		case FRONT_PLANE: return frontPlane;
 		case BACK_PLANE: return backPlane;
-		default: return net;
+		case NET_FRONT: return netFront;
+		default: return netBack;
 		}
 	}
 };

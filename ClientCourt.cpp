@@ -65,9 +65,10 @@ void ClientCourt::setup(void) {
 		makePlane("cwallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/CloudySky", w/2, l, h, wallNode);
 	}
 	if (courtType == FULL_COURT) {
-		Ogre::SceneNode* temp = parentNode->createChildSceneNode("cNetNode", Ogre::Vector3(0,-h/2+20, 0));
-		makePlane("cnet", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, temp);
-
+		Ogre::SceneNode* netF = parentNode->createChildSceneNode("cNetNode1", Ogre::Vector3(0,-h/2+20, 0));
+		Ogre::SceneNode* netB = parentNode->createChildSceneNode("cNetNode2", Ogre::Vector3(0,-h/2+20, 0));
+		makePlane("cnet1", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, netF);
+		makePlane("cnet2", -Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, netB);
 	}
 }
 
@@ -81,8 +82,10 @@ void ClientCourt::destroy(void) {
 	graphicsEngine->destroyEntity("cceiling");
 	graphicsEngine->destroyEntity("cfloor");
 	if (courtType == FULL_COURT) {
-		parentNode->removeAndDestroyChild("cNetNode");
-		graphicsEngine->destroyEntity("cnet");
+		parentNode->removeAndDestroyChild("cNetNode1");
+		graphicsEngine->destroyEntity("cnet1");
+		parentNode->removeAndDestroyChild("cNetNode2");
+		graphicsEngine->destroyEntity("cnet2");
 	}
 	Ogre::MeshManager::getSingleton().remove("cwallf");
 	Ogre::MeshManager::getSingleton().remove("cwallb");

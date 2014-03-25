@@ -66,14 +66,22 @@ void PlayGround::setup(void) {
 		makePlane("wallr", Ogre::Vector3::NEGATIVE_UNIT_X, Ogre::Vector3::UNIT_Y, "Examples/CloudySky", w/2, l, h, wallNode);
 	}
 	if (courtType == FULL_COURT) {
-		Ogre::SceneNode* temp = parentNode->createChildSceneNode("NetNode", Ogre::Vector3(0,-h/2+20, 0));
-		makePlane("net", Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, temp);
-		net.setToBox(
+		Ogre::SceneNode* netF = parentNode->createChildSceneNode("NetNode1", Ogre::Vector3(0,-h/2+20, 0));
+		Ogre::SceneNode* netB = parentNode->createChildSceneNode("NetNode2", Ogre::Vector3(0,-h/2+20, 0));
+		makePlane("net1",-Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, netF);
+		makePlane("net2",-Ogre::Vector3::UNIT_Z, Ogre::Vector3::UNIT_Y, "Examples/TennisNet", 0, w, 40, netB);
+		netFront.setToBox(
 			btVector3(w/2, 20, 2), 
 			0, 
 			btQuaternion(0,0,0,1), 
 			btVector3(0, -h/2+20, 0));
-		physicsEngine->addObject(&net);
+		physicsEngine->addObject(&netFront);
+		netBack.setToBox(
+			btVector3(w/2, 20, 2), 
+			0, 
+			btQuaternion(0,0,0,1), 
+			btVector3(0, -h/2+20, 0));
+		physicsEngine->addObject(&netBack);
 
 	}
 	bottomPlane.setToStaticPlane(btVector3(0,1,0), -h/2);
@@ -92,7 +100,8 @@ void PlayGround::setup(void) {
 	rightPlane.setRestitution(0.8); 
 	frontPlane.setRestitution(0.1); 
 	backPlane.setRestitution(0.8); 
-	net.setRestitution(0.02); 
+	netFront.setRestitution(0.02); 
+	netBack.setRestitution(0.02);
 	physicsEngine->addObject(&bottomPlane);
 	physicsEngine->addObject(&topPlane);
 	physicsEngine->addObject(&leftPlane);
@@ -117,9 +126,12 @@ void PlayGround::destroy(void) {
 	graphicsEngine->destroyEntity("ceiling");
 	graphicsEngine->destroyEntity("floor");
 	if (courtType == FULL_COURT) {
-		parentNode->removeAndDestroyChild("NetNode");
-		graphicsEngine->destroyEntity("net");
-		physicsEngine->removeObject(&net);
+		parentNode->removeAndDestroyChild("NetNode1");
+		graphicsEngine->destroyEntity("net1");
+		physicsEngine->removeObject(&netFront);
+		parentNode->removeAndDestroyChild("NetNode2");
+		graphicsEngine->destroyEntity("net2");
+		physicsEngine->removeObject(&netBack);
 	}
 	Ogre::MeshManager::getSingleton().remove("wallf");
 	Ogre::MeshManager::getSingleton().remove("wallb");
