@@ -12,6 +12,7 @@ using namespace std;
 
 class Network {
 public:
+	bool connectionSuccess;
 	Network(bool s, const char* h, int p);
 	~Network();
 	void server();

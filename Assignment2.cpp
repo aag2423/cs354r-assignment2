@@ -6,7 +6,6 @@
 #include <stdio.h>
 //-------------------------------------------------------------------------------------
 Assignment2::Assignment2(void) : 
-	game(NULL),
 	mPaused(true),
 	mouseClicked(false),
 	bounces(0),
@@ -19,7 +18,8 @@ Assignment2::Assignment2(void) :
 //-------------------------------------------------------------------------------------
 Assignment2::~Assignment2(void)
 {
-	delete game;
+	delete sGame;
+	delete cGame;
 	delete soundHandler;
 	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
@@ -326,8 +326,8 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 			mShutDown = true;
 			break;
 		case OIS::KC_SPACE: 
+			if (appMode == MULTI_PLAYER_SERVER) return true;
 			mPaused = !mPaused;
-			game->handleKeyboardEvent(PAUSE);
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);
 			CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu")->setVisible(true);
@@ -516,6 +516,11 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	// Network server setup here
 	conn = new Network(true, "", 0);
+	if (!conn->connectionSuccess) {
+		delete conn;
+		return true;
+	}
+
 
 	appMode = MULTI_PLAYER_SERVER;
 
@@ -545,6 +550,10 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	int port = atoi(prt.c_str());
 	// Network client setup here
 	conn = new Network(false, addr, port);
+	if (!conn->connectionSuccess) {
+		mShutDown = true;
+		return true;
+	}
 
 	delete cGame;
 	cGame= new ClientGame(mSceneMgr, mCamNode, sGame->getInitializationData(SIDE_FAR), sGame->send(SIDE_FAR));
@@ -642,7 +651,7 @@ bool Assignment2::config_court(const CEGUI::EventArgs &e) {
 //--------------------------------------------------------------------------------------
 
 bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {	
-	return true;
+	return true;/*
 	if (appMode == SINGLE_PLAYER) {
 		game->handleKeyboardEvent(TOGGLE_GAME_MODE);
 		if(game->getGameMode() == PRACTICE) {
@@ -654,6 +663,7 @@ bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {
 		}
 	}
 	return true;
+	*/
 }
 //-------------------------------------------------------------------------------------
 
