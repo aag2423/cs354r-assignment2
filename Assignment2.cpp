@@ -543,18 +543,18 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
 	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
 
-	appMode = MULTI_PLAYER_CLIENT;
-	mPaused = false;
 
 	const char* addr = ad.c_str();
 	int port = atoi(prt.c_str());
 	// Network client setup here
 	conn = new Network(false, addr, port);
 	if (!conn->connectionSuccess) {
-		mShutDown = true;
+		delete conn;
 		return true;
 	}
 
+	appMode = MULTI_PLAYER_CLIENT;
+	mPaused = false;
 	delete cGame;
 	cGame= new ClientGame(mSceneMgr, mCamNode, sGame->getInitializationData(SIDE_FAR), sGame->send(SIDE_FAR));
 

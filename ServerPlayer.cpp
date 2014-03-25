@@ -46,7 +46,6 @@ ServerPlayer::ServerPlayer(Ogre::SceneManager* mSceneMgr, PhysicsEngine& bulletE
 ServerPlayer::~ServerPlayer(void) {
 	physicsEngine->removeObject(&physicsObject);
 	graphicsEngine->getRootSceneNode()->removeChild(positionNode);
-	delete positionNode;
 	std::cout << "========= Debug: ServerPlayer Deleted =========" << std::endl;
 }
 

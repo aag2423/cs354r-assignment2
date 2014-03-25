@@ -16,7 +16,7 @@ public:
 	Network(bool s, const char* h, int p);
 	~Network();
 	void server();
-	void client(const char* d, int p = 2000);
+	void client(const char* d, int p = 50001);
 	bool receivePacket();
 	bool sendPacket();
 	bool receiveOutputState(OutputState* os);

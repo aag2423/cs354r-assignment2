@@ -59,7 +59,6 @@ bool Network::receiveOutputState(OutputState* os){
 		if(SDLNet_TCP_Recv(csd, buffer, 512) > 0)
 		{
 			memcpy(os, buffer, sizeof(OutputState));
-			std::cout << "receiveOutputState success" << std::endl;
 			return true;
 		}
 	}
@@ -79,7 +78,6 @@ bool Network::sendOutputState(OutputState os)
 			//exit(EXIT_FAILURE);
 			return false;
 		}else{	
-			std::cout << "sendOutputState success" << std::endl;
 			return true;
 		}
 	}
@@ -94,7 +92,6 @@ bool Network::receiveInputState(InputState* in)
 		if(SDLNet_TCP_Recv(csd, buffer, 512) > 0)
 		{
 			memcpy(in, buffer, sizeof(InputState));
-			std::cout << "receiveInputState success" << std::endl;
 			return true;
 		}
 	}
@@ -113,7 +110,6 @@ bool Network::sendInputState(InputState in)
 			std::cout << "sendInputState fail: " << SDLNet_GetError() << std::endl;
 			return false;
 		}else{	
-			std::cout << "sendInputState success" << std::endl;
 			return true;
 		}
 	}
@@ -156,7 +152,7 @@ bool Network::sendPacket(){
 
 void Network::server() {
 	/* Resolving the host using NULL make network interface to listen */
-	if (SDLNet_ResolveHost(&ip, NULL, 2000) < 0)
+	if (SDLNet_ResolveHost(&ip, NULL, 50001) < 0)
 	{
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 	}
@@ -168,8 +164,9 @@ void Network::server() {
 	}
 	quit = 1;
 	printf("DEBUG: WAITING FOR Players ========================== \n");
-	int counter = 100000;
-	while (quit && counter > 0)
+	double start = std::clock();
+	double diff =  ( std::clock() - start ) / (double)CLOCKS_PER_SEC;
+	while (quit && diff <= 5)
 	{
 		
 		/* This check the sd if there is a pending connection.
@@ -187,10 +184,10 @@ void Network::server() {
 				printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
 			quit--;
 		}
-		counter--;
+		diff =  ( std::clock() - start ) / (double)CLOCKS_PER_SEC;
 	}
 	
-	connectionSuccess = counter > 0;
+	connectionSuccess = diff <= 5;
 	if (!connectionSuccess) return;
 	
 	printf("DEBUG: CONNECTION MADE ========================== \n");

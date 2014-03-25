@@ -38,7 +38,6 @@ ClientGame::~ClientGame(void) {
 	Ogre::Node* oldCamParent = cameraNode->getParent();
 	oldCamParent->removeChild(cameraNode);
 	graphicsEngine->getRootSceneNode()->addChild(cameraNode);
-	return;
 	delete cCourt;
 	delete cBall;
 	delete cPlayer1;
