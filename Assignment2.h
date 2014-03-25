@@ -14,7 +14,6 @@
 #include <stdio.h>
 
 
-
 class Assignment2 : public BaseApplication
 {
 public:
@@ -24,13 +23,12 @@ protected:
 	const static Ogre::Real BOX_SIDE_LENGTH = 200.0f;
 
 	Game* game;
+
+
 	ServerGame* sGame;
 	ClientGame* cGame;
 
-
-	bool gameRunning;
 	enum AppMode appMode;
-
 	// NETWORK OBJECT
 	Network* conn;
 

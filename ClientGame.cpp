@@ -23,13 +23,11 @@ ClientGame::ClientGame(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, 
 	cPlayer2 = new ClientPlayer(graphicsEngine, AI);
 	cBall = new ClientBall(graphicsEngine);
 
-	std::cout << "========= Debug: ClientasdsadsadadGame Deleted =========" << std::endl;
 
 	cameraNode = camNode;
 	camMode = ABOVE_CAM;
 	toggleCamera();
 
-	std::cout << "========= Debug: ClientasdsadsadadGame Deleted =========" << std::endl;
 	//soundPlayer = new Sound();
 	soundHandler->start_ambient();
 }
@@ -107,7 +105,7 @@ void ClientGame::runNextFrame(void) {
 		default: break;
 	}
 
-
+	
 	OutputSceneState* newScene = &(serverState.sceneState);
 	cBall->setPosition(newScene->ballPos);
 	cBall->setOrientation(newScene->ballOrient);

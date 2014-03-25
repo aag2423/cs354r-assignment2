@@ -10,16 +10,15 @@
 #include "Sound.h"
 #include "ServerPlayer.h"
 #include "ServerCourt.h"
-#include "ClientPlayer.h"
+#include "ServerBall.h"
 #include "ClientCourt.h"
-#include "ServerBall.h"
-#include "ServerBall.h"
+#include "ClientPlayer.h"
 #include "ClientBall.h"
 
 enum {
 	BALL_SERVE_SPEED = 100
 };
-enum Gravity { EARTH_G = -10, MOON_G = -2 };
+enum Gravity { EARTH_G = -15, MOON_G = -2 };
 enum CameraMode { ABOVE_CAM, THIRD_PERSON_CAM, FIRST_PERSON_CAM };
 
 
@@ -30,13 +29,11 @@ enum KeyboardEvent {
 	TOGGLE_CAMERA, PAUSE, RESTART, TOGGLE_GAME_MODE		// overall game params
 };
 enum MouseEvent { HIT_START, HIT_STOP };
-
-
-enum AppMode {
-	SINGLE_PLAYER, MULTI_PLAYER_SERVER, MULTI_PLAYER_CLIENT
-};
 enum GameMode {
 	PRACTICE, FULL_GAME
+};
+enum AppMode {
+	SINGLE_PLAYER, MULTI_PLAYER_SERVER, MULTI_PLAYER_CLIENT
 };
 enum RoundProgress {
 	HIT_BY_PLAYER, HIT_BY_PLAYER_AND_FLOOR, 
@@ -61,6 +58,7 @@ typedef struct GameState {
 	GameResult result;
 } GameState;
 
+
 typedef struct InitializationData {
 	bool isClientNearSide;
 	GameMode gameMode;
@@ -82,11 +80,14 @@ typedef struct OutputSceneState {
 } OutputSceneState;
 
 typedef struct OutputGameState {
-	RoundProgress roundProgress;
-	GameResult result; 
+	bool paused;
+	bool gameStarted;
+	bool restart;
 	int playerScore;
 	int opponentScore;
-	int combo;
+	int comboBonus;
+	enum RoundProgress progress;
+	GameResult result;
 } OutputGameState;
 
 typedef struct OutputState {
@@ -111,13 +112,7 @@ protected:
 	GameState gameState;
 	Ball* ball;
 	PlayGround* court;
-	ServerCourt* sCourt;
-	ClientCourt* cCourt;
 	Player* player;
-	ServerPlayer* sPlayer;
-	ClientPlayer* cPlayer;
-	ServerBall* sBall;
-	ClientBall* cBall;
 	Player* computer;
 	Target* target1;
 	Target* target2;
@@ -134,7 +129,7 @@ public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod, GameMode mode=FULL_GAME);
  	~Game(void);
 	
-	ClientCourt* getCourt(void) { return cCourt; }
+	PlayGround* getCourt(void) { return court; }
 	void setBallRestitution(Ogre::Real r) {
 		if(r == 1) r = 0.99;
 		gameState.ballRestitution = r;

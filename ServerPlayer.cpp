@@ -103,7 +103,7 @@ bool ServerPlayer::move(const Ogre::Vector3& range, bool isFullGame) {
 //-------------------------------------------------------------------------------------
 
 bool ServerPlayer::canReachBall(const Ogre::Vector3& ballPos) {
-	Ogre::Vector3 distance = ballPos - (positionNode->getPosition() + Ogre::Vector3(0, HEIGHT/2.0, 0));
+	Ogre::Vector3 distance = ballPos - (positionNode->getPosition() + Ogre::Vector3(0, HEIGHT*0.7, 0));
 
 	Ogre::Vector3 dir = positionNode->getOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 	return distance.length() < PADDLE_REACH && distance.dotProduct(dir) >= 0;

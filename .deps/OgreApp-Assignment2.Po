@@ -875,9 +875,9 @@ OgreApp-Assignment2.o: Assignment2.cpp Assignment2.h BaseApplication.h \
  /usr/include/SDL/SDL_loadso.h /usr/include/SDL/SDL_timer.h \
  /usr/include/SDL/SDL_version.h /usr/include/SDL/SDL_mixer.h \
  /usr/include/SDL/SDL_types.h ServerPlayer.h Player.h ServerCourt.h \
- ServerBall.h ClientCourt.h ClientPlayer.h ClientBall.h Network.h \
- /usr/include/SDL/SDL_net.h /usr/include/SDL/SDL.h ServerGame.h \
- ClientGame.h /lusr/opt/cegui-0.7.6/include/CEGUI/CEGUI.h \
+ ServerBall.h ClientCourt.h ClientPlayer.h ClientBall.h ServerGame.h \
+ ClientGame.h Network.h /usr/include/SDL/SDL_net.h /usr/include/SDL/SDL.h \
+ /lusr/opt/cegui-0.7.6/include/CEGUI/CEGUI.h \
  /lusr/opt/cegui-0.7.6/include/CEGUI/CEGUIAffector.h \
  /lusr/opt/cegui-0.7.6/include/CEGUI/CEGUIString.h \
  /lusr/opt/cegui-0.7.6/include/CEGUI/CEGUIBase.h \
@@ -3213,15 +3213,15 @@ ClientPlayer.h:
 
 ClientBall.h:
 
+ServerGame.h:
+
+ClientGame.h:
+
 Network.h:
 
 /usr/include/SDL/SDL_net.h:
 
 /usr/include/SDL/SDL.h:
-
-ServerGame.h:
-
-ClientGame.h:
 
 /lusr/opt/cegui-0.7.6/include/CEGUI/CEGUI.h:
 

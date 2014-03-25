@@ -18,7 +18,7 @@ protected:
 public:
 	ServerBall(PhysicsEngine& physicsEngine, const Ogre::Vector3& pos=Ogre::Vector3::ZERO);
 	~ServerBall(void);
-	PhysicsObject getPhysicsObject(void) { return physicsObject; }
+	PhysicsObject& getPhysicsObject(void) { return physicsObject; }
 	const Ogre::Vector3& getPosition(void);
 	const Ogre::Quaternion& getOrientation(void);
 	bool hitByPlayer(ServerPlayer* player);

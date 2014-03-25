@@ -16,7 +16,7 @@ public:
 	enum PlayerSide playerSide;
 	InputPlayerState playerState;
 	const static Ogre::Real HEIGHT = 70.0f;
-	const static Ogre::Real PADDLE_REACH = 100.0f;
+	const static Ogre::Real PADDLE_REACH = 90.0f;
 	ServerPlayer(Ogre::SceneManager* mSceneMgr, PhysicsEngine& bulletEngine, PlayerType type, const Ogre::Vector3& pos, PlayerSide side, bool turnAround=false);
 	~ServerPlayer(void);
 	bool move(const Ogre::Vector3& range, bool isFullGame=true) ;
