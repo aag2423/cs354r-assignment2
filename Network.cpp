@@ -168,7 +168,8 @@ void Network::server() {
 	}
 	quit = 1;
 	printf("DEBUG: WAITING FOR Players ========================== \n");
-	while (quit)
+	int counter = 100000;
+	while (quit && counter > 0)
 	{
 		
 		/* This check the sd if there is a pending connection.
@@ -186,7 +187,12 @@ void Network::server() {
 				printf("SDLNet_TCP_GetPeerAddress: %s\n", SDLNet_GetError());
 			quit--;
 		}
+		counter--;
 	}
+	
+	connectionSuccess = counter > 0;
+	if (!connectionSuccess) return;
+	
 	printf("DEBUG: CONNECTION MADE ========================== \n");
 	SDLNet_TCP_AddSocket(set,sd);
 	SDLNet_TCP_AddSocket(set,csd);
@@ -208,6 +214,8 @@ void Network::client(const char* d, int p) {
 		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
 		//exit(EXIT_FAILURE);
 	}
+	connectionSuccess = !!csd;
+	if (!connectionSuccess) return;
 	printf("DEBUG: CLIENT CONNECTED TO SERVER ========================== \n");
 	/* Send messages */
 	SDLNet_TCP_AddSocket(set,csd);

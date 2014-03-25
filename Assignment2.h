@@ -22,8 +22,6 @@ public:
 protected:
 	const static Ogre::Real BOX_SIDE_LENGTH = 200.0f;
 
-	Game* game;
-
 
 	ServerGame* sGame;
 	ClientGame* cGame;

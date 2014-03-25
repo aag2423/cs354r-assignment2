@@ -9,7 +9,7 @@
 
 enum PlayerSide { SIDE_NEAR, SIDE_FAR };
 enum PlayerType { HUMAN, AI };
-enum PlayerStep { SMALL_STEP = 100, NORMAL_STEP = 200, RUN_STEP = 350 };
+enum PlayerStep { SMALL_STEP = 50, NORMAL_STEP = 130, RUN_STEP = 200 };
 enum HitStrength { WEAK_HIT = 100, NORMAL_HIT = 150, STRONG_HIT = 200 };
 enum shotMode{ FOREHAND = -30, BACKHAND = 30, VOLLEY = 35, SMASH = -10 };
 
