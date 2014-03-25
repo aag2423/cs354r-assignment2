@@ -26,6 +26,7 @@ private:
 	InputPlayerState player2Input;
 
 	bool isFullGame;
+	enum AppMode appMode;
 	ServerCourt* sCourt;
 	ServerPlayer* sPlayer1;
 	ServerPlayer* sPlayer2;
@@ -33,7 +34,7 @@ private:
 	void outputPositionState(void);
 	void outputPauseState(void);
 public:
-	ServerGame(Ogre::SceneManager* mSceneMgr, GameMode mode=FULL_GAME, Gravity g=EARTH_G, Ogre::Real ballRestitution=0.99);
+	ServerGame(Ogre::SceneManager* mSceneMgr, AppMode playMode=SINGLE_PLAYER, GameMode mode=FULL_GAME, Gravity g=EARTH_G, Ogre::Real ballRestitution=0.99);
 	~ServerGame(void);
 	InitializationData& getInitializationData(PlayerSide serverSide) { 
 		initData.isClientNearSide = serverSide == SIDE_NEAR;

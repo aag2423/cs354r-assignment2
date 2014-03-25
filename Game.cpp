@@ -36,7 +36,12 @@ Game::Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, GameMode mod
 	court->getHalfDimension(halfDim);
 
 	ball = new Ball(mSceneMgr, physicsEngine, court, Ogre::Vector3(5, -75, halfDim.z - 340));
+	sBall = new ServerBall(physicsEngine, Ogre::Vector3(5, -75, halfDim.z - 340));
+	cBall = new ClientBall(mSceneMgr, Ogre::Vector3(5, -75, halfDim.z - 340));
 	player = new Player(mSceneMgr, physicsEngine, HUMAN, court, Ogre::Vector3(0, -125, halfDim.z - 320));
+
+	sPlayer = new ServerPlayer(mSceneMgr, physicsEngine, HUMAN, Ogre::Vector3(0, -125, halfDim.z - 320), SIDE_NEAR);
+	//cPlayer = new ClientPlayer(mSceneMgr, HUMAN, Ogre::Vector3(0, -125, halfDim.z - 320), SIDE_NEAR);
 
 	computer = new Player(mSceneMgr, physicsEngine, AI, court, Ogre::Vector3(0, -125, -FULL_COURT_LENGTH/2 + 300));
 	computer->getNode()->yaw(Ogre::Degree(180));
@@ -184,6 +189,11 @@ void Game::runNextFrame(const Ogre::FrameEvent& evt) {
 	bool isFullGame = gameMode == FULL_GAME;
 
 	player->move(evt, isFullGame);
+
+	Ogre::Vector3 range;
+	court->getHalfMovaRange(range);
+	//sPlayer->move(cPlayer->playerState, range, isFullGame);
+	//cPlayer->setPosition(sPlayer->getPosition());
 	if (isFullGame) {
 		runAI();
 		computer->move(evt);
@@ -309,31 +319,44 @@ void Game::toggleCamera(void) {
 void Game::handleKeyboardEvent(enum KeyboardEvent evt) {
 	switch (evt) {
 	case GO_LEFT:
-		player->playerState.movingLeft = true; break;
+		player->playerState.movingLeft = true; 
+		break;
 	case GO_RIGHT:
-		player->playerState.movingRight = true; break;
+		player->playerState.movingRight = true; 
+		break;
 	case GO_FORWARD:
-		player->playerState.movingForward = true; break;
+		player->playerState.movingForward = true;
+		break;
 	case GO_BACKWARD:
-		player->playerState.movingBackward = true; break;
+		player->playerState.movingBackward = true;
+		break;
 	case STOP_LEFT:
-		player->playerState.movingLeft = false; break;
+		player->playerState.movingLeft = false;
+		break;
 	case STOP_RIGHT:
-		player->playerState.movingRight = false; break;
+		player->playerState.movingRight = false;
+		break;
 	case STOP_FORWARD:
-		player->playerState.movingForward = false; break;
+		player->playerState.movingForward = false;
+		break;
 	case STOP_BACKWARD:
-		player->playerState.movingBackward = false; break;
+		player->playerState.movingBackward = false;
+		break;
 	case RUN:
-	        player->playerState.step = RUN_STEP; break;
+	        player->playerState.step = RUN_STEP;
+		break;
 	case STOP_RUN:
-	        player->playerState.step = NORMAL_STEP; break;
+	        player->playerState.step = NORMAL_STEP;
+		break;
 	case USE_WEAK_HIT:
-        	player->playerState.strength = WEAK_HIT; break;
+        	player->playerState.strength = WEAK_HIT;
+		break;
 	case USE_NORMAL_HIT:
-	        player->playerState.strength = NORMAL_HIT; break;
+        	player->playerState.strength = NORMAL_HIT;
+		break;
 	case USE_STRONG_HIT:
-	        player->playerState.strength = STRONG_HIT; break;
+        	player->playerState.strength = STRONG_HIT;
+		break;
 	case TOGGLE_CAMERA:
 		toggleCamera(); 
 		break;

@@ -56,16 +56,14 @@ bool Network::receiveOutputState(OutputState* os){
 	//OutputState os;
 	SDLNet_CheckSockets(set, 100);
 	if(SDLNet_SocketReady(csd)){
-		std::cout << "wwwww SOCKET READY wwwwwwww" << std::endl;
-		if(SDLNet_TCP_Recv(sd, buffer, 512) > 0)
+		if(SDLNet_TCP_Recv(csd, buffer, 512) > 0)
 		{
-			std::cout << "sssssssssssssssssssssssssssssssssssssssssssss" << std::endl;
 			memcpy(os, buffer, sizeof(OutputState));
-			printf("Server say: %s\n", buffer);
+			std::cout << "receiveOutputState success" << std::endl;
 			return true;
 		}
 	}
-	std::cout << "fail" << std::endl;
+	std::cout << "receiveOutputState fail" << std::endl;
 	return false;
 }
 
@@ -77,11 +75,44 @@ bool Network::sendOutputState(OutputState os)
 		memcpy(buffer, &os, sizeof(OutputState));
 		if (SDLNet_TCP_Send(csd, (void *)buffer, len) < len)
 		{
-			printf("SDLNet_TCP_Send Error: %s\n", SDLNet_GetError());
+			std::cout << "sendOutputState fail: " << SDLNet_GetError() << std::endl;
 			//exit(EXIT_FAILURE);
 			return false;
 		}else{	
-			printf("SDLNet_TCP_Send\n");
+			std::cout << "sendOutputState success" << std::endl;
+		}
+	}
+	return true;
+}
+
+bool Network::receiveInputState(InputState* in)
+{
+	//OutputState os;
+	SDLNet_CheckSockets(set, 100);
+	if(SDLNet_SocketReady(csd)){
+		if(SDLNet_TCP_Recv(csd, buffer, 512) > 0)
+		{
+			memcpy(in, buffer, sizeof(InputState));
+			std::cout << "receiveInputState success" << std::endl;
+			return true;
+		}
+	}
+	std::cout << "receiveInputState fail" << std::endl;
+	return false;
+}
+
+bool Network::sendInputState(InputState in)
+{
+	if(!serve)
+	{
+		len = sizeof(InputState) + 1;
+		memcpy(buffer, &in, sizeof(InputState));
+		if (SDLNet_TCP_Send(csd, (void *)buffer, len) < len)
+		{
+			std::cout << "sendInputState fail: " << SDLNet_GetError() << std::endl;
+			return false;
+		}else{	
+			std::cout << "sendInputState success" << std::endl;
 		}
 	}
 	return true;
@@ -170,12 +201,12 @@ void Network::client(const char* d, int p) {
 	}
  
 	/* Open a connection with the IP provided (listen on the host's port) */
-	if (!(sd = SDLNet_TCP_Open(&ip)))
+	if (!(csd = SDLNet_TCP_Open(&ip)))
 	{
 		printf("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
 		//exit(EXIT_FAILURE);
 	}
 	printf("DEBUG: CLIENT CONNECTED TO SERVER ========================== \n");
 	/* Send messages */
-	SDLNet_TCP_AddSocket(set,sd);
+	SDLNet_TCP_AddSocket(set,csd);
 }

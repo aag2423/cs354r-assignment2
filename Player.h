@@ -25,6 +25,7 @@ typedef struct PlayerState {
 	bool hitting;
 } PlayerState;
 
+
 typedef struct InputPlayerState {
 	enum PlayerSide serverPlayerSide;
 	enum PlayerStep step;

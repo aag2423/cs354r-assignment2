@@ -1,11 +1,12 @@
 #include "ServerGame.h"
-ServerGame::ServerGame(Ogre::SceneManager* mSceneMgr, GameMode mode, Gravity g, Ogre::Real ballRestitution) {
+ServerGame::ServerGame(Ogre::SceneManager* mSceneMgr, Appmode playMode, GameMode mode, Gravity g, Ogre::Real ballRestitution) {
 	graphicsEngine = mSceneMgr;
 	physicsEngine.setGravity(0, -15, 0);
 	sBall = NULL;
 	sPlayer1 = NULL;
 	sPlayer2 = NULL;
 	gameState.paused = false;
+	appMode = playMode;
 	isFullGame = mode == FULL_GAME;
 	sCourt = new ServerCourt(physicsEngine, isFullGame? FULL_COURT: PRACTICE_COURT);
 	initData.gameMode = mode;
@@ -43,7 +44,7 @@ void ServerGame::restart(void) {
 	sPlayer1 = new ServerPlayer(graphicsEngine, physicsEngine, HUMAN, pos, SIDE_NEAR);
 	if (isFullGame) pos.z = -pos.z;
 	else pos.x = -pos.x;
-	sPlayer2 = new ServerPlayer(graphicsEngine, physicsEngine, AI, pos, SIDE_FAR, isFullGame);
+	sPlayer2 = new ServerPlayer(graphicsEngine, physicsEngine, playMode == SINGLE_PLAYER ? AI : HUMAN, pos, SIDE_FAR, isFullGame);
 	gameState.gameStarted = false;
 	gameState.progress = NOT_STARTED;
 	outputPositionState();

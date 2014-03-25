@@ -10,9 +10,10 @@
 #include "Sound.h"
 #include "ServerPlayer.h"
 #include "ServerCourt.h"
-#include "ServerBall.h"
-#include "ClientCourt.h"
 #include "ClientPlayer.h"
+#include "ClientCourt.h"
+#include "ServerBall.h"
+#include "ServerBall.h"
 #include "ClientBall.h"
 
 enum {
@@ -29,6 +30,11 @@ enum KeyboardEvent {
 	TOGGLE_CAMERA, PAUSE, RESTART, TOGGLE_GAME_MODE		// overall game params
 };
 enum MouseEvent { HIT_START, HIT_STOP };
+
+
+enum AppMode {
+	SINGLE_PLAYER, MULTI_PLAYER_SERVER, MULTI_PLAYER_CLIENT
+};
 enum GameMode {
 	PRACTICE, FULL_GAME
 };
@@ -54,7 +60,6 @@ typedef struct GameState {
 	enum RoundProgress progress;
 	GameResult result;
 } GameState;
-
 
 typedef struct InitializationData {
 	bool isClientNearSide;
@@ -106,7 +111,13 @@ protected:
 	GameState gameState;
 	Ball* ball;
 	PlayGround* court;
+	ServerCourt* sCourt;
+	ClientCourt* cCourt;
 	Player* player;
+	ServerPlayer* sPlayer;
+	ClientPlayer* cPlayer;
+	ServerBall* sBall;
+	ClientBall* cBall;
 	Player* computer;
 	Target* target1;
 	Target* target2;
@@ -123,7 +134,7 @@ public:
 	Game(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNod, GameMode mode=FULL_GAME);
  	~Game(void);
 	
-	PlayGround* getCourt(void) { return court; }
+	ClientCourt* getCourt(void) { return cCourt; }
 	void setBallRestitution(Ogre::Real r) {
 		if(r == 1) r = 0.99;
 		gameState.ballRestitution = r;

@@ -238,9 +238,21 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
 
-	OutputState empty;
-	empty.collisionEvent = HIT_PLAYER;
-	conn->sendOutputState(empty);
+        if (appMode == MULTI_PLAYER_SERVER) {
+		OutputState empty;
+		empty.collisionEvent = HIT_PLAYER;
+		std::cout << "send ";
+		conn->sendOutputState(empty);
+		InputState input;
+		conn->receiveInputState(&input);
+	} else if (appMode == MULTI_PLAYER_CLIENT){
+		InputState emptyIn;
+		emptyIn.startRound = true;
+		std::cout << "send ";
+		conn->sendInputState(emptyIn);
+		OutputState serverState;
+		conn->receiveOutputState(&serverState);
+	}
 
 	game->runNextFrame(evt);
 	switch(game->getPlayerHitStrength()) {
@@ -495,14 +507,6 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	int port = atoi(prt.c_str());
 	// Network client setup here
 	conn = new Network(false, addr, port);
-	OutputState os;
-	os.collisionEvent = HIT_PLAYER;
-
-		std::cout << "ddddddddddddddd" << os.collisionEvent << std::endl;
-	while(!conn->receiveOutputState(&os)) {}
-
-		std::cout << "ddddddddddddddd" << os.collisionEvent << std::endl;
-		std::cout << "ddddddddddddddss" << std::endl;
 
 
 	game->handleKeyboardEvent(PAUSE);

@@ -44,6 +44,7 @@ private:
 	void setup();
 	void destroy(void);
 protected:
+	bool forServer;
 	PlayGroundType courtType;
 	Ogre::SceneManager* graphicsEngine;
 	Ogre::SceneNode* parentNode;

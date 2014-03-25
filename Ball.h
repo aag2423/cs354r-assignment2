@@ -11,7 +11,6 @@
 #include <iostream>
 #include <btBulletDynamicsCommon.h>
 
-
 enum BallCollisionEvent {
 	NOTHING_HAPPENED,
 	HIT_PLAYER_SHOT, HIT_OPPONENT_SHOT,
