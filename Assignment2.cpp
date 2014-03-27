@@ -327,7 +327,6 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 			break;
 		case OIS::KC_SPACE: 
 			if (appMode == NO_GAME) return true;
-			sGame->togglePause();
 			mPaused = !mPaused;
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);

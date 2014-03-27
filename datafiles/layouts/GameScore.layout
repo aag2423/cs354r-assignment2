@@ -17,6 +17,7 @@
 				<Property Name="HorzFormatting" Value="RightAligned" />
 			</Window>
 			<Window Type="TaharezLook/StaticText" Name="VsScoreRoot/PlayerScore">
+				<Property Name="AlwaysOnTop" Value="True" />
 				<Property Name="Text" Value="Player" />
 				<Property Name="UnifiedSize" Value="{{0.5,0},{0.3,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0,0},{0.3,0}}" />
@@ -28,6 +29,7 @@
 				<Property Name="HorzFormatting" Value="RightAligned" />
 			</Window>
 			<Window Type="TaharezLook/StaticText" Name="VsScoreRoot/CPUScore">
+				<Property Name="AlwaysOnTop" Value="True" />
 				<Property Name="Text" Value="CPU" />
 				<Property Name="UnifiedSize" Value="{{0.5,0},{0.3,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0,0},{0.6,0}}" />

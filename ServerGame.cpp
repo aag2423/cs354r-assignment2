@@ -31,10 +31,6 @@ ServerGame::~ServerGame(void) {
 
 //-------------------------------------------------------------------------------------
 
-void ServerGame::togglePause(void) {
-	outputState.gameState.paused = !outputState.gameState.paused;
-}
-
 void ServerGame::reset(void) {
 	outputState.gameState.playerScore = 0;
 	outputState.gameState.opponentScore = 0;
