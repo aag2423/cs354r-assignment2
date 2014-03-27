@@ -13,6 +13,8 @@ ServerGame::ServerGame(Ogre::SceneManager* mSceneMgr, AppMode aMode, GameMode mo
 	sCourt = new ServerCourt(physicsEngine, isFullGame? FULL_COURT: PRACTICE_COURT);
 	initData.gameMode = mode;
 	restart();
+	
+	outputState.gameState.result = ONGOING;
 	outputState.gameState.playerScore = 0;
 	outputState.gameState.opponentScore = 0;
 	outputState.gameState.progress = ENDED;
@@ -91,6 +93,9 @@ void ServerGame::runAI(void) {
 
 
 void ServerGame::runNextFrame(void) {
+	if (outputState.gameState.opponentScore > 10 || outputState.gameState.playerScore > 10) {	
+		return; // wait for user manully restart
+	}
 	if (outputState.gameState.progress == ENDED) {restart(); return;}
 	if (outputState.gameState.paused || !outputState.gameState.gameStarted) {
 		outputPositionState();
@@ -123,7 +128,7 @@ void ServerGame::runNextFrame(void) {
 void ServerGame::receive(InputState input) {
 	if (input.playerState.serverPlayerSide == SIDE_NEAR) {
 		sPlayer1->playerState = input.playerState;
-	if (input.startRound) { outputState.gameState.gameStarted = true;}
+		if (input.startRound) { outputState.gameState.gameStarted = true;}
 	} else
 		sPlayer2->playerState = input.playerState;
 	
@@ -132,6 +137,23 @@ void ServerGame::receive(InputState input) {
 //-------------------------------------------------------------------------------------
 
 OutputState ServerGame::send(bool isClientNearSide) {
+	if (isClientNearSide) {
+		if (outputState.gameState.playerScore > 10)
+			outputState.gameState.result = WIN;
+		else if (outputState.gameState.opponentScore > 10)
+			outputState.gameState.result = LOSE;
+		else
+			outputState.gameState.result = ONGOING;
+	} else {
+		if (outputState.gameState.playerScore > 10)
+			outputState.gameState.result = LOSE;
+		else if (outputState.gameState.opponentScore > 10)
+			outputState.gameState.result = WIN;
+		else
+			outputState.gameState.result = ONGOING;
+
+	}
+
 	outputState.sceneState.isClientNearSide = isClientNearSide;
 	return outputState;
 }
