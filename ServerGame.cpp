@@ -8,6 +8,7 @@ ServerGame::ServerGame(Ogre::SceneManager* mSceneMgr, AppMode aMode, GameMode mo
 	sBall = NULL;
 	sPlayer1 = NULL;
 	sPlayer2 = NULL;
+	isNearSideTurn = true;
 	outputState.gameState.paused = false;
 	isFullGame = mode == FULL_GAME;
 	sCourt = new ServerCourt(physicsEngine, isFullGame? FULL_COURT: PRACTICE_COURT);
@@ -43,9 +44,13 @@ void ServerGame::restart(void) {
 	delete sBall;
 	delete sPlayer1;
 	delete sPlayer2;
-
+	if(appMode!=SINGLE_PLAYER)
+		isNearSideTurn = !isNearSideTurn;
+	else
+		isNearSideTurn = true;
 	Ogre::Vector3 pos;
 	sCourt->getBallInitialPosition(pos);
+	if (!isNearSideTurn)  pos.z = -pos.z;
 	sBall = new ServerBall(physicsEngine, pos);
 	sBall->getPhysicsObject().setRestitution(ballRes);
 
@@ -128,9 +133,11 @@ void ServerGame::runNextFrame(void) {
 void ServerGame::receive(InputState input) {
 	if (input.playerState.serverPlayerSide == SIDE_NEAR) {
 		sPlayer1->playerState = input.playerState;
-		if (input.startRound) { outputState.gameState.gameStarted = true;}
-	} else
+		if (isNearSideTurn && input.startRound) { outputState.gameState.gameStarted = true;}
+	} else {
+		if (!isNearSideTurn && input.startRound) { outputState.gameState.gameStarted = true;}
 		sPlayer2->playerState = input.playerState;
+	}
 	
 }
 

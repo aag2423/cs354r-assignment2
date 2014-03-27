@@ -152,7 +152,7 @@ bool Network::sendPacket(){
 
 void Network::server() {
 	/* Resolving the host using NULL make network interface to listen */
-	if (SDLNet_ResolveHost(&ip, NULL, 2000) < 0)
+	if (SDLNet_ResolveHost(&ip, NULL, 50001) < 0)
 	{
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
 	}
@@ -202,6 +202,8 @@ void Network::client(const char* d, int p) {
 	if (SDLNet_ResolveHost(&ip, d, p) < 0)
 	{
 		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		connectionSuccess = false;
+		return;
 		//exit(EXIT_FAILURE);
 	}
  

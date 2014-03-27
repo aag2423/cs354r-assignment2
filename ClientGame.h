@@ -34,7 +34,7 @@ public:
 	enum HitStrength getPlayerHitStrength(void) { return localPlayerState.strength; }
 	int getPlayerScore(void) { return serverState.gameState.playerScore; }
 	int getOpponentScore(void) { return serverState.gameState.opponentScore; }
-	GameResult getGameResult(void) { return serverState.gameState.gameResult; }
+	GameResult getGameResult(void) { return serverState.gameState.result; }
 };
 
 #endif // #ifndef __ClientGame_h_

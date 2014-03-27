@@ -51,6 +51,7 @@ protected:
 	bool title_mp_menu(const CEGUI::EventArgs &e);
 	bool title_host_game(const CEGUI::EventArgs &e);
 	bool title_connect_to_game(const CEGUI::EventArgs &e);
+	bool title_failure_ok(const CEGUI::EventArgs &e);
 	bool quit(const CEGUI::EventArgs &e);
 	bool resume_game(const CEGUI::EventArgs &e);
 	bool game_controls(const CEGUI::EventArgs &e);

@@ -13,10 +13,10 @@ using namespace std;
 class Network {
 public:
 	bool connectionSuccess;
-	Network(bool s, const char* h, int p);
+	Network(bool s, const char* h);
 	~Network();
 	void server();
-	void client(const char* d, int p = 50001);
+	void client(const char* d);
 	bool receivePacket();
 	bool sendPacket();
 	bool receiveOutputState(OutputState* os);

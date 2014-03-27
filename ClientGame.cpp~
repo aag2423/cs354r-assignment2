@@ -27,9 +27,6 @@ ClientGame::ClientGame(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, 
 	cameraNode = camNode;
 	camMode = ABOVE_CAM;
 	toggleCamera();
-
-	//soundPlayer = new Sound();
-	soundHandler->start_ambient();
 }
 
 //-------------------------------------------------------------------------------------
@@ -70,10 +67,12 @@ void ClientGame::toggleCamera(void) {
 		camMode = ABOVE_CAM;
 		newCamParent = graphicsEngine->getRootSceneNode();
 		newCamParent->addChild(cameraNode);
-		cameraNode->setPosition(0, 50, 700);
+		cameraNode->setPosition(0, 50, isNearSide? 700:-700);
 		cameraNode->resetOrientation();
 		cPlayer1->getSceneNode()->resetOrientation();
-        	cameraNode->pitch(Ogre::Degree(-10));
+        if (!isNearSide)
+        	cameraNode->yaw(Ogre::Degree(180));
+        cameraNode->pitch(Ogre::Degree(-10));
 	}
 }
 
@@ -91,6 +90,7 @@ InputState ClientGame::send(void) {
 
 
 void ClientGame::runNextFrame(void) {
+	if(serverState.gameState.result == 
 	switch(serverState.collisionEvent) {
 		case HIT_PLAYER_SHOT:
 		case HIT_OPPONENT_SHOT:
@@ -136,10 +136,16 @@ void ClientGame::runNextFrame(void) {
 			newScene->playerNearHitting
 		);
 	}
-
 	Ogre::Vector3 dir = cameraNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
-	localPlayerState.shotDirection.x = dir.x * 100;
-	localPlayerState.shotDirection.y = (dir.y * 100) + 20;
+	
+	if (camMode == FIRST_PERSON_CAM) {
+		localPlayerState.shotDirection.x = dir.x * 100;
+		localPlayerState.shotDirection.y = (dir.y * 100) + 40;
+	}
+	if (camMode == THIRD_PERSON_CAM) {
+		localPlayerState.shotDirection.x = dir.x * 100;
+		localPlayerState.shotDirection.y = 35;
+	}
 }
 
 //-------------------------------------------------------------------------------------
@@ -186,9 +192,12 @@ void ClientGame::handleKeyboardEvent(enum KeyboardEvent evt) {
 }
 
 void ClientGame::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
-	localPlayerState.yaw = -0.15*dx;
+	if (camMode != ABOVE_CAM)
+		localPlayerState.yaw = -0.15*dx;
 	if (camMode == FIRST_PERSON_CAM)
 		cameraNode->pitch(Ogre::Degree(-0.15*dy), Ogre::Node::TS_LOCAL);
+	
+
 	//localPlayerState.shotDirection.x = dx*2;
 	//dy = -dy*8;
 	//localPlayerState.shotDirection.y = dy > 35 ? 35: dy;
@@ -199,6 +208,30 @@ void ClientGame::handleMouseClick(enum MouseEvent evt) {
 	switch (evt) {
 	case HIT_START:
 		localPlayerState.hitting = true;
+		/*
+		if (camMode == THIRD_PERSON_CAM) {
+			localPlayerState.shotDirection.y = 25;
+		}
+		*/
+		if (camMode == ABOVE_CAM) {
+			localPlayerState.shotDirection.y = 30;
+			if (localPlayerState.movingLeft) {
+				localPlayerState.movingLeft = false;
+				if (isNearSide)
+					localPlayerState.shotDirection.x = 40;
+				else
+					localPlayerState.shotDirection.x = -40;
+			}
+			else if (localPlayerState.movingRight) {
+				localPlayerState.movingRight = false;
+				if (isNearSide)
+					localPlayerState.shotDirection.x = -40;
+				else
+					localPlayerState.shotDirection.x = 40;
+			}
+			else if (localPlayerState.movingForward) localPlayerState.shotDirection.y = 20;
+			else if (localPlayerState.movingBackward) localPlayerState.shotDirection.y = 40;
+		}
 //		gameState.gameStarted = true;
 		break;
 	case HIT_STOP:

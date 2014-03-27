@@ -15,6 +15,7 @@ private:
 	Gravity g;
 	Ogre::Real ballRes;
 
+	bool isNearSideTurn;
 	bool isFullGame;
 	enum AppMode appMode;
 	ServerCourt* sCourt;

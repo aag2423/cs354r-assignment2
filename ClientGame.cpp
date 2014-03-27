@@ -90,6 +90,7 @@ InputState ClientGame::send(void) {
 
 
 void ClientGame::runNextFrame(void) {
+	if(serverState.gameState.result != ONGOING) return;
 	switch(serverState.collisionEvent) {
 		case HIT_PLAYER_SHOT:
 		case HIT_OPPONENT_SHOT:
@@ -150,6 +151,12 @@ void ClientGame::runNextFrame(void) {
 //-------------------------------------------------------------------------------------
 
 void ClientGame::receive(OutputState newState) {
+	if(serverState.gameState.result == ONGOING && newState.gameState.result != ONGOING){
+		if (newState.gameState.result == WIN)
+			soundHandler->play_sound(player_win);
+		else
+			soundHandler->play_sound(player_lose);
+	}
 	serverState = newState;
 	
 }

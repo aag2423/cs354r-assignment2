@@ -61,7 +61,6 @@ protected:
 	bool config_setSFXVolume(const CEGUI::EventArgs &e);
 	bool config_setRestitution(const CEGUI::EventArgs &e);
 	bool config_court(const CEGUI::EventArgs &e);
-	bool config_mode_game(const CEGUI::EventArgs &e);
 	bool config_gravity(const CEGUI::EventArgs &e);
 	
 	virtual void createCamera(void);

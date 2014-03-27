@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Network::Network(bool s, const char* h, int p) {
+Network::Network(bool s, const char* h) {
 	
 	if (SDLNet_Init() < 0)
 	{
@@ -20,16 +20,18 @@ Network::Network(bool s, const char* h, int p) {
 
 	}
 	else {
-		client(h, p);
+		client(h);
 	}
 }
 
 Network::~Network() {
-	SDLNet_FreeSocketSet(set);
-	if(serve){
+	if (set != NULL)
+		SDLNet_FreeSocketSet(set);
+	if(csd!=NULL && serve){
 		SDLNet_TCP_Close(csd);
 	}
-	SDLNet_TCP_Close(sd);
+	if(sd !=NULL)
+		SDLNet_TCP_Close(sd);
 	SDLNet_Quit();
 }
 
@@ -196,12 +198,14 @@ void Network::server() {
 	
 }
 
-void Network::client(const char* d, int p) {
+void Network::client(const char* d) {
 	/* Resolve the host we are connecting to */
 	//gameHost = d;
-	if (SDLNet_ResolveHost(&ip, d, p) < 0)
+	if (SDLNet_ResolveHost(&ip, d, 50001) < 0)
 	{
-		printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		// printf("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
+		connectionSuccess = false;
+		return;
 		//exit(EXIT_FAILURE);
 	}
  

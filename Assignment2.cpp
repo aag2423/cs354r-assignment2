@@ -126,6 +126,7 @@ void Assignment2::setupCEGUI(void) {
 	wmgr.getWindow("TitleRoot/Menu/Multiplayer")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_mp_menu, this));
 	wmgr.getWindow("TitleRoot/MP/Host")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_host_game, this));
 	wmgr.getWindow("TitleRoot/MP/Connect")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_connect_to_game, this));
+	wmgr.getWindow("TitleRoot/MP/FailOK")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::title_failure_ok, this));	
 	wmgr.getWindow("PauseRoot/Menu/Resume")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::resume_game, this));
 	wmgr.getWindow("PauseRoot/Menu/Quit")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::quit, this));
 	wmgr.getWindow("PauseRoot/Menu/Controls")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Assignment2::game_controls, this));
@@ -528,9 +529,15 @@ bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/PlayerScore")->setText("Player 1");
 	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScore")->setText("Player 2");
 	// Network server setup here
-	conn = new Network(true, "", 0);
+	conn = new Network(true, "");
 	if (!conn->connectionSuccess) {
-		delete conn;
+		//delete conn;
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/CFail")->setVisible(true);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/FailOK")->setVisible(true);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Host")->disable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Connect")->disable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->setText("");
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->disable();
 		return true;
 	}
 
@@ -563,16 +570,28 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	
 
 	CEGUI::String ad = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->getText();
-	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
-	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
+	std::cout << "IP: " << ad << std::endl;
 
-
-	const char* addr = ad.c_str();
-	int port = atoi(prt.c_str());
+	const char* addr = ad.c_str();	
+	if(std::strlen(addr) == 0) {
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/CFail")->setVisible(true);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/FailOK")->setVisible(true);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Host")->disable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Connect")->disable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->setText("");
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->disable();
+		return true;
+	}
 	// Network client setup here
-	conn = new Network(false, addr, port);
+	conn = new Network(false, addr);
 	if (!conn->connectionSuccess) {
-		delete conn;
+		//delete conn;
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/CFail")->setVisible(true);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/FailOK")->setVisible(true);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Host")->disable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Connect")->disable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->setText("");
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->disable();
 		return true;
 	}
 
@@ -588,6 +607,16 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
 	CEGUI::MouseCursor::getSingleton().hide();
     return true;
+}
+
+//--------------------------------------------------------------------------------------
+bool Assignment2::title_failure_ok(const CEGUI::EventArgs &e) {
+        CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/CFail")->setVisible(false);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/FailOK")->setVisible(false);
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Host")->enable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/Connect")->enable();
+		CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->enable();
+        return true;
 }
 
 //--------------------------------------------------------------------------------------
