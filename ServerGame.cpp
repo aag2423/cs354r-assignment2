@@ -1,19 +1,22 @@
 #include "ServerGame.h"
-ServerGame::ServerGame(Ogre::SceneManager* mSceneMgr, GameMode mode, Gravity g, Ogre::Real ballRestitution) {
+ServerGame::ServerGame(Ogre::SceneManager* mSceneMgr, AppMode aMode, GameMode mode, Gravity gravity, Ogre::Real ballRestitution) {
 	graphicsEngine = mSceneMgr;
-	physicsEngine.setGravity(0, -15, 0);
+	physicsEngine.setGravity(0, gravity, 0);
+	ballRes = ballRestitution;
+	appMode = aMode;
+	g = gravity;
 	sBall = NULL;
 	sPlayer1 = NULL;
 	sPlayer2 = NULL;
-	gameState.paused = false;
+	outputState.gameState.paused = false;
 	isFullGame = mode == FULL_GAME;
 	sCourt = new ServerCourt(physicsEngine, isFullGame? FULL_COURT: PRACTICE_COURT);
 	initData.gameMode = mode;
 	restart();
-	gameState.playerScore = 0;
-	gameState.computerScore = 0;
-	gameState.progress = ENDED;
-	gameState.result = ONGOING;
+	outputState.gameState.playerScore = 0;
+	outputState.gameState.opponentScore = 0;
+	outputState.gameState.progress = ENDED;
+	outputState.gameState.result = ONGOING;
 }
 
 //-------------------------------------------------------------------------------------
@@ -37,15 +40,15 @@ void ServerGame::restart(void) {
 	Ogre::Vector3 pos;
 	sCourt->getBallInitialPosition(pos);
 	sBall = new ServerBall(physicsEngine, pos);
-
+	sBall->getPhysicsObject().setRestitution(ballRes);
 
 	sCourt->getPlayerInitialPosition(pos);
 	sPlayer1 = new ServerPlayer(graphicsEngine, physicsEngine, HUMAN, pos, SIDE_NEAR);
 	if (isFullGame) pos.z = -pos.z;
 	else pos.x = -pos.x;
-	sPlayer2 = new ServerPlayer(graphicsEngine, physicsEngine, AI, pos, SIDE_FAR, isFullGame);
-	gameState.gameStarted = false;
-	gameState.progress = NOT_STARTED;
+	sPlayer2 = new ServerPlayer(graphicsEngine, physicsEngine, appMode==SINGLE_PLAYER?AI:HUMAN, pos, SIDE_FAR, isFullGame);
+	outputState.gameState.gameStarted = false;
+	outputState.gameState.progress = NOT_STARTED;
 	outputPositionState();
 	outputPauseState();
 }
@@ -83,8 +86,8 @@ void ServerGame::runAI(void) {
 
 
 void ServerGame::runNextFrame(void) {
-	if (gameState.progress == ENDED) {restart(); return;}
-	if (gameState.paused || !gameState.gameStarted) {
+	if (outputState.gameState.progress == ENDED) {restart(); return;}
+	if (outputState.gameState.paused || !outputState.gameState.gameStarted) {
 		outputPositionState();
 		outputPauseState();
 		return;
@@ -108,19 +111,17 @@ void ServerGame::runNextFrame(void) {
 	outputState.sceneState.playerFarMoving = p2Moving;
 	outputState.sceneState.playerNearHitting =sPlayer1->playerState.hitting;
 	outputState.sceneState.playerFarHitting =sPlayer2->playerState.hitting;
-	outputState.gameState.playerScore = gameState.playerScore;
-	outputState.gameState.opponentScore = gameState.computerScore;
-	outputState.gameState.combo = gameState.comboBonus;
 }
 
 //-------------------------------------------------------------------------------------
 
 void ServerGame::receive(InputState input) {
-	if (input.playerState.serverPlayerSide == SIDE_NEAR)
+	if (input.playerState.serverPlayerSide == SIDE_NEAR) {
 		sPlayer1->playerState = input.playerState;
-	else
+	if (input.startRound) { outputState.gameState.gameStarted = true;}
+	} else
 		sPlayer2->playerState = input.playerState;
-	if (input.startRound) { gameState.gameStarted = true;}
+	
 }
 
 //-------------------------------------------------------------------------------------
@@ -134,76 +135,76 @@ OutputState ServerGame::send(bool isClientNearSide) {
 
 void ServerGame::checkScoring(BallCollisionEvent ballEvent) {
 	Ogre::Real ballPosZ = sBall->getPosition().z;
-	if (gameState.progress == NOT_STARTED) {
+	if (outputState.gameState.progress == NOT_STARTED) {
 		switch(ballEvent){
 			case HIT_PLAYER_SHOT:
-				gameState.progress = HIT_BY_PLAYER; break;
+				outputState.gameState.progress = HIT_BY_PLAYER; break;
 			case HIT_OPPONENT_SHOT:
-				gameState.progress = HIT_BY_OPPONENT; break;
+				outputState.gameState.progress = HIT_BY_OPPONENT; break;
 			default: break;
 		}
-	} else if (gameState.progress == HIT_BY_PLAYER) {
+	} else if (outputState.gameState.progress == HIT_BY_PLAYER) {
 		switch(ballEvent){
 			case HIT_CEILING:
 			case HIT_WALL: 
 			case HIT_PLAYER:
-				gameState.computerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.opponentScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_FLOOR: 
 				if (ballPosZ > 0){
-					gameState.computerScore++; gameState.progress = ENDED;
+					outputState.gameState.opponentScore++; outputState.gameState.progress = ENDED;
 				}else
-					gameState.progress = HIT_BY_PLAYER_AND_FLOOR; 
+					outputState.gameState.progress = HIT_BY_PLAYER_AND_FLOOR; 
 				break;
 			case HIT_OPPONENT:
-				gameState.playerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.playerScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_OPPONENT_SHOT:
-				gameState.progress = HIT_BY_OPPONENT; break;
+				outputState.gameState.progress = HIT_BY_OPPONENT; break;
 			default: break;
 		}
-	} else if (gameState.progress == HIT_BY_PLAYER_AND_FLOOR) {
+	} else if (outputState.gameState.progress == HIT_BY_PLAYER_AND_FLOOR) {
 		switch(ballEvent){
 			case HIT_WALL:
 			case HIT_FLOOR:
 			case HIT_CEILING:
 			case HIT_OPPONENT:
-				gameState.playerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.playerScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_PLAYER:
 			case HIT_PLAYER_SHOT:
-				gameState.computerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.opponentScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_OPPONENT_SHOT:
-				gameState.progress = HIT_BY_OPPONENT; break;
+				outputState.gameState.progress = HIT_BY_OPPONENT; break;
 			default:break;
 		}
-	} else if (gameState.progress == HIT_BY_OPPONENT) {
+	} else if (outputState.gameState.progress == HIT_BY_OPPONENT) {
 		switch(ballEvent){
 			case HIT_CEILING:
 			case HIT_WALL: 
 			case HIT_OPPONENT:
-				gameState.playerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.playerScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_FLOOR: 
 				if (ballPosZ < 0){
-					gameState.playerScore++; gameState.progress = ENDED;
+					outputState.gameState.playerScore++; outputState.gameState.progress = ENDED;
 				}else
-					gameState.progress = HIT_BY_OPPONENT_AND_FLOOR; 
+					outputState.gameState.progress = HIT_BY_OPPONENT_AND_FLOOR; 
 				break;
 			case HIT_PLAYER:
-				gameState.computerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.opponentScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_PLAYER_SHOT:
-				gameState.progress = HIT_BY_PLAYER; break;
+				outputState.gameState.progress = HIT_BY_PLAYER; break;
 			default: break;
 		}
-	} else if (gameState.progress == HIT_BY_OPPONENT_AND_FLOOR) {
+	} else if (outputState.gameState.progress == HIT_BY_OPPONENT_AND_FLOOR) {
 		switch(ballEvent){
 			case HIT_WALL:
 			case HIT_FLOOR:
 			case HIT_CEILING:
 			case HIT_PLAYER:
-				gameState.computerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.opponentScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_OPPONENT:
 			case HIT_OPPONENT_SHOT:
-				gameState.playerScore++; gameState.progress = ENDED; break;
+				outputState.gameState.playerScore++; outputState.gameState.progress = ENDED; break;
 			case HIT_PLAYER_SHOT:
-				gameState.progress = HIT_BY_PLAYER; break;
+				outputState.gameState.progress = HIT_BY_PLAYER; break;
 			default:break;
 		}
 	}

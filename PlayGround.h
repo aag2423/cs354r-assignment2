@@ -1,4 +1,3 @@
-
 #ifndef __PlayGround_h_
 #define __PlayGround_h_
 
@@ -12,7 +11,8 @@ enum PlaneNumber {
 	RIGHT_PLANE,
 	FRONT_PLANE,
 	BACK_PLANE,
-	NET
+	NET_FRONT,
+	NET_BACK
 };
 enum PlayGroundType {
 	FULL_COURT, PRACTICE_COURT
@@ -51,7 +51,8 @@ protected:
 	Ogre::Real l;
 	Ogre::Real w;
 	Ogre::Real h;
-	PhysicsObject net;
+	PhysicsObject netFront;
+	PhysicsObject netBack;
 	PhysicsObject bottomPlane;
 	PhysicsObject topPlane;
 	PhysicsObject leftPlane;
@@ -89,7 +90,8 @@ public:
 		case RIGHT_PLANE: return rightPlane;
 		case FRONT_PLANE: return frontPlane;
 		case BACK_PLANE: return backPlane;
-		default: return net;
+		case NET_FRONT: return netFront;
+		default: return netBack;
 		}
 	}
 };

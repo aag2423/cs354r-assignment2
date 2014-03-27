@@ -6,8 +6,7 @@
 #include <stdio.h>
 //-------------------------------------------------------------------------------------
 Assignment2::Assignment2(void) : 
-	game(NULL),
-	mPaused(false),
+	mPaused(true),
 	mouseClicked(false),
 	bounces(0),
 	collisions(0),
@@ -19,7 +18,8 @@ Assignment2::Assignment2(void) :
 //-------------------------------------------------------------------------------------
 Assignment2::~Assignment2(void)
 {
-	delete game;
+	//delete sGame;
+	//delete cGame;
 	delete soundHandler;
 	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
@@ -163,8 +163,13 @@ void Assignment2::createScene(void)
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
 	appMode = SINGLE_PLAYER;
-	game = new Game(mSceneMgr, mCamNode);
-	game->handleKeyboardEvent(PAUSE);
+	//game = new Game(mSceneMgr, mCamNode);
+	//game->handleKeyboardEvent(PAUSE);
+
+	sGame= new ServerGame(mSceneMgr);
+	cGame= new ClientGame(mSceneMgr, mCamNode, sGame->getInitializationData(SIDE_NEAR), sGame->send(SIDE_NEAR));
+
+	mPaused =true;
 
 	Ogre::Light* spotLight1 = mSceneMgr->createLight("spotLight1");
     	spotLight1->setType(Ogre::Light::LT_SPOTLIGHT);
@@ -232,8 +237,37 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	mMouse->capture();
 	CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
 	mCamNode->translate(mDirection * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
-	game->runNextFrame(evt);
-	switch(game->getPlayerHitStrength()) {
+	//game->runNextFrame(evt);
+
+
+	if(mPaused) return true;
+
+        if (appMode == MULTI_PLAYER_SERVER) {
+		sGame->receive(cGame->send());
+		InputState input;
+		if(conn->receiveInputState(&input))
+			sGame->receive(input);
+
+		sGame->runNextFrame();
+		conn->sendOutputState(sGame->send(false));
+		cGame->receive(sGame->send(true));
+		cGame->runNextFrame();
+	} else if (appMode == MULTI_PLAYER_CLIENT){
+
+		OutputState serverState;
+		if(conn->receiveOutputState(&serverState))
+			cGame->receive(serverState);
+		cGame->runNextFrame();
+		conn->sendInputState(cGame->send());
+	} else {
+		sGame->receive(cGame->send());
+		sGame->runNextFrame();
+		cGame->receive(sGame->send(true));
+		cGame->runNextFrame();
+	}
+
+
+	switch(cGame->getPlayerHitStrength()) {
 		case WEAK_HIT:
 			wmgr.getWindow("StrengthRoot")->setText("WEAK");
 			break;
@@ -245,6 +279,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			break;
 		default: break;
 	}
+/*
 	switch(game->getGameResult()) {
 		case WIN:
 			wmgr.getWindow("EndGameRoot")->setVisible(true);
@@ -269,7 +304,13 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		sprintf(score_buf, "%d", game->getOpponentScore());
 		CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScoreVal")->setText(score_buf);
 	}
+*/
+	sprintf(score_buf, "%d", cGame->getPlayerScore());
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/PlayerScoreVal")->setText(score_buf);
+	sprintf(score_buf, "%d", cGame->getOpponentScore());
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScoreVal")->setText(score_buf);
 
+	
         return true;
 }
 //-------------------------------------------------------------------------------------
@@ -283,11 +324,10 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 	switch (evt.key) {
 		case OIS::KC_ESCAPE: 
 			mShutDown = true;
-			game->handleKeyboardEvent(PAUSE);
 			break;
 		case OIS::KC_SPACE: 
+			if (appMode == MULTI_PLAYER_SERVER) return true;
 			mPaused = !mPaused;
-			game->handleKeyboardEvent(PAUSE);
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);
 			CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu")->setVisible(true);
@@ -299,7 +339,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 				CEGUI::MouseCursor::getSingleton().hide();
 			break;
 		case OIS::KC_R:
-			game->handleKeyboardEvent(RESTART);
+			if (appMode == SINGLE_PLAYER) sGame->restart();
     			break;
 		case OIS::KC_J:
     			mDirection.x = -mMove;
@@ -320,31 +360,37 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
     			mDirection.z = mMove;
     			break;
 		case OIS::KC_W:
-			game->handleKeyboardEvent(GO_FORWARD);
+			cGame->handleKeyboardEvent(GO_FORWARD);
+			//game->handleKeyboardEvent(GO_FORWARD);
     			break;
 		case OIS::KC_S:
-			game->handleKeyboardEvent(GO_BACKWARD);
+			cGame->handleKeyboardEvent(GO_BACKWARD);
+			//game->handleKeyboardEvent(GO_BACKWARD);
     			break;
 		case OIS::KC_A:
-			game->handleKeyboardEvent(GO_LEFT);
+			cGame->handleKeyboardEvent(GO_LEFT);
+			//game->handleKeyboardEvent(GO_LEFT);
     			break;
 		case OIS::KC_D:
-			game->handleKeyboardEvent(GO_RIGHT);
+			cGame->handleKeyboardEvent(GO_RIGHT);
+			//game->handleKeyboardEvent(GO_RIGHT);
     			break;
 		case OIS::KC_LCONTROL:
-			game->handleKeyboardEvent(RUN);
+			cGame->handleKeyboardEvent(RUN);
+			//game->handleKeyboardEvent(RUN);
     			break;
 		case OIS::KC_C:
-			game->handleKeyboardEvent(TOGGLE_CAMERA);
+			cGame->handleKeyboardEvent(TOGGLE_CAMERA);
+			//game->handleKeyboardEvent(TOGGLE_CAMERA);
     			break;
 		case OIS::KC_1:
-			game->handleKeyboardEvent(USE_WEAK_HIT);
+			cGame->handleKeyboardEvent(USE_WEAK_HIT);
     			break;
 		case OIS::KC_2:
-			game->handleKeyboardEvent(USE_NORMAL_HIT);
+			cGame->handleKeyboardEvent(USE_NORMAL_HIT);
     			break;
 		case OIS::KC_3:
-			game->handleKeyboardEvent(USE_STRONG_HIT);
+			cGame->handleKeyboardEvent(USE_STRONG_HIT);
     			break;
 		default:
 			break;
@@ -357,7 +403,8 @@ bool Assignment2::keyReleased( const OIS::KeyEvent& evt ){
 
 	switch (evt.key) {
 		case OIS::KC_LCONTROL:
-			game->handleKeyboardEvent(STOP_RUN);
+			cGame->handleKeyboardEvent(STOP_RUN);
+			//game->handleKeyboardEvent(STOP_RUN);
     			break;
 		case OIS::KC_J:
 		case OIS::KC_L:
@@ -372,16 +419,20 @@ bool Assignment2::keyReleased( const OIS::KeyEvent& evt ){
     			mDirection.z = 0;
     			break;
 		case OIS::KC_W:
-			game->handleKeyboardEvent(STOP_FORWARD);
+			cGame->handleKeyboardEvent(STOP_FORWARD);
+			//game->handleKeyboardEvent(STOP_FORWARD);
     			break;
 		case OIS::KC_S:
-			game->handleKeyboardEvent(STOP_BACKWARD);
+			cGame->handleKeyboardEvent(STOP_BACKWARD);
+			//game->handleKeyboardEvent(STOP_BACKWARD);
     			break;
 		case OIS::KC_A:
-			game->handleKeyboardEvent(STOP_LEFT);
+			cGame->handleKeyboardEvent(STOP_LEFT);
+			//game->handleKeyboardEvent(STOP_LEFT);
     			break;
 		case OIS::KC_D:
-			game->handleKeyboardEvent(STOP_RIGHT);
+			cGame->handleKeyboardEvent(STOP_RIGHT);
+			//game->handleKeyboardEvent(STOP_RIGHT);
     			break;
 		default:
 			break;
@@ -396,8 +447,10 @@ bool Assignment2::mouseMoved( const OIS::MouseEvent& evt ){
 	sys.injectMouseMove(evt.state.X.rel, evt.state.Y.rel);
 	if(evt.state.Z.rel)
 		sys.injectMouseWheelChange(evt.state.Z.rel / 120.0f);
-	if(!mPaused)
-		game->handleMouseMove(evt.state.X.rel, evt.state.Y.rel);
+	if(!mPaused) {
+		//game->handleMouseMove(evt.state.X.rel, evt.state.Y.rel);
+		cGame->handleMouseMove(evt.state.X.rel, evt.state.Y.rel);
+	}
 //	mCamNode->yaw(Ogre::Degree(-mRotate * evt.state.X.rel), Ogre::Node::TS_WORLD);
 //    	mCamNode->pitch(Ogre::Degree(-mRotate * evt.state.Y.rel), Ogre::Node::TS_LOCAL);
 	return true;
@@ -410,7 +463,8 @@ bool Assignment2::mousePressed( const OIS::MouseEvent& evt, OIS::MouseButtonID i
 	switch (id)
 	{
 	case OIS::MB_Left:
-		game->handleMouseClick(HIT_START);
+		cGame->handleMouseClick(HIT_START);
+		//game->handleMouseClick(HIT_START);
 		break;
 	default:
 	    break;
@@ -425,7 +479,8 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 	switch (id)
 	{
 	case OIS::MB_Left:
-		game->handleMouseClick(HIT_STOP);
+		cGame->handleMouseClick(HIT_STOP);
+		//game->handleMouseClick(HIT_STOP);
 		break;
 	case OIS::MB_Right:
 		//ball->getPhysicsObject().toggleRigidBodyAndKinematic(2);
@@ -439,7 +494,10 @@ bool Assignment2::mouseReleased( const OIS::MouseEvent& evt, OIS::MouseButtonID 
 
 // CEGUI events
 bool Assignment2::title_start_sp_game(const CEGUI::EventArgs &e) {
-	game->handleKeyboardEvent(PAUSE);
+	//game->handleKeyboardEvent(PAUSE);
+	appMode = SINGLE_PLAYER;
+
+	mPaused = false;
 	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
 	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
 	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
@@ -457,11 +515,21 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	// Network server setup here
-	conn = new Network(true, NULL, NULL);
+	conn = new Network(true, "", 0);
+	if (!conn->connectionSuccess) {
+		delete conn;
+		return true;
+	}
+
 
 	appMode = MULTI_PLAYER_SERVER;
 
-	game->handleKeyboardEvent(PAUSE);
+	delete sGame;
+	delete cGame;
+	sGame= new ServerGame(mSceneMgr, appMode);
+	cGame= new ClientGame(mSceneMgr, mCamNode, sGame->getInitializationData(SIDE_NEAR), sGame->send(SIDE_NEAR));
+	//game->handleKeyboardEvent(PAUSE);
+	mPaused = false;
 	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
 	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
 	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
@@ -475,13 +543,22 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
 	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
 
+
 	const char* addr = ad.c_str();
 	int port = atoi(prt.c_str());
 	// Network client setup here
 	conn = new Network(false, addr, port);
+	if (!conn->connectionSuccess) {
+		delete conn;
+		return true;
+	}
 
+	appMode = MULTI_PLAYER_CLIENT;
+	mPaused = false;
+	delete cGame;
+	cGame= new ClientGame(mSceneMgr, mCamNode, sGame->getInitializationData(SIDE_FAR), sGame->send(SIDE_FAR));
 
-	game->handleKeyboardEvent(PAUSE);
+	//game->handleKeyboardEvent(PAUSE);
 	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
 	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
 	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
@@ -498,7 +575,7 @@ bool Assignment2::quit(const CEGUI::EventArgs &e) {
 
 bool Assignment2::resume_game(const CEGUI::EventArgs &e) {
         mPaused = false;
-	game->handleKeyboardEvent(PAUSE);
+	//game->handleKeyboardEvent(PAUSE);
         CEGUI::WindowManager::getSingleton().getWindow("PauseRoot")->setVisible(false);
         CEGUI::MouseCursor::getSingleton().hide();
         return true;
@@ -547,9 +624,10 @@ bool Assignment2::config_setSFXVolume(const CEGUI::EventArgs &e) {
 }
 //-------------------------------------------------------------------------------------
 
-bool Assignment2::config_setRestitution(const CEGUI::EventArgs &e) {
+bool Assignment2::config_setRestitution(const CEGUI::EventArgs &e) {	
+	if (appMode != SINGLE_PLAYER) return true;
 	CEGUI::Scrollbar *vol = (CEGUI::Scrollbar*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionScrollbar");
-	game->setBallRestitution(vol->getScrollPosition());
+	sGame->setBallRestitution(vol->getScrollPosition());
 	return true;
 }
 //-------------------------------------------------------------------------------------
@@ -558,11 +636,11 @@ bool Assignment2::config_court(const CEGUI::EventArgs &e) {
 	static CEGUI::RadioButton *b1 = (CEGUI::RadioButton*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/Court1");
 	static CEGUI::RadioButton *b2 = (CEGUI::RadioButton*) CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/Court2");
 	if(b1->isSelected()) {
-		game->getCourt()->toggleCourt(0);
+		cGame->getCourt()->toggleCourt(0);
 	} else if (b2->isSelected()) {
-		game->getCourt()->toggleCourt(1);
+		cGame->getCourt()->toggleCourt(1);
 	} else {
-		game->getCourt()->toggleCourt(2);
+		cGame->getCourt()->toggleCourt(2);
 	}
 	// Case 0: Tennis Court
 	// Case 1: Grid
@@ -572,21 +650,26 @@ bool Assignment2::config_court(const CEGUI::EventArgs &e) {
 }
 //--------------------------------------------------------------------------------------
 
-bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {
-	game->handleKeyboardEvent(TOGGLE_GAME_MODE);
-			if(game->getGameMode() == PRACTICE) {
-				CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(false);
-				CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(true);
-			} else {
-				CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
-				CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(false);
-			}
+bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {	
+	return true;/*
+	if (appMode == SINGLE_PLAYER) {
+		game->handleKeyboardEvent(TOGGLE_GAME_MODE);
+		if(game->getGameMode() == PRACTICE) {
+			CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(false);
+			CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(true);
+		} else {
+			CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
+			CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(false);
+		}
+	}
 	return true;
+	*/
 }
 //-------------------------------------------------------------------------------------
 
 bool Assignment2::config_gravity(const CEGUI::EventArgs &e) {
-	game->toggleGravity();
+	if (appMode == SINGLE_PLAYER)
+		sGame->toggleGravity();
 	return true;
 }
 //--------------------------------------------------------------------------------------

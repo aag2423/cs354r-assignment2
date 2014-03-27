@@ -2,18 +2,6 @@
 #define __ServerGame_h_
 #include "Game.h"
 
-typedef struct ServerGameState {
-	bool paused;
-	bool gameStarted;
-	bool restart;
-	Ogre::Real ballRestitution;
-	int playerScore;
-	int computerScore;
-	int comboBonus;
-	enum RoundProgress progress;
-	GameResult result;
-} ServerGameState;
-
 class ServerGame
 {
 private:
@@ -21,11 +9,14 @@ private:
 	PhysicsEngine physicsEngine;
 	InitializationData initData;
 	OutputState outputState;
-	ServerGameState gameState;
+
 	InputPlayerState player1Input;
 	InputPlayerState player2Input;
+	Gravity g;
+	Ogre::Real ballRes;
 
 	bool isFullGame;
+	enum AppMode appMode;
 	ServerCourt* sCourt;
 	ServerPlayer* sPlayer1;
 	ServerPlayer* sPlayer2;
@@ -33,7 +24,7 @@ private:
 	void outputPositionState(void);
 	void outputPauseState(void);
 public:
-	ServerGame(Ogre::SceneManager* mSceneMgr, GameMode mode=FULL_GAME, Gravity g=EARTH_G, Ogre::Real ballRestitution=0.99);
+	ServerGame(Ogre::SceneManager* mSceneMgr, AppMode aMode=SINGLE_PLAYER, GameMode mode=FULL_GAME, Gravity g=EARTH_G, Ogre::Real ballRestitution=0.99);
 	~ServerGame(void);
 	InitializationData& getInitializationData(PlayerSide serverSide) { 
 		initData.isClientNearSide = serverSide == SIDE_NEAR;
@@ -41,8 +32,17 @@ public:
 	}
 	void setBallRestitution(Ogre::Real r) {
 		if(r == 1) r = 0.99;
-		gameState.ballRestitution = r;
+		ballRes = r;
 		sBall->getPhysicsObject().setRestitution(r);
+	}
+	void toggleGravity(void) { 
+		if (g == EARTH_G) {
+			physicsEngine.setGravity(0, MOON_G, 0); 
+			g = MOON_G;
+		} else {
+			physicsEngine.setGravity(0, EARTH_G, 0); 
+			g = EARTH_G;
+		}
 	}
 	void checkScoring(BallCollisionEvent ballEvent);
 	void receive(InputState input);

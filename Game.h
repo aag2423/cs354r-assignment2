@@ -18,7 +18,7 @@
 enum {
 	BALL_SERVE_SPEED = 100
 };
-enum Gravity { EARTH_G = -10, MOON_G = -2 };
+enum Gravity { EARTH_G = -15, MOON_G = -2 };
 enum CameraMode { ABOVE_CAM, THIRD_PERSON_CAM, FIRST_PERSON_CAM };
 
 
@@ -31,6 +31,9 @@ enum KeyboardEvent {
 enum MouseEvent { HIT_START, HIT_STOP };
 enum GameMode {
 	PRACTICE, FULL_GAME
+};
+enum AppMode {
+	SINGLE_PLAYER, MULTI_PLAYER_SERVER, MULTI_PLAYER_CLIENT
 };
 enum RoundProgress {
 	HIT_BY_PLAYER, HIT_BY_PLAYER_AND_FLOOR, 
@@ -77,11 +80,14 @@ typedef struct OutputSceneState {
 } OutputSceneState;
 
 typedef struct OutputGameState {
-	RoundProgress roundProgress;
-	GameResult result; 
+	bool paused;
+	bool gameStarted;
+	bool restart;
 	int playerScore;
 	int opponentScore;
-	int combo;
+	int comboBonus;
+	enum RoundProgress progress;
+	GameResult result;
 } OutputGameState;
 
 typedef struct OutputState {

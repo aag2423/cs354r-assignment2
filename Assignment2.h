@@ -4,6 +4,8 @@
 
 #include "BaseApplication.h"
 #include "Game.h"
+#include "ServerGame.h"
+#include "ClientGame.h"
 #include "Sound.h"
 #include "Network.h"
 
@@ -11,9 +13,6 @@
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
 #include <stdio.h>
 
-enum AppMode {
-	SINGLE_PLAYER, MULTI_PLAYER_SERVER, MULTI_PLAYER_CLIENT
-};
 
 class Assignment2 : public BaseApplication
 {
@@ -22,8 +21,6 @@ public:
     virtual ~Assignment2(void);
 protected:
 	const static Ogre::Real BOX_SIDE_LENGTH = 200.0f;
-
-	Game* game;
 
 
 	ServerGame* sGame;

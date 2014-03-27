@@ -39,7 +39,7 @@ void ServerCourt::setup(void) {
 			btQuaternion(0,0,0,1), 
 			btVector3(0, -h/2+20, 0));
 		physicsEngine.addObject(&net);
-		net.setRestitution(0.02); 
+		net.setRestitution(0.001); 
 
 	}
 	bottomPlane.setToStaticPlane(btVector3(0,1,0), -h/2);

@@ -31,6 +31,7 @@ public:
 	void handleKeyboardEvent(enum KeyboardEvent evt);
 	void handleMouseMove(Ogre::Real dx, Ogre::Real dy);
 	void handleMouseClick(enum MouseEvent evt);
+	enum HitStrength getPlayerHitStrength(void) { return localPlayerState.strength; }
 	int getPlayerScore(void) { return serverState.gameState.playerScore; }
 	int getOpponentScore(void) { return serverState.gameState.opponentScore; }
 };
