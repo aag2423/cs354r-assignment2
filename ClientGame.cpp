@@ -27,9 +27,6 @@ ClientGame::ClientGame(Ogre::SceneManager* mSceneMgr, Ogre::SceneNode* camNode, 
 	cameraNode = camNode;
 	camMode = ABOVE_CAM;
 	toggleCamera();
-
-	//soundPlayer = new Sound();
-	soundHandler->start_ambient();
 }
 
 //-------------------------------------------------------------------------------------
