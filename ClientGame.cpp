@@ -70,10 +70,12 @@ void ClientGame::toggleCamera(void) {
 		camMode = ABOVE_CAM;
 		newCamParent = graphicsEngine->getRootSceneNode();
 		newCamParent->addChild(cameraNode);
-		cameraNode->setPosition(0, 50, 700);
+		cameraNode->setPosition(0, 50, isNearSide? 700:-700);
 		cameraNode->resetOrientation();
 		cPlayer1->getSceneNode()->resetOrientation();
-        	cameraNode->pitch(Ogre::Degree(-10));
+        if (!isNearSide)
+        	cameraNode->yaw(Ogre::Degree(180));
+        cameraNode->pitch(Ogre::Degree(-10));
 	}
 }
 
@@ -192,7 +194,8 @@ void ClientGame::handleKeyboardEvent(enum KeyboardEvent evt) {
 }
 
 void ClientGame::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
-	localPlayerState.yaw = -0.15*dx;
+	if (camMode != ABOVE_CAM)
+		localPlayerState.yaw = -0.15*dx;
 	if (camMode == FIRST_PERSON_CAM)
 		cameraNode->pitch(Ogre::Degree(-0.15*dy), Ogre::Node::TS_LOCAL);
 	
@@ -216,11 +219,17 @@ void ClientGame::handleMouseClick(enum MouseEvent evt) {
 			localPlayerState.shotDirection.y = 30;
 			if (localPlayerState.movingLeft) {
 				localPlayerState.movingLeft = false;
-				localPlayerState.shotDirection.x = -40;
+				if (isNearSide)
+					localPlayerState.shotDirection.x = 40;
+				else
+					localPlayerState.shotDirection.x = -40;
 			}
 			else if (localPlayerState.movingRight) {
 				localPlayerState.movingRight = false;
-				localPlayerState.shotDirection.x = 40;
+				if (isNearSide)
+					localPlayerState.shotDirection.x = -40;
+				else
+					localPlayerState.shotDirection.x = 40;
 			}
 			else if (localPlayerState.movingForward) localPlayerState.shotDirection.y = 20;
 			else if (localPlayerState.movingBackward) localPlayerState.shotDirection.y = 40;
