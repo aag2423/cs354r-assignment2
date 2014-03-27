@@ -526,8 +526,15 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
-	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
-
+	//CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityText")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityEarth")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityMoon")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionText")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionScrollbar")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeText")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeGame")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModePractice")->disable();
 	// Network server setup here
 	conn = new Network(true, "", 0);
 	if (!conn->connectionSuccess) {
@@ -553,7 +560,18 @@ bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
-	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
+	//CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityText")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityEarth")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityMoon")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionText")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionScrollbar")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeText")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeGame")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModePractice")->disable();
+	
+	
+
 	CEGUI::String ad = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->getText();
 	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
 	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
