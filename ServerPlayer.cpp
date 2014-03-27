@@ -10,7 +10,7 @@ ServerPlayer::ServerPlayer(Ogre::SceneManager* mSceneMgr, PhysicsEngine& bulletE
 	if (turnAround) positionNode->yaw(Ogre::Degree(180));
 	physicsEngine = &bulletEngine;
 	physicsObject.setToBox(
-		btVector3(10,HEIGHT,5),
+		btVector3(10,HEIGHT,1),
 		100,
 		btQuaternion(0, 0, 0, 1),
 		btVector3(pos.x, pos.y, pos.z)
@@ -38,6 +38,7 @@ ServerPlayer::ServerPlayer(Ogre::SceneManager* mSceneMgr, PhysicsEngine& bulletE
 		playerState.step = SMALL_STEP;
 		playerState.hitting = true;
 		playerState.shotDirection = Ogre::Vector3(0, 30, 0);
+		playerState.strength = NORMAL_HIT;
 	}
 }
 
