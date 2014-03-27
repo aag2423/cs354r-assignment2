@@ -18,8 +18,8 @@ Assignment2::Assignment2(void) :
 //-------------------------------------------------------------------------------------
 Assignment2::~Assignment2(void)
 {
-	//delete sGame;
-	//delete cGame;
+	delete sGame;
+	delete cGame;
 	delete soundHandler;
 	std::cout << "========= Debug: Assignment2 Deleted =========" << std::endl;
 }
@@ -162,7 +162,7 @@ void Assignment2::createScene(void)
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-	appMode = SINGLE_PLAYER;
+	appMode = NO_GAME;
 	//game = new Game(mSceneMgr, mCamNode);
 	//game->handleKeyboardEvent(PAUSE);
 
@@ -326,7 +326,7 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 			mShutDown = true;
 			break;
 		case OIS::KC_SPACE: 
-			if (appMode == MULTI_PLAYER_SERVER) return true;
+			if (appMode == NO_GAME) return true;
 			mPaused = !mPaused;
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);
@@ -339,24 +339,30 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 				CEGUI::MouseCursor::getSingleton().hide();
 			break;
 		case OIS::KC_R:
-			if (appMode == SINGLE_PLAYER) sGame->restart();
+			if ((appMode == SINGLE_PLAYER) || (appMode == MULTI_PLAYER_SERVER)) sGame->reset();
     			break;
 		case OIS::KC_J:
+			if (appMode == NO_GAME) break;
     			mDirection.x = -mMove;
     			break;
 		case OIS::KC_L:
+			if (appMode == NO_GAME) break;
     			mDirection.x = mMove;
     			break;
 		case OIS::KC_U:
+			if (appMode == NO_GAME) break;
     			mDirection.y = mMove;
     			break;
 		case OIS::KC_O:
+			if (appMode == NO_GAME) break;
     			mDirection.y = -mMove;
     			break;
 		case OIS::KC_I:
+			if (appMode == NO_GAME) break;
     			mDirection.z = -mMove;
     			break;
 		case OIS::KC_K:
+			if (appMode == NO_GAME) break;
     			mDirection.z = mMove;
     			break;
 		case OIS::KC_W:
@@ -514,6 +520,8 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
+	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
+
 	// Network server setup here
 	conn = new Network(true, "", 0);
 	if (!conn->connectionSuccess) {
@@ -539,6 +547,7 @@ bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
+	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
 	CEGUI::String ad = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->getText();
 	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
 	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;
