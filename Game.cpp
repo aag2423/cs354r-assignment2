@@ -364,9 +364,16 @@ void Game::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 			playerState->shotDirection.y = VOLLEY;
 	}
            */
-		Ogre::Vector3 dir = cameraNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
-		playerState->shotDirection.x = dir.x * 100;
+	Ogre::Vector3 dir = cameraNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
+	playerState->shotDirection.x = dir.x * 100;
+	if (gameState.camMode == FIRST_PERSON_CAM)
 		playerState->shotDirection.y = (dir.y * 100) + 50;
+	if (gameState.camMode == THIRD_PERSON_CAM)
+		playerState->shotDirection.y = 90;
+	if (gameState.camMode == ABOVE_CAM)
+		playerState->shotDirection.y = 190;
+
+
 	if (gameState.camMode != ABOVE_CAM){
 		player->getNode()->yaw(Ogre::Degree(-0.15*dx), Ogre::Node::TS_LOCAL);
 	}

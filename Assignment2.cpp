@@ -162,7 +162,7 @@ void Assignment2::createScene(void)
 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 	mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
 
-	appMode = SINGLE_PLAYER;
+	appMode = NO_GAME;
 	//game = new Game(mSceneMgr, mCamNode);
 	//game->handleKeyboardEvent(PAUSE);
 
@@ -241,10 +241,10 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//game->runNextFrame(evt);
 
 
-	if(mPaused) return true;
 
         if (appMode == MULTI_PLAYER_SERVER) {
-		sGame->receive(cGame->send());
+		if (!mPaused)
+			sGame->receive(cGame->send());
 		InputState input;
 		if(conn->receiveInputState(&input))
 			sGame->receive(input);
@@ -253,14 +253,16 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		conn->sendOutputState(sGame->send(false));
 		cGame->receive(sGame->send(true));
 		cGame->runNextFrame();
-	} else if (appMode == MULTI_PLAYER_CLIENT){
-
+	} else if (appMode == MULTI_PLAYER_CLIENT){	
 		OutputState serverState;
 		if(conn->receiveOutputState(&serverState))
 			cGame->receive(serverState);
 		cGame->runNextFrame();
-		conn->sendInputState(cGame->send());
+		
+		if(!mPaused);
+			conn->sendInputState(cGame->send());
 	} else {
+		if(mPaused) return true;
 		sGame->receive(cGame->send());
 		sGame->runNextFrame();
 		cGame->receive(sGame->send(true));
@@ -268,6 +270,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	}
 
 
+	if(mPaused) return true;
 	switch(cGame->getPlayerHitStrength()) {
 		case WEAK_HIT:
 			wmgr.getWindow("StrengthRoot")->setText("WEAK");
@@ -322,12 +325,14 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 	sys.injectKeyDown(evt.key);
 	sys.injectChar(evt.text);
 
+	if (mPaused) return true;
+
 	switch (evt.key) {
 		case OIS::KC_ESCAPE: 
 			mShutDown = true;
 			break;
 		case OIS::KC_SPACE: 
-			if (appMode == MULTI_PLAYER_SERVER) return true;
+			if (appMode == NO_GAME) return true;
 			mPaused = !mPaused;
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);
@@ -340,31 +345,31 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 				CEGUI::MouseCursor::getSingleton().hide();
 			break;
 		case OIS::KC_R:
-			if (appMode == SINGLE_PLAYER) sGame->restart();
+			if ((appMode == SINGLE_PLAYER) || (appMode == MULTI_PLAYER_SERVER)) sGame->reset();
     			break;
 		case OIS::KC_J:
-				if (!mPaused)
-    				mDirection.x = -mMove;
+			if (appMode == NO_GAME) break;
+    			mDirection.x = -mMove;
     			break;
 		case OIS::KC_L:
-				if (!mPaused)
-    				mDirection.x = mMove;
+			if (appMode == NO_GAME) break;
+    			mDirection.x = mMove;
     			break;
 		case OIS::KC_U:
-				if (!mPaused)
-    				mDirection.y = mMove;
+			if (appMode == NO_GAME) break;
+    			mDirection.y = mMove;
     			break;
 		case OIS::KC_O:
-				if (!mPaused)
-    				mDirection.y = -mMove;
+			if (appMode == NO_GAME) break;
+    			mDirection.y = -mMove;
     			break;
 		case OIS::KC_I:
-				if (!mPaused)
-    				mDirection.z = -mMove;
+			if (appMode == NO_GAME) break;
+    			mDirection.z = -mMove;
     			break;
 		case OIS::KC_K:
-				if (!mPaused)
-    				mDirection.z = mMove;
+			if (appMode == NO_GAME) break;
+    			mDirection.z = mMove;
     			break;
 		case OIS::KC_W:
 			cGame->handleKeyboardEvent(GO_FORWARD);
@@ -521,6 +526,8 @@ bool Assignment2::title_mp_menu(const CEGUI::EventArgs &e) {
 
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
+	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
+
 	// Network server setup here
 	conn = new Network(true, "", 0);
 	if (!conn->connectionSuccess) {
@@ -546,6 +553,7 @@ bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 
 //--------------------------------------------------------------------------------------
 bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
+	CEGUI::WindowManager::getSingleton().getWindow("PauseRoot/Menu/Config")->disable();
 	CEGUI::String ad = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->getText();
 	CEGUI::String prt = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/PortText")->getText();
 	std::cout << "IP: " << ad << "\tPort: " << prt << std::endl;

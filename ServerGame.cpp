@@ -31,6 +31,11 @@ ServerGame::~ServerGame(void) {
 
 //-------------------------------------------------------------------------------------
 
+void ServerGame::reset(void) {
+	outputState.gameState.playerScore = 0;
+	outputState.gameState.opponentScore = 0;
+	restart();
+}
 
 void ServerGame::restart(void) {
 	delete sBall;

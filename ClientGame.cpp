@@ -136,10 +136,16 @@ void ClientGame::runNextFrame(void) {
 			newScene->playerNearHitting
 		);
 	}
-
 	Ogre::Vector3 dir = cameraNode->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
-	localPlayerState.shotDirection.x = dir.x * 100;
-	localPlayerState.shotDirection.y = (dir.y * 100) + 20;
+	
+	if (camMode == FIRST_PERSON_CAM) {
+		localPlayerState.shotDirection.x = dir.x * 100;
+		localPlayerState.shotDirection.y = (dir.y * 100) + 40;
+	}
+	if (camMode == THIRD_PERSON_CAM) {
+		localPlayerState.shotDirection.x = dir.x * 100;
+		localPlayerState.shotDirection.y = 35;
+	}
 }
 
 //-------------------------------------------------------------------------------------
@@ -189,6 +195,8 @@ void ClientGame::handleMouseMove(Ogre::Real dx, Ogre::Real dy) {
 	localPlayerState.yaw = -0.15*dx;
 	if (camMode == FIRST_PERSON_CAM)
 		cameraNode->pitch(Ogre::Degree(-0.15*dy), Ogre::Node::TS_LOCAL);
+	
+
 	//localPlayerState.shotDirection.x = dx*2;
 	//dy = -dy*8;
 	//localPlayerState.shotDirection.y = dy > 35 ? 35: dy;
@@ -199,6 +207,24 @@ void ClientGame::handleMouseClick(enum MouseEvent evt) {
 	switch (evt) {
 	case HIT_START:
 		localPlayerState.hitting = true;
+		/*
+		if (camMode == THIRD_PERSON_CAM) {
+			localPlayerState.shotDirection.y = 25;
+		}
+		*/
+		if (camMode == ABOVE_CAM) {
+			localPlayerState.shotDirection.y = 30;
+			if (localPlayerState.movingLeft) {
+				localPlayerState.movingLeft = false;
+				localPlayerState.shotDirection.x = -40;
+			}
+			else if (localPlayerState.movingRight) {
+				localPlayerState.movingRight = false;
+				localPlayerState.shotDirection.x = 40;
+			}
+			else if (localPlayerState.movingForward) localPlayerState.shotDirection.y = 20;
+			else if (localPlayerState.movingBackward) localPlayerState.shotDirection.y = 40;
+		}
 //		gameState.gameStarted = true;
 		break;
 	case HIT_STOP:

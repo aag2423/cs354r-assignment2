@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<GUILayout>
+	<Window Type="DefaultWindow" Name="TitleRoot">
+		<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
+		<Property Name="AlwaysOnTop" Value="True" />
+		<Property Name="Visible" Value="True" />
+		<Window Type="TaharezLook/FrameWindow" Name="TitleRoot/Menu">
+			<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
+			<Property Name="DragMovingEnabled" Value="False" />
+			<Property Name="SizingEnabled" Value="False" />
+			<Property Name="CloseButtonEnabled" Value="False" />
+			<Window Type="TaharezLook/Button" Name="TitleRoot/Menu/SinglePlayer">
+				<Property Name="Text" Value="Single Player" />
+				<Property Name="UnifiedSize" Value="{{0.6,0},{0.2,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.2,0},{0.2,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="TitleRoot/Menu/Multiplayer">
+				<Property Name="Text" Value="Multi Player" />
+				<Property Name="UnifiedSize" Value="{{0.6,0},{0.2,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.2,0},{0.5,0}}" />
+			</Window>
+		</Window>
+		<Window Type="TaharezLook/FrameWindow" Name="TitleRoot/MP">
+			<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
+			<Property Name="AlwaysOnTop" Value="True" />
+			<Property Name="Visible" Value="False" />
+			<Property Name="DragMovingEnabled" Value="False" />
+			<Property Name="SizingEnabled" Value="False" />
+			<Property Name="CloseButtonEnabled" Value="False" />
+			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/HostGame">
+				<Property Name="UnifiedSize" Value="{{0.4,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.05,0},{0.05,0}}" />
+				<Property Name="Text" Value="Host A Game" />
+				<Property Name="HorzFormatting" Value="HorzCentred" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="TitleRoot/MP/Host">
+				<Property Name="Text" Value="Host!" />
+				<Property Name="UnifiedSize" Value="{{0.3,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.1,0},{0.2,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/ConnectToGame">
+				<Property Name="UnifiedSize" Value="{{0.4,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.55,0},{0.05,0}}" />
+				<Property Name="Text" Value="Connect To A Game" />
+				<Property Name="HorzFormatting" Value="HorzCentred" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/IPAddress">
+				<Property Name="UnifiedSize" Value="{{0.1,0},{0.08,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.2,0}}" />
+				<Property Name="Text" Value="Address" />
+			</Window>
+			<Window Type="TaharezLook/Editbox" Name="TitleRoot/MP/AddressText">
+				<Property Name="UnifiedSize" Value="{{0.3,0},{0.08,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.28,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/IPPort">
+				<Property Name="UnifiedSize" Value="{{0.1,0},{0.08,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.45,0}}" />
+				<Property Name="Text" Value="Port" />
+			</Window>
+			<Window Type="TaharezLook/Editbox" Name="TitleRoot/MP/PortText">
+				<Property Name="UnifiedSize" Value="{{0.3,0},{0.08,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.53,0}}" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="TitleRoot/MP/Connect">
+				<Property Name="Text" Value="Connect!" />
+				<Property Name="UnifiedSize" Value="{{0.3,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.72,0}}" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/Waiting">
+				<Property Name="UnifiedSize" Value="{{0.3,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.35,0},{0.4,0}}" />
+				<Property Name="Text" Value="Waiting." />
+				<Property Name="Visible" Value="False" />
+			</Window>
+			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/Failed">
+				<Property Name="UnifiedSize" Value="{{0.3,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.35,0},{0.4,0}}" />
+				<Property Name="Text" Value="Connection Failed!" />
+				<Property Name="Visible" Value="False" />
+			</Window>
+			<Window Type="TaharezLook/Button" Name="TitleRoot/MP/Failed/Ok">
+				<Property Name="Text" Value="Ok" />
+				<Property Name="UnifiedSize" Value="{{0.18,0},{0.1,0}}" />
+				<Property Name="UnifiedPosition" Value="{{0.41,0},{0.5,0}}" />
+				<Property Name="Visible" Value="False" />
+			</Window>
+		</Window>
+	</Window>
+</GUILayout>
