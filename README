@@ -9,16 +9,16 @@ Cameron Hooper
 
 
 ======== User Manual ========
-Game Mode:
-Full Game - Play with AI
-Practice  - Hit targets
+Mode:
+Single Player
+Multiplayer (Server): hit host game
+Multiplayer (Client): Enter server's ip and port 50001
 
 GamePlay:
 Press left mouse button to serve ball.
-Move mouse to swing "paddle" in the desired direction
+The ball is shot in the direction player is facing
 Press left mouse button to shoot
-Get 11 points first to win in full-game mode
-Hit targets without letting the ball hitting other objects (player, wall, floor) to get combos in practice Mode
+No limit for scoring
 
 Key bindinds:
 W,A,S,D - Move Player
@@ -36,18 +36,15 @@ Go to Pause Menu
 
 ======== Project Summary ========
 Required Features:
-User-controlled "racquet" - Animated Ninja for gamer and Robot for AI
-Camera control - Both camera mode toggling and user-controlled camera move
-Sound effects - Background sound, sound effects for any collision, controlled by GUI
-Physics - Simulated ball movement, kinematic player object, collision detection
+Networking - multiplayer with one server and one client
+GUI - options to enter single- or multi-player mode
 
 Additional Features:
 1. AI Opponent
 2. PauseMenu GUI, score display
-3. Animation when ball hits target
-4. Extra scenes
+3. Extra scenes
 
 Better than planed:
-We made the full-game mode with AI so that we can play "real" tennis now.
+We came up with better control to improve gaming experience
 Not done:
-We did not make a animated paddle object. Instead, we just used the animation of Ninja and Robot mesh.
+Although the server and client are separate, we did not add the option to host a "dedicated server" which runs the game for two remote client.
