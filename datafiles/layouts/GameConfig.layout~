@@ -100,7 +100,7 @@
 				<Property Name="GroupID" Value="999" />
 			</Window>
 			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/Court2">
-				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
+				<Property Name="UnifiedSize" Value="{{0.12,0},{0.1,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.32,0},{0.88,0}}" />
 				<Property Name="Text" Value="Grid" />
 				<Property Name="GroupID" Value="999" />

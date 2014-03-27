@@ -67,24 +67,6 @@
 				<Property Name="UnifiedSize" Value="{{0.3,0},{0.1,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.72,0}}" />
 			</Window>
-			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/Waiting">
-				<Property Name="UnifiedSize" Value="{{0.3,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.35,0},{0.4,0}}" />
-				<Property Name="Text" Value="Waiting." />
-				<Property Name="Visible" Value="False" />
-			</Window>
-			<Window Type="TaharezLook/StaticText" Name="TitleRoot/MP/Failed">
-				<Property Name="UnifiedSize" Value="{{0.3,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.35,0},{0.4,0}}" />
-				<Property Name="Text" Value="Connection Failed!" />
-				<Property Name="Visible" Value="False" />
-			</Window>
-			<Window Type="TaharezLook/Button" Name="TitleRoot/MP/Failed/Ok">
-				<Property Name="Text" Value="Ok" />
-				<Property Name="UnifiedSize" Value="{{0.18,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.41,0},{0.5,0}}" />
-				<Property Name="Visible" Value="False" />
-			</Window>
 		</Window>
 	</Window>
 </GUILayout>

@@ -138,7 +138,6 @@ void Assignment2::setupCEGUI(void) {
 	wmgr.getWindow("ConfigRoot/Menu/Court1")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_court, this));
 	wmgr.getWindow("ConfigRoot/Menu/Court2")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_court, this));
 	wmgr.getWindow("ConfigRoot/Menu/Court3")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_court, this));
-	wmgr.getWindow("ConfigRoot/Menu/ModeGame")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_mode_game, this));
 	wmgr.getWindow("ConfigRoot/Menu/GravityEarth")->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&Assignment2::config_gravity, this));
 }
 
@@ -283,8 +282,8 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			break;
 		default: break;
 	}
-/*
-	switch(game->getGameResult()) {
+
+	switch(cGame->getGameResult()) {
 		case WIN:
 			wmgr.getWindow("EndGameRoot")->setVisible(true);
 			wmgr.getWindow("EndGameRoot/Display")->setText("You Win!");
@@ -297,18 +296,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			wmgr.getWindow("EndGameRoot")->setVisible(false);
 			break;
 	}
-	if(game->getGameMode() == PRACTICE) {
-		sprintf(score_buf, "%d", game->getScore());
-		CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot/ScoreVal")->setText(score_buf);
-		sprintf(score_buf, "%d", game->getComboBonus());
-		CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot/ComboVal")->setText(score_buf);
-	} else {
-		sprintf(score_buf, "%d", game->getScore());
-		CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/PlayerScoreVal")->setText(score_buf);
-		sprintf(score_buf, "%d", game->getOpponentScore());
-		CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScoreVal")->setText(score_buf);
-	}
-*/
+
 	sprintf(score_buf, "%d", cGame->getPlayerScore());
 	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/PlayerScoreVal")->setText(score_buf);
 	sprintf(score_buf, "%d", cGame->getOpponentScore());
@@ -324,6 +312,11 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 	CEGUI::System &sys = CEGUI::System::getSingleton();
 	sys.injectKeyDown(evt.key);
 	sys.injectChar(evt.text);
+
+	if(evt.key == OIS::KC_ESCAPE) {
+		mShutDown = true;
+		return true;
+	}
 
 	if (mPaused) return true;
 
@@ -532,9 +525,8 @@ bool Assignment2::title_host_game(const CEGUI::EventArgs &e) {
 	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityMoon")->disable();
 	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionText")->disable();
 	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionScrollbar")->disable();
-	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeText")->disable();
-	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeGame")->disable();
-	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModePractice")->disable();
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/PlayerScore")->setText("Player 1");
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScore")->setText("Player 2");
 	// Network server setup here
 	conn = new Network(true, "", 0);
 	if (!conn->connectionSuccess) {
@@ -566,10 +558,8 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/GravityMoon")->disable();
 	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionText")->disable();
 	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/RestitutionScrollbar")->disable();
-	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeText")->disable();
-	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModeGame")->disable();
-	CEGUI::WindowManager::getSingleton().getWindow("ConfigRoot/Menu/ModePractice")->disable();
-	
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/PlayerScore")->setText("Player 1");
+	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot/CPUScore")->setText("Player 2");
 	
 
 	CEGUI::String ad = CEGUI::WindowManager::getSingleton().getWindow("TitleRoot/MP/AddressText")->getText();
@@ -592,6 +582,7 @@ bool Assignment2::title_connect_to_game(const CEGUI::EventArgs &e) {
 	cGame= new ClientGame(mSceneMgr, mCamNode, sGame->getInitializationData(SIDE_FAR), sGame->send(SIDE_FAR));
 
 	//game->handleKeyboardEvent(PAUSE);
+	CEGUI::WindowManager::getSingleton().getWindow("EndGameRoot/Restart")->setText("Please wait for host to restart");
 	CEGUI::WindowManager::getSingleton().getWindow("TitleRoot")->setVisible(false);
 	CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
 	CEGUI::WindowManager::getSingleton().getWindow("StrengthRoot")->setVisible(true);
@@ -682,23 +673,6 @@ bool Assignment2::config_court(const CEGUI::EventArgs &e) {
 	return true;	
 }
 //--------------------------------------------------------------------------------------
-
-bool Assignment2::config_mode_game(const CEGUI::EventArgs &e) {	
-	return true;/*
-	if (appMode == SINGLE_PLAYER) {
-		game->handleKeyboardEvent(TOGGLE_GAME_MODE);
-		if(game->getGameMode() == PRACTICE) {
-			CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(false);
-			CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(true);
-		} else {
-			CEGUI::WindowManager::getSingleton().getWindow("VsScoreRoot")->setVisible(true);
-			CEGUI::WindowManager::getSingleton().getWindow("PracticeScoreRoot")->setVisible(false);
-		}
-	}
-	return true;
-	*/
-}
-//-------------------------------------------------------------------------------------
 
 bool Assignment2::config_gravity(const CEGUI::EventArgs &e) {
 	if (appMode == SINGLE_PLAYER)

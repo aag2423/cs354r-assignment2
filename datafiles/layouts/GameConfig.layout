@@ -51,24 +51,6 @@
 				<Property Name="StepSize" Value="0.2" />
 				<Property Name="ScrollPosition" Value="0.99" />
 			</Window>
-			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/ModeText">
-				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.1,0}}" />
-				<Property Name="Text" Value="Game Mode" />
-			</Window>
-			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/ModeGame">
-				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.24,0}}" />
-				<Property Name="Selected" Value="True" />
-				<Property Name="Text" Value="Full Game" />
-				<Property Name="GroupID" Value="354" />
-			</Window>
-			<Window Type="TaharezLook/RadioButton" Name="ConfigRoot/Menu/ModePractice">
-				<Property Name="UnifiedSize" Value="{{0.2,0},{0.1,0}}" />
-				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.34,0}}" />
-				<Property Name="Text" Value="Practice" />
-				<Property Name="GroupID" Value="354" />
-			</Window>
 			<Window Type="TaharezLook/StaticText" Name="ConfigRoot/Menu/GravityText">
 				<Property Name="UnifiedSize" Value="{{0.14,0},{0.1,0}}" />
 				<Property Name="UnifiedPosition" Value="{{0.6,0},{0.5,0}}" />

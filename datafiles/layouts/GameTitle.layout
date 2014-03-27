@@ -7,6 +7,7 @@
 		<Window Type="TaharezLook/FrameWindow" Name="TitleRoot/Menu">
 			<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
 			<Property Name="DragMovingEnabled" Value="False" />
+			<Property Name="RollUpEnabled" Value="False" />
 			<Property Name="SizingEnabled" Value="False" />
 			<Property Name="CloseButtonEnabled" Value="False" />
 			<Window Type="TaharezLook/Button" Name="TitleRoot/Menu/SinglePlayer">
