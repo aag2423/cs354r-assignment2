@@ -240,10 +240,10 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//game->runNextFrame(evt);
 
 
-	if(mPaused) return true;
 
         if (appMode == MULTI_PLAYER_SERVER) {
-		sGame->receive(cGame->send());
+		if (!mPaused)
+			sGame->receive(cGame->send());
 		InputState input;
 		if(conn->receiveInputState(&input))
 			sGame->receive(input);
@@ -252,14 +252,16 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		conn->sendOutputState(sGame->send(false));
 		cGame->receive(sGame->send(true));
 		cGame->runNextFrame();
-	} else if (appMode == MULTI_PLAYER_CLIENT){
-
+	} else if (appMode == MULTI_PLAYER_CLIENT){	
 		OutputState serverState;
 		if(conn->receiveOutputState(&serverState))
 			cGame->receive(serverState);
 		cGame->runNextFrame();
-		conn->sendInputState(cGame->send());
+		
+		if(!mPaused);
+			conn->sendInputState(cGame->send());
 	} else {
+		if(mPaused) return true;
 		sGame->receive(cGame->send());
 		sGame->runNextFrame();
 		cGame->receive(sGame->send(true));
@@ -267,6 +269,7 @@ bool Assignment2::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	}
 
 
+	if(mPaused) return true;
 	switch(cGame->getPlayerHitStrength()) {
 		case WEAK_HIT:
 			wmgr.getWindow("StrengthRoot")->setText("WEAK");
@@ -321,13 +324,14 @@ bool Assignment2::keyPressed( const OIS::KeyEvent& evt ){
 	sys.injectKeyDown(evt.key);
 	sys.injectChar(evt.text);
 
+	if (mPaused) return true;
+
 	switch (evt.key) {
 		case OIS::KC_ESCAPE: 
 			mShutDown = true;
 			break;
 		case OIS::KC_SPACE: 
 			if (appMode == NO_GAME) return true;
-			// sGame->togglePause();
 			mPaused = !mPaused;
 			static CEGUI::Window* pause_screen = CEGUI::WindowManager::getSingleton().getWindow("PauseRoot");
 			pause_screen->setVisible(mPaused);
