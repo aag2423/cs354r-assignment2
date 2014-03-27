@@ -47,6 +47,8 @@ public:
 	void checkScoring(BallCollisionEvent ballEvent);
 	void receive(InputState input);
 	void restart(void);
+	void reset(void);
+	void togglePause(void);
 	void runAI(void);
 	void runNextFrame(void);
 	OutputState send(bool isClientNearSide);
